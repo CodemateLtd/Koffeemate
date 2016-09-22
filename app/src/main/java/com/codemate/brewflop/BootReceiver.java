@@ -8,15 +8,15 @@ import android.content.Intent;
  * Created by iiro on 22.9.2016.
  */
 public class BootReceiver extends BroadcastReceiver {
-    DayCounter dayCounter;
+    DayUpdater dayUpdater;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // For testing
-        if (dayCounter == null) {
-            dayCounter = new DayCounter(context);
+        if (dayUpdater == null) {
+            dayUpdater = new DayUpdater(context);
         }
 
-        dayCounter.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
     }
 }

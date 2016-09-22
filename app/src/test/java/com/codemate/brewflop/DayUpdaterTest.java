@@ -15,20 +15,16 @@ import org.robolectric.shadows.ShadowPendingIntent;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.*;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-public class DayCounterTest {
+public class DayUpdaterTest {
     private Context context;
     private ShadowAlarmManager shadowAlarmManager;
 
-    private DayCounter dayCounter;
+    private DayUpdater dayUpdater;
 
     @Before
     public void setUp() {
@@ -37,28 +33,28 @@ public class DayCounterTest {
         AlarmManager manager = (AlarmManager) RuntimeEnvironment.application.getSystemService(Context.ALARM_SERVICE);
         shadowAlarmManager = shadowOf(manager);
 
-        dayCounter = new DayCounter(context);
+        dayUpdater = new DayUpdater(context);
     }
 
     @Test
     public void shouldScheduleAlarmEveryMorningAtSix() {
         assertNull(shadowAlarmManager.getNextScheduledAlarm());
 
-        dayCounter.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
 
         ShadowAlarmManager.ScheduledAlarm scheduledAlarm = shadowAlarmManager.getNextScheduledAlarm();
         assertNotNull(scheduledAlarm);
 
         assertThat(scheduledAlarm.interval, is(AlarmManager.INTERVAL_DAY));
-        assertThat(scheduledAlarm.triggerAtTime, is(dayCounter.getTriggerTime()));
+        assertThat(scheduledAlarm.triggerAtTime, is(dayUpdater.getTriggerTime()));
         assertThat(scheduledAlarm.type, is(AlarmManager.RTC_WAKEUP));
     }
 
     @Test
     public void shouldOnlyHaveOneAlarmAtTime() {
-        dayCounter.setAlarmIfNotExists();
-        dayCounter.setAlarmIfNotExists();
-        dayCounter.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
 
         assertThat(shadowAlarmManager.getScheduledAlarms().size(), is(1));
     }
@@ -67,7 +63,7 @@ public class DayCounterTest {
     public void shouldCallAlarmReceiverWhenTimeIsUp() {
         Intent expectedIntent = new Intent(context, AlarmReceiver.class);
 
-        dayCounter.setAlarmIfNotExists();
+        dayUpdater.setAlarmIfNotExists();
 
         ShadowAlarmManager.ScheduledAlarm scheduledAlarm = shadowAlarmManager.getNextScheduledAlarm();
         ShadowPendingIntent shadowPendingIntent = shadowOf(scheduledAlarm.operation);

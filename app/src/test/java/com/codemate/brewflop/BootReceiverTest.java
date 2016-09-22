@@ -19,20 +19,20 @@ import static org.mockito.Mockito.verify;
 public class BootReceiverTest {
     private Context context;
     private BootReceiver bootReceiver;
-    private DayCounter dayCounter;
+    private DayUpdater dayUpdater;
 
     @Before
     public void setUp() {
         context = RuntimeEnvironment.application.getApplicationContext();
         bootReceiver = new BootReceiver();
-        dayCounter = mock(DayCounter.class);
-        bootReceiver.dayCounter = dayCounter;
+        dayUpdater = mock(DayUpdater.class);
+        bootReceiver.dayUpdater = dayUpdater;
     }
 
     @Test
     public void shouldSetRepeatingAlarmOnBoot() {
         bootReceiver.onReceive(context, new Intent(Intent.ACTION_BOOT_COMPLETED));
 
-        verify(dayCounter).setAlarmIfNotExists();
+        verify(dayUpdater).setAlarmIfNotExists();
     }
 }
