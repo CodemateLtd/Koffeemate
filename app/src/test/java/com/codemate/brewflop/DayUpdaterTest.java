@@ -46,7 +46,7 @@ public class DayUpdaterTest {
         assertNotNull(scheduledAlarm);
 
         assertThat(scheduledAlarm.interval, is(AlarmManager.INTERVAL_DAY));
-        assertThat(scheduledAlarm.triggerAtTime, is(dayUpdater.getTriggerTime()));
+        assertThat(scheduledAlarm.triggerAtTime, is(dayUpdater.getTriggerTime() + AlarmManager.INTERVAL_DAY));
         assertThat(scheduledAlarm.type, is(AlarmManager.RTC_WAKEUP));
     }
 

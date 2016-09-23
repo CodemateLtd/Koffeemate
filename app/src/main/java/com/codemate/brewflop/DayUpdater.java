@@ -41,10 +41,11 @@ public class DayUpdater {
 
     private void setAlarm() {
         PendingIntent alarmIntent = getAlarmIntent(PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstTriggerTime = getTriggerTime() + AlarmManager.INTERVAL_DAY;
 
         alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
-                getTriggerTime(),
+                firstTriggerTime,
                 AlarmManager.INTERVAL_DAY,
                 alarmIntent
         );
