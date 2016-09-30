@@ -22,10 +22,9 @@ android {
     }
     productFlavors {
         mock {
-
+            applicationIdSuffix ".mock"
         }
         prod {
-
         }
     }
     android.variantFilter { variant ->
