@@ -26,9 +26,10 @@
 
         <Button
             style="?attr/borderlessButtonStyle"
+            android:id="@+id/resetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset"
+            android:text="@string/reset"
             android:textColor="#03A9F4" />
 
     </LinearLayout>
