@@ -23,32 +23,23 @@ public class DayUpdater {
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
-    public void setAlarmIfNotExists() {
-        if (!isAlarmSet()) {
-            setAlarm();
-        }
-    }
+    public void setAlarm() {
+        PendingIntent alarmIntent = getAlarmIntent(PendingIntent.FLAG_UPDATE_CURRENT);
+        long interval = Constants.DAY_UPDATE_INTERVAL;
+        long firstTriggerTime = getTriggerTime() + interval;
 
-    boolean isAlarmSet() {
-        return getAlarmIntent(PendingIntent.FLAG_NO_CREATE) != null;
+        alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                firstTriggerTime,
+                interval,
+                alarmIntent
+        );
     }
 
     private PendingIntent getAlarmIntent(int flags) {
         Intent intent = new Intent(context, AlarmReceiver.class);
 
         return PendingIntent.getBroadcast(context, REQUEST_CODE, intent, flags);
-    }
-
-    private void setAlarm() {
-        PendingIntent alarmIntent = getAlarmIntent(PendingIntent.FLAG_UPDATE_CURRENT);
-        long firstTriggerTime = getTriggerTime() + AlarmManager.INTERVAL_DAY;
-
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                firstTriggerTime,
-                AlarmManager.INTERVAL_DAY,
-                alarmIntent
-        );
     }
 
     long getTriggerTime() {

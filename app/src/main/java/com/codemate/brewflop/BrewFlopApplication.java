@@ -15,6 +15,6 @@ public class BrewFlopApplication extends Application {
 
     private void setDayCounterAlarm() {
         DayUpdater dayUpdater = new DayUpdater(this);
-        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarm();
     }
 }

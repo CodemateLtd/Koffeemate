@@ -40,21 +40,21 @@ public class DayUpdaterTest {
     public void shouldScheduleAlarmEveryMorningAtSix() {
         assertNull(shadowAlarmManager.getNextScheduledAlarm());
 
-        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarm();
 
         ShadowAlarmManager.ScheduledAlarm scheduledAlarm = shadowAlarmManager.getNextScheduledAlarm();
         assertNotNull(scheduledAlarm);
 
-        assertThat(scheduledAlarm.interval, is(AlarmManager.INTERVAL_DAY));
-        assertThat(scheduledAlarm.triggerAtTime, is(dayUpdater.getTriggerTime() + AlarmManager.INTERVAL_DAY));
+        assertThat(scheduledAlarm.interval, is(Constants.DAY_UPDATE_INTERVAL));
+        assertThat(scheduledAlarm.triggerAtTime, is(dayUpdater.getTriggerTime() + Constants.DAY_UPDATE_INTERVAL));
         assertThat(scheduledAlarm.type, is(AlarmManager.RTC_WAKEUP));
     }
 
     @Test
     public void shouldOnlyHaveOneAlarmAtTime() {
-        dayUpdater.setAlarmIfNotExists();
-        dayUpdater.setAlarmIfNotExists();
-        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarm();
+        dayUpdater.setAlarm();
+        dayUpdater.setAlarm();
 
         assertThat(shadowAlarmManager.getScheduledAlarms().size(), is(1));
     }
@@ -63,7 +63,7 @@ public class DayUpdaterTest {
     public void shouldCallAlarmReceiverWhenTimeIsUp() {
         Intent expectedIntent = new Intent(context, AlarmReceiver.class);
 
-        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarm();
 
         ShadowAlarmManager.ScheduledAlarm scheduledAlarm = shadowAlarmManager.getNextScheduledAlarm();
         ShadowPendingIntent shadowPendingIntent = shadowOf(scheduledAlarm.operation);

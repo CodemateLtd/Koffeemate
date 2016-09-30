@@ -20,6 +20,20 @@ android {
     dataBinding {
         enabled true
     }
+    productFlavors {
+        mock {
+
+        }
+        prod {
+
+        }
+    }
+    android.variantFilter { variant ->
+        if(variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('mock')) {
+            variant.setIgnore(true);
+        }
+    }
 }
 
 dependencies {

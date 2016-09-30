@@ -17,6 +17,6 @@ public class BootReceiver extends BroadcastReceiver {
             dayUpdater = new DayUpdater(context);
         }
 
-        dayUpdater.setAlarmIfNotExists();
+        dayUpdater.setAlarm();
     }
 }

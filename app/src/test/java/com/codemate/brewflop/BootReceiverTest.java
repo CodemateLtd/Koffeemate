@@ -33,6 +33,6 @@ public class BootReceiverTest {
     public void shouldSetRepeatingAlarmOnBoot() {
         bootReceiver.onReceive(context, new Intent(Intent.ACTION_BOOT_COMPLETED));
 
-        verify(dayUpdater).setAlarmIfNotExists();
+        verify(dayUpdater).setAlarm();
     }
 }
