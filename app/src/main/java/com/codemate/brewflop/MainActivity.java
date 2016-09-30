@@ -28,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
         broadcastManager = LocalBroadcastManager.getInstance(this);
         dayCounter = new DayCounter(this, broadcastManager);
 
+        binding.resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dayCounter.reset();
+            }
+        });
         hideStatusBar();
     }
 
