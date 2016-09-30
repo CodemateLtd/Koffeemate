@@ -41,7 +41,7 @@ public class DayCounter {
         return preferences.getInt(KEY_DAY_COUNT, 0);
     }
 
-    public void clear() {
+    public void reset() {
         preferences.edit().clear().apply();
 
         sendDayCountUpdatedEvent();

@@ -41,7 +41,7 @@ public class DayCounterTest {
 
     @After
     public void tearDown() {
-        dayCounter.clear();
+        dayCounter.reset();
     }
 
     @Test
@@ -62,7 +62,7 @@ public class DayCounterTest {
         dayCounter.increment();
         assertThat(dayCounter.getDayCount(), is(2));
 
-        dayCounter.clear();
+        dayCounter.reset();
         assertThat(dayCounter.getDayCount(), is(0));
 
         verify(broadcastManager, times(3)).sendBroadcast(intentCaptor.capture());
