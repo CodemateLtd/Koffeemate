@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateText() {
         int dayCount = dayCounter.getDayCount();
-        String formattedText = getString(R.string.days_fmt, dayCount);
+        String formattedText = getResources().getQuantityString(R.plurals.number_of_days, dayCount, dayCount);
 
         binding.daysSinceLastIncident.setText(formattedText);
     }
