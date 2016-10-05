@@ -1,4 +1,4 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.alarms;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.content.Intent;
  * Created by iiro on 22.9.2016.
  */
 public class BootReceiver extends BroadcastReceiver {
-    DayUpdater dayUpdater;
+    public DayUpdater dayUpdater;
 
     @Override
     public void onReceive(Context context, Intent intent) {

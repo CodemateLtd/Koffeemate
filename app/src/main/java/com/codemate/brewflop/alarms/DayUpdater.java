@@ -1,10 +1,11 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.alarms;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import com.codemate.brewflop.Constants;
 
 import java.util.Calendar;
 
@@ -42,7 +43,7 @@ public class DayUpdater {
         return PendingIntent.getBroadcast(context, REQUEST_CODE, intent, flags);
     }
 
-    long getTriggerTime() {
+    public long getTriggerTime() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 6);
