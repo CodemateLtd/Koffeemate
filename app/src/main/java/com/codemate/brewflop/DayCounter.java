@@ -17,6 +17,10 @@ public class DayCounter {
     private final Intent dayCountUpdatedEvent;
     private final LocalBroadcastManager broadcastManager;
 
+    public DayCounter(Context context) {
+        this(context, LocalBroadcastManager.getInstance(context));
+    }
+
     public DayCounter(Context context, LocalBroadcastManager manager) {
         this.preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         this.dayCountUpdatedEvent = new Intent(ACTION_DAY_COUNT_UPDATED);
@@ -26,6 +30,10 @@ public class DayCounter {
     public void increment() {
         int newDayCount = getDayCount() + 1;
 
+        setCount(newDayCount);
+    }
+
+    public void setCount(int newDayCount) {
         preferences.edit()
                 .putInt(KEY_DAY_COUNT, newDayCount)
                 .apply();
