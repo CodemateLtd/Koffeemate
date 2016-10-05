@@ -17,7 +17,7 @@ public class SlackMessageRequest {
 
         Attachment attachment = new Attachment.Builder()
                 .fallback(meme.getDescription())
-                .color("#FF0000")
+                .color("#6F4E37")
                 .imageUrl(meme.getMemeApiUrl())
                 .build();
 
