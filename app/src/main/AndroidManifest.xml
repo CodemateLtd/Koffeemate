@@ -3,6 +3,7 @@
     package="com.codemate.brewflop">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".BrewFlopApplication"
@@ -19,9 +20,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".secret.SecretSettings" />
+
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".secret.SecretCodeReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data android:scheme="android_secret_code" android:host="2739" />
             </intent-filter>
         </receiver>
 
