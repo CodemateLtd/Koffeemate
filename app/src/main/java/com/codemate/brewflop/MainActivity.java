@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.codemate.brewflop.databinding.ActivityMainBinding;
+import com.codemate.brewflop.network.SlackMemeUploader;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -26,12 +27,15 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
-        dayCounter = new DayCounter(this, broadcastManager);
+        dayCounter = new DayCounter(this);
 
         binding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int incidentFreeDays = dayCounter.getDayCount();
                 dayCounter.reset();
+
+                SlackMemeUploader.uploadRandomMeme(incidentFreeDays, "Hello World!");
             }
         });
         hideStatusBar();

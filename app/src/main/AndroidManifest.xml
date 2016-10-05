@@ -22,7 +22,7 @@
 
         <activity android:name=".secret.SecretSettings" />
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".alarms.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -35,7 +35,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".alarms.AlarmReceiver" />
     </application>
 
 </manifest>
