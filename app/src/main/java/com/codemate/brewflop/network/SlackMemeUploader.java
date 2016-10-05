@@ -11,6 +11,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import okhttp3.ResponseBody;
@@ -78,17 +80,13 @@ public class SlackMemeUploader {
     }
 
     private static Meme getChildAtIndex(int index, Iterable<DataSnapshot> iterable) {
-        int i = 0;
+        List<Meme> memeList = new ArrayList<>();
 
-        for (DataSnapshot meme : iterable) {
-            if (i == index) {
-                return meme.getValue(Meme.class);
-            }
-
-            i++;
+        for (DataSnapshot snapshot : iterable) {
+            memeList.add(snapshot.getValue(Meme.class));
         }
 
-        return new Meme();
+        return memeList.get(index);
     }
 
     private void postMemeToSlack(SlackMessageRequest messageRequest) {
