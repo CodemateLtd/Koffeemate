@@ -23,7 +23,7 @@ import retrofit2.Response;
  */
 public class SlackMemeUploader {
     private final Random random;
-    private final DatabaseReference databaseReference;
+    private final DatabaseReference memeReference;
     private final SlackService.SlackApi slackApi;
 
     private static SlackMemeUploader instance;
@@ -34,8 +34,8 @@ public class SlackMemeUploader {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.setPersistenceEnabled(true);
 
-        databaseReference = database.getReference();
-        databaseReference.keepSynced(true);
+        memeReference = database.getReference().child("memes");
+        memeReference.keepSynced(true);
 
         slackApi = new SlackService().getApi();
     }
@@ -59,7 +59,7 @@ public class SlackMemeUploader {
     }
 
     private void getRandomMeme(final RandomMemeCallback callback) {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        memeReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
