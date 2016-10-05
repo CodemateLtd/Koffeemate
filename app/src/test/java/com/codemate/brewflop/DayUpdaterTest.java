@@ -4,6 +4,9 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 
+import com.codemate.brewflop.alarms.AlarmReceiver;
+import com.codemate.brewflop.alarms.DayUpdater;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +19,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)

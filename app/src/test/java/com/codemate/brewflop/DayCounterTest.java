@@ -13,7 +13,6 @@ import org.robolectric.RuntimeEnvironment;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,7 +35,7 @@ public class DayCounterTest {
                 broadcastManager
         );
 
-        intentCaptor = ArgumentCaptor.forClass(Intent.class);
+        intentCaptor = new ArgumentCaptor<>();
     }
 
     @After

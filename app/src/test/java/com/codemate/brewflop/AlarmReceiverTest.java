@@ -3,13 +3,14 @@ package com.codemate.brewflop;
 import android.content.Context;
 import android.content.Intent;
 
+import com.codemate.brewflop.alarms.AlarmReceiver;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

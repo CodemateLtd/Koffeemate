@@ -3,6 +3,9 @@ package com.codemate.brewflop;
 import android.content.Context;
 import android.content.Intent;
 
+import com.codemate.brewflop.alarms.BootReceiver;
+import com.codemate.brewflop.alarms.DayUpdater;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
