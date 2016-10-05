@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "394903266123",
+    "firebase_url": "https://brewflop.firebaseio.com",
+    "project_id": "brewflop",
+    "storage_bucket": "brewflop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394903266123:android:e55f2917c96f0c3a",
+        "android_client_info": {
+          "package_name": "com.codemate.brewflop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394903266123-hnkbrtnglc50e2thnro8d5l045l0dflp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codemate.brewflop",
+            "certificate_hash": "B92B45696ED243620B2C826BE501DFF280EFB333"
+          }
+        },
+        {
+          "client_id": "394903266123-f5umfclfggelqpvbv601u3h2eli6bil0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codemate.brewflop",
+            "certificate_hash": "1D809C4A4E1C4279628D6970C8763CC3C2F2071D"
+          }
+        },
+        {
+          "client_id": "394903266123-cl13hu7bge8850m82jc434k83gasbn5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq5JEX1su9gQUU-yqM59OKEhD4yoz3qKQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394903266123-cl13hu7bge8850m82jc434k83gasbn5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
