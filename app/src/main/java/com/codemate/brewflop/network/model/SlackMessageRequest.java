@@ -12,7 +12,7 @@ public class SlackMessageRequest {
     List<Attachment> attachments = new ArrayList<>();
 
     public SlackMessageRequest(String who, int incidentFreeDays, Meme meme) {
-        this.text = String.format(Locale.ENGLISH, "_%s_ reseted the coffee incident counter." +
+        this.text = String.format(Locale.ENGLISH, "_%s_ didn't know how to make coffee." +
                 "\nTotal of *%d* incident free days were had.", who, incidentFreeDays);
 
         Attachment attachment = new Attachment.Builder()
