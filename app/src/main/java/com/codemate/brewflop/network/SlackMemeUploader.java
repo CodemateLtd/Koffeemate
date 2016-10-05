@@ -22,11 +22,13 @@ import retrofit2.Response;
  * Created by iiro on 5.10.2016.
  */
 public class SlackMemeUploader {
-    private static final Random random;
-    private static final DatabaseReference databaseReference;
-    private static final SlackService.SlackApi slackApi;
+    private final Random random;
+    private final DatabaseReference databaseReference;
+    private final SlackService.SlackApi slackApi;
 
-    static {
+    private static SlackMemeUploader instance;
+
+    private SlackMemeUploader() {
         random = new Random();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -38,7 +40,15 @@ public class SlackMemeUploader {
         slackApi = new SlackService().getApi();
     }
 
-    public static void uploadRandomMeme(final int incidentFreeDays, final String text) {
+    public static SlackMemeUploader getInstance() {
+        if (instance == null) {
+            instance = new SlackMemeUploader();
+        }
+
+        return instance;
+    }
+
+    public void uploadRandomMeme(final int incidentFreeDays, final String text) {
         getRandomMeme(new RandomMemeCallback() {
             @Override
             public void gotRandomMeme(Meme randomMeme) {
@@ -48,7 +58,7 @@ public class SlackMemeUploader {
         });
     }
 
-    private static void getRandomMeme(final RandomMemeCallback callback) {
+    private void getRandomMeme(final RandomMemeCallback callback) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,7 +91,7 @@ public class SlackMemeUploader {
         return new Meme();
     }
 
-    private static void postMemeToSlack(SlackMessageRequest messageRequest) {
+    private void postMemeToSlack(SlackMessageRequest messageRequest) {
         slackApi.sendMessage(messageRequest).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

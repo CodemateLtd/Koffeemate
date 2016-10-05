@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 int incidentFreeDays = dayCounter.getDayCount();
                 dayCounter.reset();
 
-                SlackMemeUploader.uploadRandomMeme(incidentFreeDays, "Hello World!");
+                SlackMemeUploader.getInstance().uploadRandomMeme(incidentFreeDays, "Hello World!");
             }
         });
         hideStatusBar();
