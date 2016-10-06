@@ -31,6 +31,8 @@
         <receiver android:name=".secret.SecretCodeReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SECRET_CODE" />
+
+                <!-- 2739 on the dialpad forms the word "brew" -->
                 <data android:scheme="android_secret_code" android:host="2739" />
             </intent-filter>
         </receiver>
