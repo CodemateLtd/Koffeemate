@@ -11,7 +11,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "SLACK_CHANNEL_PATH", SLACK_CHANNEL_PATH
         buildConfigField "String", "MEME_API_BASE_URL", MEME_API_BASE_URL
     }
     buildTypes {
@@ -25,8 +24,10 @@ android {
     }
     productFlavors {
         mock {
+            buildConfigField "String", "SLACK_CHANNEL_PATH", SLACK_PRIVATE_TEST_CHANNEL_PATH
         }
         prod {
+            buildConfigField "String", "SLACK_CHANNEL_PATH", SLACK_CHANNEL_PATH
         }
     }
     android.variantFilter { variant ->
