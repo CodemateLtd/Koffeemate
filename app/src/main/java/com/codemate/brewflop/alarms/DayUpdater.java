@@ -53,8 +53,4 @@ public class DayUpdater {
 
         return calendar.getTimeInMillis();
     }
-
-    public void cancelAlarm() {
-        alarmManager.cancel(getAlarmIntent(0));
-    }
 }
