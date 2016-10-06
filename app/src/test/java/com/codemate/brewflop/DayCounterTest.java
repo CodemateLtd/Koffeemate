@@ -44,7 +44,7 @@ public class DayCounterTest {
     }
 
     @Test
-    public void testIncrement() {
+    public void shouldPersistAndNotifyAboutCountWhenIncremented() {
         assertThat(dayCounter.getDayCount(), is(0));
 
         dayCounter.increment();
@@ -56,7 +56,7 @@ public class DayCounterTest {
     }
 
     @Test
-    public void testClear() {
+    public void shouldClearCountAndNotifyWhenCleared() {
         dayCounter.increment();
         dayCounter.increment();
         assertThat(dayCounter.getDayCount(), is(2));
