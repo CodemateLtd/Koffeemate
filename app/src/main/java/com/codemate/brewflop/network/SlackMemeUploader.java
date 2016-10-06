@@ -2,6 +2,7 @@ package com.codemate.brewflop.network;
 
 import android.util.Log;
 
+import com.codemate.brewflop.SlackMessageCallback;
 import com.codemate.brewflop.network.model.Meme;
 import com.codemate.brewflop.network.model.SlackMessageRequest;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +30,7 @@ public class SlackMemeUploader {
     private final SlackService.SlackApi slackApi;
 
     private static SlackMemeUploader instance;
+    private SlackMessageCallback callBack;
 
     private SlackMemeUploader() {
         random = new Random();
@@ -95,16 +97,23 @@ public class SlackMemeUploader {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Log.d("response", response.body().string());
+                    callBack.onMessagePostedToSlack();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    callBack.onMessageError();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
+                callBack.onMessageError();
             }
         });
+    }
+
+    public void setCallback(SlackMessageCallback callback) {
+        this.callBack = callback;
     }
 
     private interface RandomMemeCallback {

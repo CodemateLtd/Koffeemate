@@ -13,6 +13,8 @@
     <string name="inform_everyone">Inform everyone!</string>
     <string name="reset_the_counter">Reset the counter?</string>
     <string name="who_is_guilty">Who is guilty of this coffee incident?</string>
+    <string name="message_posted_successfully">New MoccaMaster certified person announced successfully on Slack!</string>
+    <string name="could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
 
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>
