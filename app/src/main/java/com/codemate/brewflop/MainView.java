@@ -5,5 +5,6 @@ package com.codemate.brewflop;
  */
 public interface MainView {
     void showGuiltyCoffeeNoobPrompt();
+    void confirmGuiltyCoffeeNoob(String name);
     void updateDayCountText();
 }

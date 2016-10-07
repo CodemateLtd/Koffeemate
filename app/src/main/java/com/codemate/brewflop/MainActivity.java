@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
         Toast.makeText(this, R.string.could_not_post_message, Toast.LENGTH_LONG).show();
     }
 
-    private void confirmGuiltyCoffeeNoob(final String name) {
+    @Override
+    public void confirmGuiltyCoffeeNoob(final String name) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.reset_the_counter)
                 .setMessage(getString(R.string.posting_to_slack_fmt, name))
