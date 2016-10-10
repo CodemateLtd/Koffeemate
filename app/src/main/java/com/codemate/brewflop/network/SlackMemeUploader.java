@@ -2,7 +2,6 @@ package com.codemate.brewflop.network;
 
 import android.util.Log;
 
-import com.codemate.brewflop.SlackMessageCallback;
 import com.codemate.brewflop.network.model.Meme;
 import com.codemate.brewflop.network.model.SlackMessageRequest;
 import com.google.firebase.database.DataSnapshot;

@@ -1,4 +1,4 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.network;
 
 /**
  * Created by iiro on 6.10.2016.

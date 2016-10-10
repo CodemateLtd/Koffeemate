@@ -1,5 +1,6 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.ui;
 
+import com.codemate.brewflop.DayCounter;
 import com.codemate.brewflop.network.SlackMemeUploader;
 
 /**

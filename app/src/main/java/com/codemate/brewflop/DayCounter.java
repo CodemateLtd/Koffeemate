@@ -11,7 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 public class DayCounter {
     private static final String PREFS_NAME = "day_counter_prefs";
     private static final String KEY_DAY_COUNT = "day_count";
-    static final String ACTION_DAY_COUNT_UPDATED = "com.codemate.brewflop.ACTION_DAY_COUNT_UPDATED";
+    public static final String ACTION_DAY_COUNT_UPDATED = "com.codemate.brewflop.ACTION_DAY_COUNT_UPDATED";
 
     private final SharedPreferences preferences;
     private final Intent dayCountUpdatedEvent;

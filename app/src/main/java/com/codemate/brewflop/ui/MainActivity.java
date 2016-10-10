@@ -1,4 +1,4 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.codemate.brewflop.DayCounter;
+import com.codemate.brewflop.R;
+import com.codemate.brewflop.network.SlackMessageCallback;
 import com.codemate.brewflop.databinding.ActivityMainBinding;
 import com.codemate.brewflop.network.SlackMemeUploader;
 
