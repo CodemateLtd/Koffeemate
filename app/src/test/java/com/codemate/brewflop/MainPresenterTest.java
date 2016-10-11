@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by iiro on 6.10.2016.
  */
-public class MainActivityTest {
+public class MainPresenterTest {
     @Mock
     private MainView mainView;
 
