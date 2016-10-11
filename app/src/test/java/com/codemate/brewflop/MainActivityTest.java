@@ -6,6 +6,9 @@ import android.os.Build;
 import android.speech.RecognizerIntent;
 
 import com.codemate.brewflop.network.SlackMemeUploader;
+import com.codemate.brewflop.ui.MainActivity;
+import com.codemate.brewflop.ui.MainPresenter;
+import com.codemate.brewflop.ui.MainView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,17 +51,9 @@ public class MainActivityTest {
 
         mainPresenter = new MainPresenter(mainView, dayCounter, slackMemeUploader);
     }
-
-    @Test
-    public void shouldShowPromptWhenAskingForGuiltyCoffeeNoob() {
-        mainPresenter.askForGuiltyCoffeeNoob();
-
-        verify(mainView).showGuiltyCoffeeNoobPrompt();
-    }
-
     @Test
     public void shouldShowConfirmDialogWithCorrectNameWhenAskedForGuiltyCoffeeNoob() {
-        mainActivity.showGuiltyCoffeeNoobPrompt();
+        mainActivity.askForGuiltyCoffeeNoob();
 
         shadowOf(mainActivity).receiveResult(
                 new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH),
