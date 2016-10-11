@@ -17,10 +17,6 @@ public class MainPresenter {
         this.memeUploader = memeUploader;
     }
 
-    public void askForGuiltyCoffeeNoob() {
-        mainView.showGuiltyCoffeeNoobPrompt();
-    }
-
     public void resetCounterAndInformAboutANoob(String name) {
         int incidentFreeDays = dayCounter.getDayCount();
         dayCounter.reset();
