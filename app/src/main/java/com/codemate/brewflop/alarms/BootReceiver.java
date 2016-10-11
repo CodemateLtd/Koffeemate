@@ -8,15 +8,15 @@ import android.content.Intent;
  * Created by iiro on 22.9.2016.
  */
 public class BootReceiver extends BroadcastReceiver {
-    public DayUpdater dayUpdater;
+    public DayUpdateScheduler dayUpdateScheduler;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // For testing
-        if (dayUpdater == null) {
-            dayUpdater = new DayUpdater(context);
+        if (dayUpdateScheduler == null) {
+            dayUpdateScheduler = new DayUpdateScheduler(context);
         }
 
-        dayUpdater.setAlarm();
+        dayUpdateScheduler.setAlarm();
     }
 }

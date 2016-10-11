@@ -8,7 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 /**
  * Created by iiro on 22.9.2016.
  */
-public class DayCounter {
+public class DayCountUpdater {
     private static final String PREFS_NAME = "day_counter_prefs";
     private static final String KEY_DAY_COUNT = "day_count";
     public static final String ACTION_DAY_COUNT_UPDATED = "com.codemate.brewflop.ACTION_DAY_COUNT_UPDATED";
@@ -17,11 +17,11 @@ public class DayCounter {
     private final Intent dayCountUpdatedEvent;
     private final LocalBroadcastManager broadcastManager;
 
-    public DayCounter(Context context) {
+    public DayCountUpdater(Context context) {
         this(context, LocalBroadcastManager.getInstance(context));
     }
 
-    public DayCounter(Context context, LocalBroadcastManager manager) {
+    public DayCountUpdater(Context context, LocalBroadcastManager manager) {
         this.preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         this.dayCountUpdatedEvent = new Intent(ACTION_DAY_COUNT_UPDATED);
         this.broadcastManager = manager;

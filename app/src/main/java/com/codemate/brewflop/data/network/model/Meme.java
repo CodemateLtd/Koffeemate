@@ -1,4 +1,4 @@
-package com.codemate.brewflop.network.model;
+package com.codemate.brewflop.data.network.model;
 
 import com.codemate.brewflop.BuildConfig;
 

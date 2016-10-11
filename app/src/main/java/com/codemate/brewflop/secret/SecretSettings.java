@@ -3,10 +3,9 @@ package com.codemate.brewflop.secret;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.codemate.brewflop.DayCounter;
+import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.R;
 
 /**
@@ -20,14 +19,14 @@ public class SecretSettings extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.secret_preferences);
 
-        final DayCounter dayCounter = new DayCounter(this);
+        final DayCountUpdater dayCountUpdater = new DayCountUpdater(this);
 
         Preference dayCount = findPreference(getString(R.string.pref_key_incident_free_day_count));
         dayCount.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String newValueStr = newValue.toString();
-                dayCounter.setCount(Integer.parseInt(newValueStr));
+                dayCountUpdater.setCount(Integer.parseInt(newValueStr));
 
                 Toast.makeText(SecretSettings.this, getString(R.string.day_count_updated_fmt, newValueStr), Toast.LENGTH_LONG).show();
                 return false;

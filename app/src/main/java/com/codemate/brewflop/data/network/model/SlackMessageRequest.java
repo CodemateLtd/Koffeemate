@@ -1,4 +1,4 @@
-package com.codemate.brewflop.network.model;
+package com.codemate.brewflop.data.network.model;
 
 import java.util.ArrayList;
 import java.util.List;

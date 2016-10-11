@@ -26,18 +26,18 @@ import static org.mockito.Mockito.when;
 public class AlarmReceiverTest {
     private Context context;
     private AlarmReceiver alarmReceiver;
-    private DayCounter dayCounter;
+    private DayCountUpdater dayCountUpdater;
     private Calendar calendar;
 
     @Before
     public void setUp() {
         context = RuntimeEnvironment.application.getApplicationContext();
 
-        dayCounter = mock(DayCounter.class);
+        dayCountUpdater = mock(DayCountUpdater.class);
         calendar = mock(Calendar.class);
 
         alarmReceiver = new AlarmReceiver();
-        alarmReceiver.dayCounter = dayCounter;
+        alarmReceiver.dayCountUpdater = dayCountUpdater;
         alarmReceiver.calendar = calendar;
     }
 
@@ -48,7 +48,7 @@ public class AlarmReceiverTest {
             alarmReceiver.onReceive(context, new Intent());
         }
 
-        verify(dayCounter, times(5)).increment();
+        verify(dayCountUpdater, times(5)).increment();
     }
 
     @Test
@@ -59,6 +59,6 @@ public class AlarmReceiverTest {
         when(calendar.get(Calendar.DAY_OF_WEEK)).thenReturn(Calendar.SUNDAY);
         alarmReceiver.onReceive(context, new Intent());
 
-        verifyZeroInteractions(dayCounter);
+        verifyZeroInteractions(dayCountUpdater);
     }
 }

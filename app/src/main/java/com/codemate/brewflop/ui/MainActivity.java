@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.codemate.brewflop.DayCounter;
+import com.codemate.brewflop.DayCountUpdater;
+import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
 import com.codemate.brewflop.R;
-import com.codemate.brewflop.network.SlackMessageCallback;
+import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.databinding.ActivityMainBinding;
-import com.codemate.brewflop.network.SlackMemeUploader;
+import com.codemate.brewflop.data.network.SlackMemeUploader;
+import com.codemate.brewflop.data.network.SlackService;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
 
     private ActivityMainBinding binding;
     private LocalBroadcastManager broadcastManager;
-    private DayCounter dayCounter;
+    private DayCountUpdater dayCountUpdater;
     private MainPresenter presenter;
 
     private IntentFilter dayCountUpdatedFilter;
@@ -42,12 +44,15 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
-        dayCounter = new DayCounter(this);
+        dayCountUpdater = new DayCountUpdater(this);
 
-        SlackMemeUploader memeUploader = SlackMemeUploader.getInstance();
+        SlackMemeUploader memeUploader = SlackMemeUploader.getInstance(
+                new FirebaseMemeRepository(),
+                new SlackService().getApi()
+        );
         memeUploader.setCallback(this);
 
-        presenter = new MainPresenter(this, dayCounter, memeUploader);
+        presenter = new MainPresenter(this, dayCountUpdater, memeUploader);
 
         binding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
 
     @Override
     public void updateDayCountText() {
-        int dayCount = dayCounter.getDayCount();
+        int dayCount = dayCountUpdater.getDayCount();
         String formattedText = getResources().getQuantityString(R.plurals.number_of_days, dayCount, dayCount);
 
         binding.daysSinceLastIncident.setText(formattedText);
@@ -146,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
 
     private void registerDayUpdateReceiver() {
         if (dayCountUpdatedFilter == null || dayCountUpdatedReceiver == null) {
-            dayCountUpdatedFilter = new IntentFilter(DayCounter.ACTION_DAY_COUNT_UPDATED);
+            dayCountUpdatedFilter = new IntentFilter(DayCountUpdater.ACTION_DAY_COUNT_UPDATED);
             dayCountUpdatedReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {

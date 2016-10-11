@@ -1,25 +1,25 @@
 package com.codemate.brewflop.ui;
 
-import com.codemate.brewflop.DayCounter;
-import com.codemate.brewflop.network.SlackMemeUploader;
+import com.codemate.brewflop.DayCountUpdater;
+import com.codemate.brewflop.data.network.SlackMemeUploader;
 
 /**
  * Created by iiro on 6.10.2016.
  */
 public class MainPresenter {
     private final MainView mainView;
-    private final DayCounter dayCounter;
+    private final DayCountUpdater dayCountUpdater;
     private final SlackMemeUploader memeUploader;
 
-    public MainPresenter(MainView mainView, DayCounter dayCounter, SlackMemeUploader memeUploader) {
+    public MainPresenter(MainView mainView, DayCountUpdater dayCountUpdater, SlackMemeUploader memeUploader) {
         this.mainView = mainView;
-        this.dayCounter = dayCounter;
+        this.dayCountUpdater = dayCountUpdater;
         this.memeUploader = memeUploader;
     }
 
     public void resetCounterAndInformAboutANoob(String name) {
-        int incidentFreeDays = dayCounter.getDayCount();
-        dayCounter.reset();
+        int incidentFreeDays = dayCountUpdater.getDayCount();
+        dayCountUpdater.reset();
 
         memeUploader.uploadRandomMeme(incidentFreeDays, name);
     }

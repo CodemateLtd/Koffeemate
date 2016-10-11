@@ -1,7 +1,7 @@
-package com.codemate.brewflop.network;
+package com.codemate.brewflop.data.network;
 
 import com.codemate.brewflop.BuildConfig;
-import com.codemate.brewflop.network.model.SlackMessageRequest;
+import com.codemate.brewflop.data.network.model.SlackMessageRequest;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

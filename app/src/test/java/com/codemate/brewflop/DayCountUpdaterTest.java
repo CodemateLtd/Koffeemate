@@ -21,16 +21,16 @@ import static org.mockito.Mockito.verify;
  * Created by iiro on 22.9.2016.
  */
 @RunWith(RobolectricTestRunner.class)
-public class DayCounterTest {
+public class DayCountUpdaterTest {
     private LocalBroadcastManager broadcastManager;
-    private DayCounter dayCounter;
+    private DayCountUpdater dayCountUpdater;
 
     private ArgumentCaptor<Intent> intentCaptor;
 
     @Before
     public void setUp() {
         broadcastManager = mock(LocalBroadcastManager.class);
-        dayCounter = new DayCounter(
+        dayCountUpdater = new DayCountUpdater(
                 RuntimeEnvironment.application.getApplicationContext(),
                 broadcastManager
         );
@@ -40,31 +40,31 @@ public class DayCounterTest {
 
     @After
     public void tearDown() {
-        dayCounter.reset();
+        dayCountUpdater.reset();
     }
 
     @Test
     public void shouldPersistAndNotifyAboutCountWhenIncremented() {
-        assertThat(dayCounter.getDayCount(), is(0));
+        assertThat(dayCountUpdater.getDayCount(), is(0));
 
-        dayCounter.increment();
-        dayCounter.increment();
-        assertThat(dayCounter.getDayCount(), is(2));
+        dayCountUpdater.increment();
+        dayCountUpdater.increment();
+        assertThat(dayCountUpdater.getDayCount(), is(2));
 
         verify(broadcastManager, times(2)).sendBroadcast(intentCaptor.capture());
-        assertThat(intentCaptor.getValue().getAction(), is(DayCounter.ACTION_DAY_COUNT_UPDATED));
+        assertThat(intentCaptor.getValue().getAction(), is(DayCountUpdater.ACTION_DAY_COUNT_UPDATED));
     }
 
     @Test
     public void shouldClearCountAndNotifyWhenCleared() {
-        dayCounter.increment();
-        dayCounter.increment();
-        assertThat(dayCounter.getDayCount(), is(2));
+        dayCountUpdater.increment();
+        dayCountUpdater.increment();
+        assertThat(dayCountUpdater.getDayCount(), is(2));
 
-        dayCounter.reset();
-        assertThat(dayCounter.getDayCount(), is(0));
+        dayCountUpdater.reset();
+        assertThat(dayCountUpdater.getDayCount(), is(0));
 
         verify(broadcastManager, times(3)).sendBroadcast(intentCaptor.capture());
-        assertThat(intentCaptor.getValue().getAction(), is(DayCounter.ACTION_DAY_COUNT_UPDATED));
+        assertThat(intentCaptor.getValue().getAction(), is(DayCountUpdater.ACTION_DAY_COUNT_UPDATED));
     }
 }

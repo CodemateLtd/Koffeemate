@@ -1,4 +1,4 @@
-package com.codemate.brewflop.network.model;
+package com.codemate.brewflop.data.network.model;
 
 /**
  * Created by iiro on 4.10.2016.

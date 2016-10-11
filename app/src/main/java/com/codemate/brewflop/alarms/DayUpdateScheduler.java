@@ -13,13 +13,13 @@ import java.util.Calendar;
  * Created by ironman on 22/09/16.
  */
 
-public class DayUpdater {
+public class DayUpdateScheduler {
     private static final int REQUEST_CODE = 1;
 
     private final Context context;
     private final AlarmManager alarmManager;
 
-    public DayUpdater(Context context) {
+    public DayUpdateScheduler(Context context) {
         this.context = context;
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }

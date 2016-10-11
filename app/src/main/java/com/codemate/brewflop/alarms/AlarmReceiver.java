@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.codemate.brewflop.DayCounter;
+import com.codemate.brewflop.DayCountUpdater;
 
 import java.util.Calendar;
 
@@ -12,7 +12,7 @@ import java.util.Calendar;
  * Created by ironman on 22/09/16.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    public DayCounter dayCounter;
+    public DayCountUpdater dayCountUpdater;
     public Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -23,10 +23,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        if (dayCounter == null) {
-            dayCounter = new DayCounter(context);
+        if (dayCountUpdater == null) {
+            dayCountUpdater = new DayCountUpdater(context);
         }
 
-        dayCounter.increment();
+        dayCountUpdater.increment();
     }
 }
