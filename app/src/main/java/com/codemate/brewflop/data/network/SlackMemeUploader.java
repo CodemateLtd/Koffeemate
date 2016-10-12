@@ -19,17 +19,17 @@ import retrofit2.Response;
  */
 public class SlackMemeUploader {
     private final MemeRepository memeRepository;
-    private final SlackService.SlackApi slackApi;
+    private final SlackApi slackApi;
 
     private static SlackMemeUploader instance;
     private SlackMessageCallback callBack;
 
-    private SlackMemeUploader(MemeRepository memeRepository, SlackService.SlackApi slackApi) {
+    private SlackMemeUploader(MemeRepository memeRepository, SlackApi slackApi) {
         this.memeRepository = memeRepository;
         this.slackApi = slackApi;
     }
 
-    public static SlackMemeUploader getInstance(MemeRepository memeRepository, SlackService.SlackApi slackApi) {
+    public static SlackMemeUploader getInstance(MemeRepository memeRepository, SlackApi slackApi) {
         if (instance == null) {
             instance = new SlackMemeUploader(memeRepository, slackApi);
         }
