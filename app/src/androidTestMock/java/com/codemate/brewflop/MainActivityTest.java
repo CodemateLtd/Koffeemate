@@ -38,17 +38,20 @@ public class MainActivityTest {
 
     @Test
     public void shouldConfirmPostingToSlackWithCorrectGuiltyPersonName() {
+        String guiltyPersonName = "Jorma";
         String expectedDialogMessage = mainActivityTestRule.getActivity()
-                .getString(R.string.posting_to_slack_fmt, "Jorma");
-        intending(hasAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)).respondWith(createResultStub());
+                .getString(R.string.posting_to_slack_fmt, guiltyPersonName);
+
+        intending(hasAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH))
+                .respondWith(createRecognizerResultWithName(guiltyPersonName));
 
         onView(withId(R.id.resetButton)).perform(click());
         onView(withText(expectedDialogMessage)).check(matches(isDisplayed()));
     }
 
-    private Instrumentation.ActivityResult createResultStub() {
+    private Instrumentation.ActivityResult createRecognizerResultWithName(String name) {
         ArrayList<String> results = new ArrayList<>();
-        results.add("Jorma");
+        results.add(name);
 
         Intent resultData = new Intent();
         resultData.putExtra(RecognizerIntent.EXTRA_RESULTS, results);
