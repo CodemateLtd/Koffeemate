@@ -40,6 +40,6 @@ public class MainPresenterTest {
         mainPresenter.resetCounterAndInformAboutANoob("Test noob");
 
         verify(dayCountUpdater).reset();
-        verify(slackMemeUploader).uploadRandomMeme(1337, "Test noob");
+        verify(slackMemeUploader).uploadRandomMeme("Test noob");
     }
 }

@@ -17,10 +17,9 @@ public class MainPresenter {
         this.memeUploader = memeUploader;
     }
 
-    public void resetCounterAndInformAboutANoob(String name) {
-        int incidentFreeDays = dayCountUpdater.getDayCount();
+    public void resetCounterAndInformAboutANoob(String message) {
         dayCountUpdater.reset();
 
-        memeUploader.uploadRandomMeme(incidentFreeDays, name);
+        memeUploader.uploadRandomMeme(message);
     }
 }
