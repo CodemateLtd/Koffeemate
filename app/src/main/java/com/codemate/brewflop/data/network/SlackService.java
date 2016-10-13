@@ -9,9 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SlackService {
     private SlackApi slackApi;
 
-    public SlackService() {
+    public SlackService(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://hooks.slack.com/services/")
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -15,19 +15,27 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.codemate.brewflop.BrewFlopApplication;
 import com.codemate.brewflop.DayCountUpdater;
+import com.codemate.brewflop.data.network.SlackApi;
 import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
 import com.codemate.brewflop.R;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.databinding.ActivityMainBinding;
 import com.codemate.brewflop.data.network.SlackMemeUploader;
 import com.codemate.brewflop.data.network.SlackService;
+import com.codemate.brewflop.injection.DaggerNetComponent;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity implements MainView, SlackMessageCallback {
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
+
+    @Inject
+    SlackApi slackApi;
 
     private ActivityMainBinding binding;
     private LocalBroadcastManager broadcastManager;
@@ -41,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        BrewFlopApplication.netComponent().inject(this);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
@@ -48,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
 
         SlackMemeUploader memeUploader = SlackMemeUploader.getInstance(
                 new FirebaseMemeRepository(),
-                new SlackService().getApi()
+                slackApi
         );
         memeUploader.setCallback(this);
 
