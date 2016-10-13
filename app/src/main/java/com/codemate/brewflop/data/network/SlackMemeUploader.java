@@ -2,6 +2,7 @@ package com.codemate.brewflop.data.network;
 
 import android.util.Log;
 
+import com.codemate.brewflop.data.network.model.Attachment;
 import com.codemate.brewflop.data.repository.MemeRepository;
 import com.codemate.brewflop.data.repository.RandomMemeCallback;
 import com.codemate.brewflop.data.network.model.Meme;
@@ -37,11 +38,17 @@ public class SlackMemeUploader {
         return instance;
     }
 
-    public void uploadRandomMeme(final int incidentFreeDays, final String text) {
+    public void uploadRandomMeme(final String text) {
         memeRepository.getRandomMeme(new RandomMemeCallback() {
             @Override
             public void gotRandomMeme(Meme randomMeme) {
-                SlackMessageRequest messageRequest = new SlackMessageRequest(text, incidentFreeDays, randomMeme);
+                Attachment attachment = new Attachment.Builder()
+                        .fallback(randomMeme.getDescription())
+                        .color("#6F4E37")
+                        .imageUrl(randomMeme.getMemeApiUrl())
+                        .build();
+
+                SlackMessageRequest messageRequest = new SlackMessageRequest(text, attachment);
                 postMemeToSlack(messageRequest);
             }
         });

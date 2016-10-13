@@ -15,6 +15,7 @@
     <string name="who_is_guilty">Who is guilty of this coffee incident?</string>
     <string name="message_posted_successfully">New MoccaMaster certified person announced successfully on Slack!</string>
     <string name="could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
+    <string name="slack_announcement_fmt">_%1$s_ didn\'t know how to make coffee.\nTotal of *%2$d* incident free days were had.</string>
 
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>

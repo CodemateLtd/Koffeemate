@@ -134,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
                 .setPositiveButton(R.string.inform_everyone, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.resetCounterAndInformAboutANoob(name);
+                        String message = getString(R.string.slack_announcement_fmt, name, dayCountUpdater.getDayCount());
+                        presenter.resetCounterAndInformAboutANoob(message);
                     }
                 }).show();
     }
