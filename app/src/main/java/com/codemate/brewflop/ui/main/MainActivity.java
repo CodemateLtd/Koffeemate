@@ -22,6 +22,7 @@ import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         memeUploader = new SlackMemeUploader(
-                new FirebaseMemeRepository(),
+                new FirebaseMemeRepository(FirebaseDatabase.getInstance()),
                 new SlackService(BuildConfig.MEME_API_BASE_URL).getApi()
         );
 

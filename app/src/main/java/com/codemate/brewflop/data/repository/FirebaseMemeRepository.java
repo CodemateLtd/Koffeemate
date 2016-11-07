@@ -20,10 +20,7 @@ public class FirebaseMemeRepository implements MemeRepository {
     private final DatabaseReference memeReference;
     private final Random random;
 
-    public FirebaseMemeRepository() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //database.setPersistenceEnabled(true);
-
+    public FirebaseMemeRepository(FirebaseDatabase database) {
         memeReference = database.getReference().child("memes");
         memeReference.keepSynced(true);
 
@@ -38,7 +35,7 @@ public class FirebaseMemeRepository implements MemeRepository {
                 if (dataSnapshot.hasChildren()) {
                     int randomIndex = random.nextInt((int) dataSnapshot.getChildrenCount());
 
-                    Meme randomMeme = getChildAtIndex(randomIndex, dataSnapshot.getChildren());
+                    Meme randomMeme = getMemeAtPostion(randomIndex, dataSnapshot.getChildren());
                     callback.gotRandomMeme(randomMeme);
                 }
             }
@@ -50,7 +47,7 @@ public class FirebaseMemeRepository implements MemeRepository {
         });
     }
 
-    private static Meme getChildAtIndex(int index, Iterable<DataSnapshot> iterable) {
+    Meme getMemeAtPostion(int index, Iterable<DataSnapshot> iterable) {
         List<Meme> memeList = new ArrayList<>();
 
         for (DataSnapshot snapshot : iterable) {

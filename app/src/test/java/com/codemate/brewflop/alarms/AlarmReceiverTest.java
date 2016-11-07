@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.codemate.brewflop.DayCountUpdater;
-import com.codemate.brewflop.alarms.AlarmReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import java.util.Calendar;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -40,6 +40,14 @@ public class AlarmReceiverTest {
         alarmReceiver = new AlarmReceiver();
         alarmReceiver.dayCountUpdater = dayCountUpdater;
         alarmReceiver.calendar = calendar;
+    }
+
+    @Test
+    public void shouldUseRealDayCountUpdaterIfFieldNotInjected() {
+        alarmReceiver.dayCountUpdater = null;
+        alarmReceiver.onReceive(context, new Intent());
+
+        assertNotNull(alarmReceiver.dayCountUpdater);
     }
 
     @Test

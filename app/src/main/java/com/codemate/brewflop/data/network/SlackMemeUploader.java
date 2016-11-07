@@ -19,8 +19,6 @@ import retrofit2.Response;
  * Created by iiro on 5.10.2016.
  */
 public class SlackMemeUploader {
-    private static SlackMemeUploader instance;
-
     private final MemeRepository memeRepository;
     private final SlackApi slackApi;
 
