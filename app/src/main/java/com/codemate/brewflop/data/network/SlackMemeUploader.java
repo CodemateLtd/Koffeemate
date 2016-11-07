@@ -24,17 +24,9 @@ public class SlackMemeUploader {
     private final MemeRepository memeRepository;
     private final SlackApi slackApi;
 
-    private SlackMemeUploader(MemeRepository memeRepository, SlackApi slackApi) {
+    public SlackMemeUploader(MemeRepository memeRepository, SlackApi slackApi) {
         this.memeRepository = memeRepository;
         this.slackApi = slackApi;
-    }
-
-    public static SlackMemeUploader getInstance(MemeRepository memeRepository, SlackApi slackApi) {
-        if (instance == null) {
-            instance = new SlackMemeUploader(memeRepository, slackApi);
-        }
-
-        return instance;
     }
 
     public void uploadRandomMeme(final String text, final SlackMessageCallback callback) {

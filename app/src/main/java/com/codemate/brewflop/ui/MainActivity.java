@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         broadcastManager = LocalBroadcastManager.getInstance(this);
         dayCountUpdater = new DayCountUpdater(this);
 
-        memeUploader = SlackMemeUploader.getInstance(
+        memeUploader = new SlackMemeUploader(
                 new FirebaseMemeRepository(),
                 new SlackService(BuildConfig.MEME_API_BASE_URL).getApi()
         );
