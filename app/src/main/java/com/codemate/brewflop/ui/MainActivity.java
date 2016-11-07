@@ -17,21 +17,19 @@ import android.widget.Toast;
 
 import com.codemate.brewflop.BrewFlopApplication;
 import com.codemate.brewflop.DayCountUpdater;
-import com.codemate.brewflop.data.network.SlackApi;
-import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
 import com.codemate.brewflop.R;
-import com.codemate.brewflop.data.network.SlackMessageCallback;
-import com.codemate.brewflop.databinding.ActivityMainBinding;
+import com.codemate.brewflop.data.network.SlackApi;
 import com.codemate.brewflop.data.network.SlackMemeUploader;
-import com.codemate.brewflop.data.network.SlackService;
-import com.codemate.brewflop.injection.DaggerNetComponent;
+import com.codemate.brewflop.data.network.SlackMessageCallback;
+import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
+import com.codemate.brewflop.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView, SlackMessageCallback {
+public class MainActivity extends AppCompatActivity implements SlackMessageCallback {
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
     @Inject
@@ -40,10 +38,10 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
     private ActivityMainBinding binding;
     private LocalBroadcastManager broadcastManager;
     private DayCountUpdater dayCountUpdater;
-    private MainPresenter presenter;
 
     private IntentFilter dayCountUpdatedFilter;
     private BroadcastReceiver dayCountUpdatedReceiver;
+    private SlackMemeUploader memeUploader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +54,11 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
         broadcastManager = LocalBroadcastManager.getInstance(this);
         dayCountUpdater = new DayCountUpdater(this);
 
-        SlackMemeUploader memeUploader = SlackMemeUploader.getInstance(
+        memeUploader = SlackMemeUploader.getInstance(
                 new FirebaseMemeRepository(),
                 slackApi
         );
         memeUploader.setCallback(this);
-
-        presenter = new MainPresenter(this, dayCountUpdater, memeUploader);
-
         binding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
         }
     }
 
-    @Override
     public void updateDayCountText() {
         int dayCount = dayCountUpdater.getDayCount();
         String formattedText = getResources().getQuantityString(R.plurals.number_of_days, dayCount, dayCount);
@@ -119,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
         Toast.makeText(this, R.string.could_not_post_message, Toast.LENGTH_LONG).show();
     }
 
-    @Override
     public void confirmGuiltyCoffeeNoob(final String name) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.reset_the_counter)
@@ -135,7 +128,9 @@ public class MainActivity extends AppCompatActivity implements MainView, SlackMe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String message = getString(R.string.slack_announcement_fmt, name, dayCountUpdater.getDayCount());
-                        presenter.resetCounterAndInformAboutANoob(message);
+
+                        dayCountUpdater.reset();
+                        memeUploader.uploadRandomMeme(message);
                     }
                 }).show();
     }
