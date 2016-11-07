@@ -1,10 +1,7 @@
 package com.codemate.brewflop.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,11 +26,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
-    private LocalBroadcastManager broadcastManager;
     private DayCountUpdater dayCountUpdater;
-
-    private IntentFilter dayCountUpdatedFilter;
-    private BroadcastReceiver dayCountUpdatedReceiver;
+    private DayUpdateListener dayUpdateListener;
     private SlackMemeUploader memeUploader;
 
     @Override
@@ -43,8 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        broadcastManager = LocalBroadcastManager.getInstance(this);
         dayCountUpdater = new DayCountUpdater(this);
+        dayUpdateListener = new DayUpdateListener(
+                LocalBroadcastManager.getInstance(this),
+                new DayUpdateListener.OnDayChangedListener() {
+                    @Override
+                    public void onDayChanged() {
+                        updateDayCountText();
+                    }
+                }
+        );
 
         memeUploader = new SlackMemeUploader(
                 new FirebaseMemeRepository(),
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        registerDayUpdateReceiver();
+        dayUpdateListener.listenForDayChanges();
         updateDayCountText();
     }
 
@@ -140,29 +142,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        unregisterDayUpdateReceiver();
+        dayUpdateListener.stopListeningForDayChanges();
     }
 
     private void hideStatusBar() {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         getWindow().getDecorView().setSystemUiVisibility(uiOptions);
-    }
-
-    private void registerDayUpdateReceiver() {
-        if (dayCountUpdatedFilter == null || dayCountUpdatedReceiver == null) {
-            dayCountUpdatedFilter = new IntentFilter(DayCountUpdater.ACTION_DAY_COUNT_UPDATED);
-            dayCountUpdatedReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    updateDayCountText();
-                }
-            };
-        }
-
-        broadcastManager.registerReceiver(dayCountUpdatedReceiver, dayCountUpdatedFilter);
-    }
-
-    private void unregisterDayUpdateReceiver() {
-        broadcastManager.unregisterReceiver(dayCountUpdatedReceiver);
     }
 }
