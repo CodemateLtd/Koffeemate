@@ -27,7 +27,7 @@ import com.codemate.brewflop.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements SlackMessageCallback {
+public class MainActivity extends AppCompatActivity {
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
     private ActivityMainBinding binding;
@@ -52,13 +52,14 @@ public class MainActivity extends AppCompatActivity implements SlackMessageCallb
                 new FirebaseMemeRepository(),
                 new SlackService(BuildConfig.MEME_API_BASE_URL).getApi()
         );
-        memeUploader.setCallback(this);
+
         binding.resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 askForGuiltyCoffeeNoob();
             }
         });
+
         hideStatusBar();
     }
 
@@ -97,16 +98,6 @@ public class MainActivity extends AppCompatActivity implements SlackMessageCallb
         binding.daysSinceLastIncident.setText(formattedText);
     }
 
-    @Override
-    public void onMessagePostedToSlack() {
-        Toast.makeText(this, R.string.message_posted_successfully, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onMessageError() {
-        Toast.makeText(this, R.string.could_not_post_message, Toast.LENGTH_LONG).show();
-    }
-
     public void confirmGuiltyCoffeeNoob(final String name) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.reset_the_counter)
@@ -124,7 +115,17 @@ public class MainActivity extends AppCompatActivity implements SlackMessageCallb
                         String message = getString(R.string.slack_announcement_fmt, name, dayCountUpdater.getDayCount());
 
                         dayCountUpdater.reset();
-                        memeUploader.uploadRandomMeme(message);
+                        memeUploader.uploadRandomMeme(message, new SlackMessageCallback() {
+                            @Override
+                            public void onMessagePostedToSlack() {
+                                Toast.makeText(MainActivity.this, R.string.message_posted_successfully, Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onMessageError() {
+                                Toast.makeText(MainActivity.this, R.string.could_not_post_message, Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 }).show();
     }

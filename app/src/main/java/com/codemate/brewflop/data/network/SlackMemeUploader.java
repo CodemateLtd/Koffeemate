@@ -19,11 +19,10 @@ import retrofit2.Response;
  * Created by iiro on 5.10.2016.
  */
 public class SlackMemeUploader {
+    private static SlackMemeUploader instance;
+
     private final MemeRepository memeRepository;
     private final SlackApi slackApi;
-
-    private static SlackMemeUploader instance;
-    private SlackMessageCallback callBack;
 
     private SlackMemeUploader(MemeRepository memeRepository, SlackApi slackApi) {
         this.memeRepository = memeRepository;
@@ -38,7 +37,7 @@ public class SlackMemeUploader {
         return instance;
     }
 
-    public void uploadRandomMeme(final String text) {
+    public void uploadRandomMeme(final String text, final SlackMessageCallback callback) {
         memeRepository.getRandomMeme(new RandomMemeCallback() {
             @Override
             public void gotRandomMeme(Meme randomMeme) {
@@ -49,33 +48,29 @@ public class SlackMemeUploader {
                         .build();
 
                 SlackMessageRequest messageRequest = new SlackMessageRequest(text, attachment);
-                postMemeToSlack(messageRequest);
+                postMemeToSlack(messageRequest, callback);
             }
         });
     }
 
-    private void postMemeToSlack(SlackMessageRequest messageRequest) {
+    private void postMemeToSlack(SlackMessageRequest messageRequest, final SlackMessageCallback callback) {
         slackApi.sendMessage(messageRequest).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Log.d("response", response.body().string());
-                    callBack.onMessagePostedToSlack();
+                    callback.onMessagePostedToSlack();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    callBack.onMessageError();
+                    callback.onMessageError();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-                callBack.onMessageError();
+                callback.onMessageError();
             }
         });
-    }
-
-    public void setCallback(SlackMessageCallback callback) {
-        this.callBack = callback;
     }
 }
