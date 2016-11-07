@@ -10,7 +10,7 @@ import android.content.Intent;
 public class SecretCodeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent secretPrefs = new Intent(context, SecretSettings.class);
+        Intent secretPrefs = new Intent(context, SecretSettingsActivity.class);
         secretPrefs.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(secretPrefs);
     }

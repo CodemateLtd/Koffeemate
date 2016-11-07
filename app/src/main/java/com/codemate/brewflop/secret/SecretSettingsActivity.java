@@ -11,7 +11,7 @@ import com.codemate.brewflop.R;
 /**
  * Created by iiro on 4.10.2016.
  */
-public class SecretSettings extends PreferenceActivity {
+public class SecretSettingsActivity extends PreferenceActivity {
 
     @SuppressWarnings("deprecation")
     @Override
@@ -28,7 +28,7 @@ public class SecretSettings extends PreferenceActivity {
                 String newValueStr = newValue.toString();
                 dayCountUpdater.setCount(Integer.parseInt(newValueStr));
 
-                Toast.makeText(SecretSettings.this, getString(R.string.day_count_updated_fmt, newValueStr), Toast.LENGTH_LONG).show();
+                Toast.makeText(SecretSettingsActivity.this, getString(R.string.day_count_updated_fmt, newValueStr), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
