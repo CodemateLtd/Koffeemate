@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codemate.brewflop.BuildConfig;
@@ -22,7 +22,6 @@ import com.codemate.brewflop.data.network.SlackMemeUploader;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
-import com.codemate.brewflop.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -30,7 +29,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
-    private ActivityMainBinding binding;
     private LocalBroadcastManager broadcastManager;
     private DayCountUpdater dayCountUpdater;
 
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 new SlackService(BuildConfig.MEME_API_BASE_URL).getApi()
         );
 
-        binding.resetButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 askForGuiltyCoffeeNoob();
@@ -95,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         int dayCount = dayCountUpdater.getDayCount();
         String formattedText = getResources().getQuantityString(R.plurals.number_of_days, dayCount, dayCount);
 
-        binding.daysSinceLastIncident.setText(formattedText);
+        ((TextView) findViewById(R.id.daysSinceLastIncident)).setText(formattedText);
     }
 
     public void confirmGuiltyCoffeeNoob(final String name) {
