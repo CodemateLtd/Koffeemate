@@ -1,8 +1,10 @@
-package com.codemate.brewflop.ui;
+package com.codemate.brewflop.ui.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -19,11 +21,13 @@ import com.codemate.brewflop.data.network.SlackMemeUploader;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
+import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    static final String DEFAULT_PASSWORD_FOR_SETTINGS = "Google";
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
     private DayCountUpdater dayCountUpdater;
@@ -79,16 +83,37 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case GUILTY_NOOB_SPEECH_CODE: {
                 if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> result = data
+                    ArrayList<String> results = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String name = result.get(0);
 
-                    confirmGuiltyCoffeeNoob(name);
+                    if (containsPasswordForSettings(results)) {
+                        Intent intent = new Intent(MainActivity.this, SecretSettingsActivity.class);
+                        startActivity(intent);
+                    } else {
+                        String name = results.get(0);
+                        confirmGuiltyCoffeeNoob(name);
+                    }
                 }
 
                 break;
             }
         }
+    }
+
+    private boolean containsPasswordForSettings(ArrayList<String> results) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String secret = preferences.getString(
+                getString(R.string.pref_key_secret_settings_password),
+                DEFAULT_PASSWORD_FOR_SETTINGS
+        );
+
+        for (String result : results) {
+            if (secret.toLowerCase().equals(result.toLowerCase())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void updateDayCountText() {

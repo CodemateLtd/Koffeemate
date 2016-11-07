@@ -1,17 +1,16 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.ui.main;
 
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.codemate.brewflop.alarms.DayUpdateScheduler;
-import com.codemate.brewflop.ui.DayUpdateListener;
+import com.codemate.brewflop.DayCountUpdater;
+import com.codemate.brewflop.ui.main.DayUpdateListener;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

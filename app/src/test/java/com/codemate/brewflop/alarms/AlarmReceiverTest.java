@@ -1,8 +1,9 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.alarms;
 
 import android.content.Context;
 import android.content.Intent;
 
+import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.alarms.AlarmReceiver;
 
 import org.junit.Before;

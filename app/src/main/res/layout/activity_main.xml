@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.codemate.brewflop.ui.MainActivity">
+    tools:context="com.codemate.brewflop.ui.main.MainActivity">
 
     <TextView
         android:id="@+id/daysSinceLastIncident"

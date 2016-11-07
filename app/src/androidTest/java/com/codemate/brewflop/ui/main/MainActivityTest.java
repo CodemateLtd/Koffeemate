@@ -1,14 +1,18 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.ui.main;
 
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.codemate.brewflop.ui.MainActivity;
+import com.codemate.brewflop.R;
+import com.codemate.brewflop.ui.main.MainActivity;
+import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,8 +23,10 @@ import java.util.ArrayList;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -47,6 +53,25 @@ public class MainActivityTest {
 
         onView(withId(R.id.resetButton)).perform(click());
         onView(withText(expectedDialogMessage)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldLaunchSecretSettingsWhenCorrectPasswordSpoken() {
+        String password = getPasswordForSettings(mainActivityTestRule.getActivity());
+
+        intending(hasAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH))
+                .respondWith(createRecognizerResultWithName(password));
+
+        onView(withId(R.id.resetButton)).perform(click());
+        intended(hasComponent(SecretSettingsActivity.class.getName()));
+    }
+
+    private String getPasswordForSettings(MainActivity mainActivity) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+        String passwordKey = mainActivity.getString(R.string.pref_key_secret_settings_password);
+        String password = preferences.getString(passwordKey, MainActivity.DEFAULT_PASSWORD_FOR_SETTINGS);
+
+        return password;
     }
 
     private Instrumentation.ActivityResult createRecognizerResultWithName(String name) {

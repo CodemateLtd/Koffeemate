@@ -1,4 +1,4 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.alarms;
 
 import android.content.Context;
 import android.content.Intent;

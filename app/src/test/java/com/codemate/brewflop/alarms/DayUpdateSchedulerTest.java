@@ -1,12 +1,14 @@
-package com.codemate.brewflop;
+package com.codemate.brewflop.alarms;
 
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 
+import com.codemate.brewflop.Constants;
 import com.codemate.brewflop.alarms.AlarmReceiver;
 import com.codemate.brewflop.alarms.DayUpdateScheduler;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +50,7 @@ public class DayUpdateSchedulerTest {
         ShadowAlarmManager.ScheduledAlarm scheduledAlarm = shadowAlarmManager.getNextScheduledAlarm();
         assertNotNull(scheduledAlarm);
 
-        assertThat(scheduledAlarm.interval, is(Constants.DAY_UPDATE_INTERVAL));
+        assertThat(scheduledAlarm.interval, CoreMatchers.is(Constants.DAY_UPDATE_INTERVAL));
         assertThat(scheduledAlarm.triggerAtTime, is(dayUpdateScheduler.getTriggerTime() + Constants.DAY_UPDATE_INTERVAL));
         assertThat(scheduledAlarm.type, is(AlarmManager.RTC_WAKEUP));
     }

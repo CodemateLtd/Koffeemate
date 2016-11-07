@@ -22,7 +22,7 @@ public class FirebaseMemeRepository implements MemeRepository {
 
     public FirebaseMemeRepository() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.setPersistenceEnabled(true);
+        //database.setPersistenceEnabled(true);
 
         memeReference = database.getReference().child("memes");
         memeReference.keepSynced(true);

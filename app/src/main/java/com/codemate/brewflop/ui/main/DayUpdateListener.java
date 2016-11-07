@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui;
+package com.codemate.brewflop.ui.main;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

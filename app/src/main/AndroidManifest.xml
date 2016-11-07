@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity" android:screenOrientation="sensorLandscape">
+        <activity android:name=".ui.main.MainActivity" android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,20 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".secret.SecretSettingsActivity" />
+        <activity android:name=".ui.secret.SecretSettingsActivity" />
 
         <receiver android:name=".alarms.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".secret.SecretCodeReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-
-                <!-- 2739 on the dialpad forms the word "brew" -->
-                <data android:scheme="android_secret_code" android:host="2739" />
             </intent-filter>
         </receiver>
 
