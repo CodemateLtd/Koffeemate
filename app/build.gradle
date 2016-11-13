@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.codemate.brewflop"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "MEME_API_BASE_URL", MEME_API_BASE_URL
+        buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
     }
     buildTypes {
         release {
@@ -47,8 +46,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
 
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.google.firebase:firebase-database:9.6.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -58,5 +56,3 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.1.2'
     testCompile 'org.mockito:mockito-core:1.+'
 }
-
-apply plugin: 'com.google.gms.google-services'

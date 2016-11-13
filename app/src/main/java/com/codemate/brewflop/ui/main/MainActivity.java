@@ -14,26 +14,24 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codemate.brewflop.BuildConfig;
 import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.R;
-import com.codemate.brewflop.data.network.SlackMemeUploader;
+import com.codemate.brewflop.data.network.SlackApi;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
+import com.codemate.brewflop.data.network.SlackMessagePoster;
 import com.codemate.brewflop.data.network.SlackService;
-import com.codemate.brewflop.data.repository.FirebaseMemeRepository;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    static final String DEFAULT_PASSWORD_FOR_SETTINGS = "Google";
+    static final String DEFAULT_PASSWORD_FOR_SETTINGS = "Settings";
     private static final int GUILTY_NOOB_SPEECH_CODE = 69;
 
     private DayCountUpdater dayCountUpdater;
     private DayUpdateListener dayUpdateListener;
-    private SlackMemeUploader memeUploader;
+    private SlackMessagePoster memeUploader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        memeUploader = new SlackMemeUploader(
-                new FirebaseMemeRepository(FirebaseDatabase.getInstance()),
-                new SlackService(BuildConfig.MEME_API_BASE_URL).getApi()
+        memeUploader = new SlackMessagePoster(
+                new SlackService(SlackApi.BASE_URL).getApi()
         );
 
         findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {

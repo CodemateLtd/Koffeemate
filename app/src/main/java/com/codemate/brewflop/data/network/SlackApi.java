@@ -12,6 +12,8 @@ import retrofit2.http.POST;
  * Created by iiro on 12.10.2016.
  */
 public interface SlackApi {
+    String BASE_URL = "https://hooks.slack.com/services/";
+
     @POST(BuildConfig.SLACK_CHANNEL_PATH)
     Call<ResponseBody> sendMessage(@Body SlackMessageRequest slackMessageRequest);
 }
