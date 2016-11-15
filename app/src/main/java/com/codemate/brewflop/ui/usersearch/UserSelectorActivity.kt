@@ -10,9 +10,9 @@ import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import org.jetbrains.anko.toast
 
-class UserSearchActivity : AppCompatActivity(), UserSearchView {
-    private lateinit var userSearchAdapter: UserSearchAdapter
-    private lateinit var presenter: UserSearchPresenter
+class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
+    private lateinit var userSelectorAdapter: UserSelectorAdapter
+    private lateinit var presenter: UserSelectorPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class UserSearchActivity : AppCompatActivity(), UserSearchView {
 
         val searchTerm = intent.getStringExtra("search_term")
 
-        presenter = UserSearchPresenter(SlackService.getApi(SlackApi.BASE_URL))
+        presenter = UserSelectorPresenter(SlackService.getApi(SlackApi.BASE_URL))
         presenter.attachView(this)
         presenter.loadUsers(searchTerm)
     }
@@ -32,14 +32,14 @@ class UserSearchActivity : AppCompatActivity(), UserSearchView {
     }
 
     private fun setUpUserRecycler() {
-        userSearchAdapter = UserSearchAdapter()
+        userSelectorAdapter = UserSelectorAdapter()
 
         userRecycler.layoutManager = LinearLayoutManager(this)
-        userRecycler.adapter = userSearchAdapter
+        userRecycler.adapter = userSelectorAdapter
     }
 
     override fun showSearchResults(users: List<User>) {
-        userSearchAdapter.setItems(users)
+        userSelectorAdapter.setItems(users)
     }
 
     override fun showProgress() {

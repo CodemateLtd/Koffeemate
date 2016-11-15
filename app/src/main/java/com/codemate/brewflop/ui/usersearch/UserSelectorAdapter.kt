@@ -10,7 +10,7 @@ import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 import java.util.*
 
-class UserSearchAdapter : RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
+class UserSelectorAdapter : RecyclerView.Adapter<UserSelectorAdapter.ViewHolder>() {
     private var users: List<User> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

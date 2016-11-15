@@ -21,7 +21,7 @@ import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackMessagePoster;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
-import com.codemate.brewflop.ui.usersearch.UserSearchActivity;
+import com.codemate.brewflop.ui.usersearch.UserSelectorActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else {
                         String name = results.get(0);
-                        Intent intent = new Intent(this, UserSearchActivity.class);
+                        Intent intent = new Intent(this, UserSelectorActivity.class);
                         intent.putExtra("search_term", name);
                         startActivity(intent);
                     }

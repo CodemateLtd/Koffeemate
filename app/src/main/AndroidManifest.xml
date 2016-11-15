@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.usersearch.UserSearchActivity" />
+        <activity android:name=".ui.usersearch.UserSelectorActivity" />
         <activity android:name=".ui.secret.SecretSettingsActivity" />
 
         <receiver android:name=".alarms.BootReceiver">

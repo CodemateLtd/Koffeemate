@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserSearchPresenter(private val slackApi: SlackApi) : BasePresenter<UserSearchView>() {
+class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers(searchTerm: String) {
         super.ensureViewIsAttached()
         getView()?.showProgress()
