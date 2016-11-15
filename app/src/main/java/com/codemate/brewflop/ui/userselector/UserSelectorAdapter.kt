@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.usersearch
+package com.codemate.brewflop.ui.userselector
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

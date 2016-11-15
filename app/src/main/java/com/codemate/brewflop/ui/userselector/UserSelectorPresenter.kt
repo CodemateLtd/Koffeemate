@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.usersearch
+package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.data.network.SlackApi

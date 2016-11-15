@@ -17,6 +17,8 @@
     <string name="could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
     <string name="slack_announcement_fmt">_%1$s_ didn\'t know how to make coffee.\nTotal of *%2$d* incident free days were had.</string>
     <string name="pref_key_secret_settings_password">pref_key_secret_settings_password</string>
+    <string name="user_load_error">Couldn\'t load the profile list. :(</string>
+    <string name="error_try_again">Try again</string>
 
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>

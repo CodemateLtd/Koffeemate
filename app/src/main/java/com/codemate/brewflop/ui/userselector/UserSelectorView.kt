@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.usersearch
+package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.ui.base.MvpView

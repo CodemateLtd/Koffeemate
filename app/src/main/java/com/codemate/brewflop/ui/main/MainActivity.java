@@ -21,7 +21,7 @@ import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackMessagePoster;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
-import com.codemate.brewflop.ui.usersearch.UserSelectorActivity;
+import com.codemate.brewflop.ui.userselector.UserSelectorActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
