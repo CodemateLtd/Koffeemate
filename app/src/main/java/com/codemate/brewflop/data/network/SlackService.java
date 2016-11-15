@@ -7,19 +7,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by iiro on 4.10.2016.
  */
 public class SlackService {
-    private SlackApi slackApi;
+    private SlackService() { }
 
-    public SlackService(String baseUrl) {
+    public static SlackWebHookApi getWebhookApi(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        slackApi = retrofit.create(SlackApi.class);
+        return retrofit.create(SlackWebHookApi.class);
     }
 
-    public SlackApi getApi() {
-        return slackApi;
-    }
+    public static SlackApi getApi(String baseUrl) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        return retrofit.create(SlackApi.class);
+    }
 }

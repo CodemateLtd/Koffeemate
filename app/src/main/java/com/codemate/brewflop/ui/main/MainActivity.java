@@ -16,11 +16,12 @@ import android.widget.Toast;
 
 import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.R;
-import com.codemate.brewflop.data.network.SlackApi;
+import com.codemate.brewflop.data.network.SlackWebHookApi;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
 import com.codemate.brewflop.data.network.SlackMessagePoster;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
+import com.codemate.brewflop.ui.usersearch.UserSearchActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         memeUploader = new SlackMessagePoster(
-                new SlackService(SlackApi.BASE_URL).getApi()
+                SlackService.getWebhookApi(SlackWebHookApi.BASE_URL)
         );
 
         findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {
@@ -89,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else {
                         String name = results.get(0);
-                        confirmGuiltyCoffeeNoob(name);
+                        Intent intent = new Intent(this, UserSearchActivity.class);
+                        intent.putExtra("search_term", name);
+                        startActivity(intent);
                     }
                 }
 

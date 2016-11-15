@@ -1,19 +1,14 @@
 package com.codemate.brewflop.data.network;
 
-import com.codemate.brewflop.BuildConfig;
-import com.codemate.brewflop.data.network.model.SlackMessageRequest;
+import com.codemate.brewflop.data.network.model.UserListResponse;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
-/**
- * Created by iiro on 12.10.2016.
- */
 public interface SlackApi {
-    String BASE_URL = "https://hooks.slack.com/services/";
+    String BASE_URL = "https://slack.com/api/";
 
-    @POST(BuildConfig.SLACK_CHANNEL_PATH)
-    Call<ResponseBody> sendMessage(@Body SlackMessageRequest slackMessageRequest);
+    @GET("users.list")
+    Call<UserListResponse> getUsers(@Query("token") String token);
 }

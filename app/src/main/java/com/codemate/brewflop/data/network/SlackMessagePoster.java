@@ -12,10 +12,10 @@ import retrofit2.Response;
  * Created by iiro on 5.10.2016.
  */
 public class SlackMessagePoster {
-    private final SlackApi slackApi;
+    private final SlackWebHookApi slackWebHookApi;
 
-    public SlackMessagePoster(SlackApi slackApi) {
-        this.slackApi = slackApi;
+    public SlackMessagePoster(SlackWebHookApi slackWebHookApi) {
+        this.slackWebHookApi = slackWebHookApi;
     }
 
     public void uploadRandomMeme(final String text, final SlackMessageCallback callback) {
@@ -30,7 +30,7 @@ public class SlackMessagePoster {
     }
 
     private void postMemeToSlack(SlackMessageRequest messageRequest, final SlackMessageCallback callback) {
-        slackApi.sendMessage(messageRequest).enqueue(new Callback<ResponseBody>() {
+        slackWebHookApi.sendMessage(messageRequest).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
