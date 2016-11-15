@@ -19,6 +19,7 @@
     <string name="pref_key_secret_settings_password">pref_key_secret_settings_password</string>
     <string name="user_load_error">Couldn\'t load the profile list. :(</string>
     <string name="error_try_again">Try again</string>
+    <string name="select_person_below">Click on a correct person below.</string>
 
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>

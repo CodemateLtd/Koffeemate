@@ -1,43 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.userselector.UserSelectorActivity">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/userRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ProgressBar
-        style="?attr/indeterminateProgressStyle"
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/errorLayout"
-        android:layout_width="wrap_content"
+        android:id="@+id/userSelectorMessage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:gravity="center">
+        android:padding="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/user_load_error" />
+            android:text="@string/who_is_guilty"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <Button
-            style="?attr/borderlessButtonStyle"
-            android:id="@+id/tryAgain"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/error_try_again"
-            android:textColor="#03A9F4" />
+            android:text="@string/select_person_below"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/userListContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/userSelectorMessage">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?attr/indeterminateProgressStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/errorLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_load_error" />
+
+            <Button
+                android:id="@+id/tryAgain"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/error_try_again"
+                android:textColor="#03A9F4" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>
