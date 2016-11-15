@@ -7,6 +7,7 @@ import org.jetbrains.anko.db.*
 object BrewFailureContract {
     val TABLE_NAME = "BrewFailures"
     val USER_ID = "user_id"
+    val USER_NAME = "user_name"
     val FAILURE_TIMESTAMP = "failure_timestamp"
 }
 
@@ -28,6 +29,7 @@ class BrewFailureDatabaseOpenHelper(private val context: Context) : ManagedSQLit
         db.createTable(BrewFailureContract.TABLE_NAME, true,
                 "_id" to INTEGER + PRIMARY_KEY + UNIQUE,
                 BrewFailureContract.USER_ID to TEXT,
+                BrewFailureContract.USER_NAME to TEXT,
                 BrewFailureContract.FAILURE_TIMESTAMP to INTEGER
         )
     }

@@ -1,7 +1,9 @@
 package com.codemate.brewflop.ui.userselector
 
+import android.content.Context
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.DayCountUpdater
+import com.codemate.brewflop.R
 import com.codemate.brewflop.data.local.BrewFailureLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.model.User
@@ -15,7 +17,8 @@ import retrofit2.Response
 class UserSelectorPresenter(
         private val slackApi: SlackApi,
         private val brewFailureLogger: BrewFailureLogger,
-        private val dayCountUpdater: DayCountUpdater) : BasePresenter<UserSelectorView>() {
+        private val dayCountUpdater: DayCountUpdater,
+        private val messageCreator: MessageCreator) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         super.ensureViewIsAttached()
         getView()?.showProgress()
@@ -44,25 +47,24 @@ class UserSelectorPresenter(
         })
     }
 
-    fun postMessageToSlack(user: User, message: String) {
+    fun postMessageToSlack(user: User) {
         super.ensureViewIsAttached()
 
         brewFailureLogger.incrementFailureCountForUser(user)
-        val failureCount = brewFailureLogger.getFailureCountForUser(user)
-        val formattedMessage = message.format(user.realName, user.profile.firstName, failureCount, dayCountUpdater.dayCount)
+        messageCreator.createMessage(user, brewFailureLogger, dayCountUpdater.dayCount) { message ->
+            slackApi.postMessage(BuildConfig.SLACK_AUTH_TOKEN, "iiro-test", message).enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        getView()?.messagePostedSuccessfully()
+                    } else {
+                        getView()?.errorPostingMessage()
+                    }
+                }
 
-        slackApi.postMessage(BuildConfig.SLACK_AUTH_TOKEN, "iiro-test", formattedMessage).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    getView()?.messagePostedSuccessfully()
-                } else {
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                     getView()?.errorPostingMessage()
                 }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                getView()?.errorPostingMessage()
-            }
-        })
+            })
+        }
     }
 }

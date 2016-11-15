@@ -1,6 +1,5 @@
 package com.codemate.brewflop.ui.userselector
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -14,7 +13,9 @@ import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.onClick
+import org.jetbrains.anko.toast
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private lateinit var userSelectorAdapter: UserSelectorAdapter
@@ -28,7 +29,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         presenter = UserSelectorPresenter(
                 SlackService.getApi(SlackApi.BASE_URL),
                 BrewFailureLogger(brewFailureDB),
-                DayCountUpdater(this)
+                DayCountUpdater(this),
+                MessageCreator(this)
         )
         presenter.attachView(this)
         presenter.loadUsers()
@@ -60,10 +62,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             negativeButton(R.string.try_again)
             neutralButton(R.string.cancel)
             positiveButton(R.string.inform_everyone) {
-                presenter.postMessageToSlack(
-                        user,
-                        getString(R.string.slack_announcement_fmt)
-                )
+                presenter.postMessageToSlack(user)
             }
         }.show()
     }
