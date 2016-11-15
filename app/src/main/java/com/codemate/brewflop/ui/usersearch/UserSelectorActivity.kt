@@ -19,11 +19,9 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         setContentView(R.layout.activity_user_selector)
         setUpUserRecycler()
 
-        val searchTerm = intent.getStringExtra("search_term")
-
         presenter = UserSelectorPresenter(SlackService.getApi(SlackApi.BASE_URL))
         presenter.attachView(this)
-        presenter.loadUsers(searchTerm)
+        presenter.loadUsers()
     }
 
     override fun onDestroy() {

@@ -2,7 +2,6 @@ package com.codemate.brewflop.ui.usersearch
 
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.data.network.SlackApi
-import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.data.network.model.UserListResponse
 import com.codemate.brewflop.ui.base.BasePresenter
 import retrofit2.Call
@@ -10,7 +9,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
-    fun loadUsers(searchTerm: String) {
+    fun loadUsers() {
         super.ensureViewIsAttached()
         getView()?.showProgress()
 
@@ -19,7 +18,10 @@ class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<User
                 if (response.isSuccessful) {
                     val users = response.body().members
                             .toMutableList()
-                            .filter { !it.isBot && search(it, searchTerm) }
+                            .filter { !it.isBot
+                                        && !it.profile.firstName.startsWith("Ext-")
+                                        && it.profile.realName != "slackbot"
+                            }
                             .sortedBy { it.profile.realNameNormalized }
 
                     getView()?.showSearchResults(users)
@@ -34,17 +36,5 @@ class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<User
         })
 
         getView()?.hideProgress()
-    }
-
-    private fun search(user: User, searchTerm: String): Boolean {
-        val firstNameNormalized = normalize(user.profile.firstName)
-        val searchTermNormalized = normalize(searchTerm)
-
-        return firstNameNormalized.contains(searchTermNormalized)
-    }
-
-    // Takes in a freak and makes it normal.
-    private fun normalize(freak: String): String {
-        return freak.trim().toLowerCase()
     }
 }
