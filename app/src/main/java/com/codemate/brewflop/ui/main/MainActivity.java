@@ -1,24 +1,18 @@
 package com.codemate.brewflop.ui.main;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.R;
-import com.codemate.brewflop.data.network.SlackWebHookApi;
-import com.codemate.brewflop.data.network.SlackMessageCallback;
-import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
 import com.codemate.brewflop.ui.userselector.UserSelectorActivity;
 

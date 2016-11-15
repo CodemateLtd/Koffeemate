@@ -1,9 +1,11 @@
 package com.codemate.brewflop.ui.userselector
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.ImageView
 import com.codemate.brewflop.DayCountUpdater
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.network.SlackApi
@@ -12,9 +14,7 @@ import com.codemate.brewflop.data.network.SlackWebHookApi
 import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private lateinit var userSelectorAdapter: UserSelectorAdapter
@@ -27,7 +27,6 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
         presenter = UserSelectorPresenter(
                 SlackService.getApi(SlackApi.BASE_URL),
-                SlackService.getWebhookApi(SlackWebHookApi.BASE_URL),
                 DayCountUpdater(this)
         )
         presenter.attachView(this)
@@ -60,10 +59,19 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             negativeButton(R.string.try_again)
             neutralButton(R.string.cancel)
             positiveButton(R.string.inform_everyone) {
-                presenter.postMessageToSlack(
-                        user,
-                        getString(R.string.slack_announcement_fmt)
-                )
+                doAsync {
+                    val sticker = BitmapFactory.decodeResource(
+                            this@UserSelectorActivity.resources,
+                            R.drawable.approved_sticker
+                    )
+
+                    uiThread {
+                        presenter.postMessageToSlack(
+                                user,
+                                getString(R.string.slack_announcement_fmt)
+                        )
+                    }
+                }
             }
         }.show()
     }

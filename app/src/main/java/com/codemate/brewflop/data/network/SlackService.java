@@ -9,15 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SlackService {
     private SlackService() { }
 
-    public static SlackWebHookApi getWebhookApi(String baseUrl) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(SlackWebHookApi.class);
-    }
-
     public static SlackApi getApi(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)

@@ -3,9 +3,6 @@ package com.codemate.brewflop.ui.userselector
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.DayCountUpdater
 import com.codemate.brewflop.data.network.SlackApi
-import com.codemate.brewflop.data.network.SlackWebHookApi
-import com.codemate.brewflop.data.network.model.Attachment
-import com.codemate.brewflop.data.network.model.SlackMessageRequest
 import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.data.network.model.UserListResponse
 import com.codemate.brewflop.ui.base.BasePresenter
@@ -16,7 +13,6 @@ import retrofit2.Response
 
 class UserSelectorPresenter(
         private val slackApi: SlackApi,
-        private val webhookApi: SlackWebHookApi,
         private val dayCountUpdater: DayCountUpdater) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         super.ensureViewIsAttached()
@@ -50,15 +46,8 @@ class UserSelectorPresenter(
         super.ensureViewIsAttached()
 
         val formattedMessage = message.format(user.realName, dayCountUpdater.dayCount)
-        val request = SlackMessageRequest(formattedMessage,
-                Attachment(
-                        formattedMessage,
-                        "#6F4E37",
-                        "https://a.slack-edge.com/66f9/img/api/attachment_example_honeybadger.png"
-                )
-        )
 
-        webhookApi.sendMessage(request).enqueue(object : Callback<ResponseBody>{
+        slackApi.postMessage(BuildConfig.SLACK_AUTH_TOKEN, "iiro-test", formattedMessage).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 getView()?.messagePostedSuccessfully()
             }
