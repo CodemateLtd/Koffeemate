@@ -8,9 +8,11 @@ import com.bumptech.glide.Glide
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
+import org.jetbrains.anko.onClick
 import java.util.*
 
-class UserSelectorAdapter : RecyclerView.Adapter<UserSelectorAdapter.ViewHolder>() {
+class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
+        RecyclerView.Adapter<UserSelectorAdapter.ViewHolder>() {
     private var users: List<User> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +40,8 @@ class UserSelectorAdapter : RecyclerView.Adapter<UserSelectorAdapter.ViewHolder>
                     .load(user.profile.image72)
                     .into(profileImage)
             userName.text = user.profile.realName
+
+            onClick { onUserSelectedListener(user) }
         }
     }
 }

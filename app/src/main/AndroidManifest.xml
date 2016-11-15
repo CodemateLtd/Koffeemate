@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.userselector.UserSelectorActivity" />
-        <activity android:name=".ui.secret.SecretSettingsActivity" />
+        <activity android:name=".ui.userselector.UserSelectorActivity" android:screenOrientation="sensorLandscape"/>
+        <activity android:name=".ui.secret.SecretSettingsActivity" android:screenOrientation="sensorLandscape"/>
 
         <receiver android:name=".alarms.BootReceiver">
             <intent-filter>

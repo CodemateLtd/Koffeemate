@@ -18,7 +18,6 @@ import com.codemate.brewflop.DayCountUpdater;
 import com.codemate.brewflop.R;
 import com.codemate.brewflop.data.network.SlackWebHookApi;
 import com.codemate.brewflop.data.network.SlackMessageCallback;
-import com.codemate.brewflop.data.network.SlackMessagePoster;
 import com.codemate.brewflop.data.network.SlackService;
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity;
 import com.codemate.brewflop.ui.userselector.UserSelectorActivity;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DayCountUpdater dayCountUpdater;
     private DayUpdateListener dayUpdateListener;
-    private SlackMessagePoster memeUploader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
                         updateDayCountText();
                     }
                 }
-        );
-
-        memeUploader = new SlackMessagePoster(
-                SlackService.getWebhookApi(SlackWebHookApi.BASE_URL)
         );
 
         findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {
@@ -124,38 +118,6 @@ public class MainActivity extends AppCompatActivity {
         String formattedText = getResources().getQuantityString(R.plurals.number_of_days, dayCount, dayCount);
 
         ((TextView) findViewById(R.id.daysSinceLastIncident)).setText(formattedText);
-    }
-
-    public void confirmGuiltyCoffeeNoob(final String name) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.reset_the_counter)
-                .setMessage(getString(R.string.posting_to_slack_fmt, name))
-                .setNegativeButton(R.string.try_again, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        askForGuiltyCoffeeNoob();
-                    }
-                })
-                .setNeutralButton(R.string.cancel, null)
-                .setPositiveButton(R.string.inform_everyone, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String message = getString(R.string.slack_announcement_fmt, name, dayCountUpdater.getDayCount());
-
-                        dayCountUpdater.reset();
-                        memeUploader.uploadRandomMeme(message, new SlackMessageCallback() {
-                            @Override
-                            public void onMessagePostedToSlack() {
-                                Toast.makeText(MainActivity.this, R.string.message_posted_successfully, Toast.LENGTH_LONG).show();
-                            }
-
-                            @Override
-                            public void onMessageError() {
-                                Toast.makeText(MainActivity.this, R.string.could_not_post_message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).show();
     }
 
     @Override

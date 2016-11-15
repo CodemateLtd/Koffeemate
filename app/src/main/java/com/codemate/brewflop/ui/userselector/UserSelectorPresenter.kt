@@ -1,14 +1,23 @@
 package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
+import com.codemate.brewflop.DayCountUpdater
 import com.codemate.brewflop.data.network.SlackApi
+import com.codemate.brewflop.data.network.SlackWebHookApi
+import com.codemate.brewflop.data.network.model.Attachment
+import com.codemate.brewflop.data.network.model.SlackMessageRequest
+import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.data.network.model.UserListResponse
 import com.codemate.brewflop.ui.base.BasePresenter
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
+class UserSelectorPresenter(
+        private val slackApi: SlackApi,
+        private val webhookApi: SlackWebHookApi,
+        private val dayCountUpdater: DayCountUpdater) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         super.ensureViewIsAttached()
         getView()?.showProgress()
@@ -20,7 +29,7 @@ class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<User
                             .toMutableList()
                             .filter { !it.isBot
                                         && !it.profile.firstName.startsWith("Ext-")
-                                        && it.profile.realName != "slackbot"
+                                        && it.realName != "slackbot"
                             }
                             .sortedBy { it.profile.realNameNormalized }
 
@@ -36,5 +45,28 @@ class UserSelectorPresenter(private val slackApi: SlackApi) : BasePresenter<User
         })
 
         getView()?.hideProgress()
+    }
+
+    fun postMessageToSlack(user: User, message: String) {
+        super.ensureViewIsAttached()
+
+        val formattedMessage = message.format(user.realName, dayCountUpdater.dayCount)
+        val request = SlackMessageRequest(formattedMessage,
+                Attachment(
+                        formattedMessage,
+                        "#6F4E37",
+                        "https://a.slack-edge.com/66f9/img/api/attachment_example_honeybadger.png"
+                )
+        )
+
+        webhookApi.sendMessage(request).enqueue(object : Callback<ResponseBody>{
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                getView()?.messagePostedSuccessfully()
+            }
+
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                getView()?.errorPostingMessage()
+            }
+        })
     }
 }
