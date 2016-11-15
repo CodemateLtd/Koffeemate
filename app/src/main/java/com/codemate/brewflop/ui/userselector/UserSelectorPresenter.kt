@@ -34,6 +34,7 @@ class UserSelectorPresenter(
                             .sortedBy { it.profile.realNameNormalized }
 
                     getView()?.showSearchResults(users)
+                    getView()?.hideProgress()
                 } else {
                     getView()?.showError()
                 }
@@ -43,8 +44,6 @@ class UserSelectorPresenter(
                 getView()?.showError()
             }
         })
-
-        getView()?.hideProgress()
     }
 
     fun postMessageToSlack(user: User, message: String) {
