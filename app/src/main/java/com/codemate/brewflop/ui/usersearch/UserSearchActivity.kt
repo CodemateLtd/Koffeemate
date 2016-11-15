@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_user_selector.*
 import org.jetbrains.anko.toast
 
 class UserSearchActivity : AppCompatActivity(), UserSearchView {
-    private lateinit var userAdapter: UserAdapter
+    private lateinit var userSearchAdapter: UserSearchAdapter
     private lateinit var presenter: UserSearchPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,14 +32,14 @@ class UserSearchActivity : AppCompatActivity(), UserSearchView {
     }
 
     private fun setUpUserRecycler() {
-        userAdapter = UserAdapter()
+        userSearchAdapter = UserSearchAdapter()
 
         userRecycler.layoutManager = LinearLayoutManager(this)
-        userRecycler.adapter = userAdapter
+        userRecycler.adapter = userSearchAdapter
     }
 
     override fun showSearchResults(users: List<User>) {
-        userAdapter.setItems(users)
+        userSearchAdapter.setItems(users)
     }
 
     override fun showProgress() {
