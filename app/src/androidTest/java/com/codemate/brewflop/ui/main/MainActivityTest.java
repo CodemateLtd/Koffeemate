@@ -69,7 +69,7 @@ public class MainActivityTest {
     private String getPasswordForSettings(MainActivity mainActivity) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
         String passwordKey = mainActivity.getString(R.string.pref_key_secret_settings_password);
-        String password = preferences.getString(passwordKey, MainActivity.DEFAULT_PASSWORD_FOR_SETTINGS);
+        String password = preferences.getString(passwordKey, MainActivity.Companion.getDEFAULT_PASSWORD_FOR_SETTINGS());
 
         return password;
     }

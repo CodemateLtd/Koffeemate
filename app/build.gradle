@@ -22,12 +22,8 @@ android {
         }
     }
     productFlavors {
-        mock {
-            buildConfigField "String", "SLACK_CHANNEL_PATH", SLACK_PRIVATE_TEST_CHANNEL_PATH
-        }
-        prod {
-            buildConfigField "String", "SLACK_CHANNEL_PATH", SLACK_CHANNEL_PATH
-        }
+        mock {}
+        prod {}
     }
     android.variantFilter { variant ->
         if (variant.buildType.name.equals('release')
