@@ -2,6 +2,7 @@ package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.DayCountUpdater
+import com.codemate.brewflop.data.local.BrewFailureLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.data.network.model.UserListResponse
@@ -13,6 +14,7 @@ import retrofit2.Response
 
 class UserSelectorPresenter(
         private val slackApi: SlackApi,
+        private val brewFailureLogger: BrewFailureLogger,
         private val dayCountUpdater: DayCountUpdater) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         super.ensureViewIsAttached()
@@ -45,11 +47,17 @@ class UserSelectorPresenter(
     fun postMessageToSlack(user: User, message: String) {
         super.ensureViewIsAttached()
 
-        val formattedMessage = message.format(user.realName, dayCountUpdater.dayCount)
+        brewFailureLogger.incrementFailureCountForUser(user)
+        val failureCount = brewFailureLogger.getFailureCountForUser(user)
+        val formattedMessage = message.format(user.realName, user.profile.firstName, failureCount, dayCountUpdater.dayCount)
 
         slackApi.postMessage(BuildConfig.SLACK_AUTH_TOKEN, "iiro-test", formattedMessage).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                getView()?.messagePostedSuccessfully()
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    getView()?.messagePostedSuccessfully()
+                } else {
+                    getView()?.errorPostingMessage()
+                }
             }
 
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {

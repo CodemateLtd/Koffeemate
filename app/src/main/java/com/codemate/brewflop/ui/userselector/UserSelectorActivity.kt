@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.codemate.brewflop.DayCountUpdater
 import com.codemate.brewflop.R
+import com.codemate.brewflop.data.local.BrewFailureLogger
+import com.codemate.brewflop.data.local.brewFailureDB
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.User
@@ -25,6 +27,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
         presenter = UserSelectorPresenter(
                 SlackService.getApi(SlackApi.BASE_URL),
+                BrewFailureLogger(brewFailureDB),
                 DayCountUpdater(this)
         )
         presenter.attachView(this)
@@ -57,19 +60,10 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             negativeButton(R.string.try_again)
             neutralButton(R.string.cancel)
             positiveButton(R.string.inform_everyone) {
-                doAsync {
-                    val sticker = BitmapFactory.decodeResource(
-                            this@UserSelectorActivity.resources,
-                            R.drawable.approved_sticker
-                    )
-
-                    uiThread {
-                        presenter.postMessageToSlack(
-                                user,
-                                getString(R.string.slack_announcement_fmt)
-                        )
-                    }
-                }
+                presenter.postMessageToSlack(
+                        user,
+                        getString(R.string.slack_announcement_fmt)
+                )
             }
         }.show()
     }
