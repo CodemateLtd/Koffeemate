@@ -6,9 +6,9 @@ import com.codemate.brewflop.data.local.BrewFailureLogger
 import com.codemate.brewflop.data.network.model.User
 
 class MessageCreator(context: Context) {
-    private val nameIsLeading = context.getString(R.string.name_is_leading_fmt)
-    private val nameResetedCounter = context.getString(R.string.name_reseted_counter_was_at_n_days_fmt)
-    private val namesNthBrewingAccident = context.getString(R.string.names_nth_brewing_accident_fmt)
+    val nameIsLeading = context.getString(R.string.name_is_leading_fmt)
+    val nameResetedCounter = context.getString(R.string.name_reseted_counter_was_at_n_days_fmt)
+    val namesNthBrewingAccident = context.getString(R.string.names_nth_brewing_accident_fmt)
 
     fun createMessage(
             user: User,

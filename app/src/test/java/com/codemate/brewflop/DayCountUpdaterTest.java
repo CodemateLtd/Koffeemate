@@ -35,7 +35,7 @@ public class DayCountUpdaterTest {
                 broadcastManager
         );
 
-        intentCaptor = new ArgumentCaptor<>();
+        intentCaptor = ArgumentCaptor.forClass(Intent.class);
     }
 
     @After
