@@ -11,10 +11,6 @@ open class BasePresenter<T: MvpView> : Presenter<T> {
         mvpView = null
     }
 
-    fun isViewAttached(): Boolean {
-        return mvpView != null
-    }
-
     fun getView(): T? {
         return mvpView
     }
@@ -23,6 +19,10 @@ open class BasePresenter<T: MvpView> : Presenter<T> {
         if (!isViewAttached()) {
             throw ViewNotAttachedException()
         }
+    }
+
+    fun isViewAttached(): Boolean {
+        return mvpView != null
     }
 
     class ViewNotAttachedException : RuntimeException("View not attached! Please call attachView() first.")

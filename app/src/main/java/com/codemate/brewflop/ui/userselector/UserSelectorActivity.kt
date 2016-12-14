@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.codemate.brewflop.DayCountUpdater
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.local.BrewFailureLogger
 import com.codemate.brewflop.data.local.brewFailureDB
@@ -26,11 +25,12 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         setContentView(R.layout.activity_user_selector)
         setUpUserRecycler()
 
+        val failureLogger = BrewFailureLogger(brewFailureDB)
+
         presenter = UserSelectorPresenter(
                 SlackService.getApi(SlackApi.BASE_URL),
-                BrewFailureLogger(brewFailureDB),
-                DayCountUpdater(this),
-                MessageCreator(this)
+                failureLogger,
+                StickerApplier(this, R.drawable.approved_sticker)
         )
         presenter.attachView(this)
         presenter.loadUsers()

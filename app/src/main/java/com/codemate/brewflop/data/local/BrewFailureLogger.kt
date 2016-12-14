@@ -7,7 +7,7 @@ import org.jetbrains.anko.db.SqlOrderDirection
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 
-class BrewFailureLogger(private val db: SQLiteDatabase) {
+open class BrewFailureLogger(private val db: SQLiteDatabase) {
     fun getFailureCountForUser(user: User): Long {
         return DatabaseUtils.queryNumEntries(
                 db,
