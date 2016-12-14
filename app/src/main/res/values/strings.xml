@@ -31,7 +31,7 @@
     <string name="coffee_loader_message">Are you sure you want to cancel current coffee brewing timer?</string>
 
     <string name="coffee_is_coming_title">Coffee is coming!</string>
-    <string name="coffee_is_coming_message">Wait a bit and be hypnotized by the pretty waves.</string>
+    <string name="coffee_is_coming_message">Informing others on Slack when ready.</string>
 
     <string name="really_cancel_coffee_progress_title">Cancel Coffee Progress</string>
     <string name="really_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
