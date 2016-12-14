@@ -8,26 +8,25 @@
     android:orientation="vertical"
     tools:context="com.codemate.brewflop.ui.main.MainActivity">
 
-    <TextView
-        android:id="@+id/daysSinceLastIncident"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        tools:text="123 days" />
+    <com.codemate.brewflop.CoffeeProgressView
+        android:id="@+id/coffeeProgressView"
+        android:layout_width="128dp"
+        android:layout_height="128dp" />
 
     <TextView
+        android:id="@+id/coffeeStatusTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/since_the_last_brewing_accident"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:layout_marginTop="16dp"
+        android:text="@string/did_you_start_the_coffee_machine"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
-    <Button
-        android:id="@+id/resetButton"
-        style="?attr/borderlessButtonStyle"
+    <TextView
+        android:id="@+id/coffeeStatusMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reset"
-        android:textColor="#03A9F4" />
+        android:layout_marginTop="8dp"
+        android:text="@string/touch_here_to_notify_when_coffee_ready"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"/>
 
 </LinearLayout>

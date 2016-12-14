@@ -1,71 +1,89 @@
 package com.codemate.brewflop.ui.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.view.WindowManager
-import com.codemate.brewflop.DayCountUpdater
+import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.R
+import com.codemate.brewflop.data.local.CoffeePreferences
+import com.codemate.brewflop.data.network.SlackApi
+import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity
-import com.codemate.brewflop.ui.userselector.UserSelectorActivity
+import com.codemate.brewflop.util.extensions.hideStatusBar
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.onLongClick
+import org.jetbrains.anko.*
+import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var dayCountUpdater: DayCountUpdater
-    private lateinit var dayUpdateListener: DayUpdateListener
+class MainActivity : AppCompatActivity(), MainView {
+    lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideStatusBar()
 
-        dayCountUpdater = DayCountUpdater(this)
-        dayUpdateListener = DayUpdateListener(
-                LocalBroadcastManager.getInstance(this),
-                DayUpdateListener.OnDayChangedListener { updateDayCountText() }
+        val coffeePreferences = CoffeePreferences(this)
+        val brewingProgressUpdater = BrewingProgressUpdater(
+                brewingTimeMillis = TimeUnit.MINUTES.toMillis(5),
+                totalSteps = 30
         )
 
-        resetButton.onClick {
-            val intent = Intent(this@MainActivity, UserSelectorActivity::class.java)
-            startActivity(intent)
+        val slackApi = SlackService.getApi(SlackApi.BASE_URL)
+
+        presenter = MainPresenter(coffeePreferences, brewingProgressUpdater, slackApi)
+        presenter.attachView(this)
+
+        coffeeProgressView.alpha = 0.2f
+        coffeeProgressView.onClick {
+            presenter.startCountDownForNewCoffee("Freshly brewed coffee available!")
         }
 
-        resetButton.onLongClick {
-            val intent = Intent(this@MainActivity, SecretSettingsActivity::class.java)
-            startActivity(intent)
-
+        coffeeProgressView.onLongClick {
+            startActivity(intentFor<SecretSettingsActivity>())
             true
         }
     }
 
-    fun updateDayCountText() {
-        val dayCount = dayCountUpdater.dayCount
-        val formattedText = resources.getQuantityString(R.plurals.number_of_days, dayCount, dayCount)
-
-        daysSinceLastIncident.text = formattedText
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        dayUpdateListener.listenForDayChanges()
-        updateDayCountText()
+    override fun noChannelNameSet() {
+        longToast(R.string.no_channel_name_set)
+        startActivity(intentFor<SecretSettingsActivity>())
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        dayUpdateListener.stopListeningForDayChanges()
+    override fun newCoffeeIsComing() {
+        coffeeStatusTitle.text = getString(R.string.coffee_is_coming_title)
+        coffeeStatusMessage.text = getString(R.string.coffee_is_coming_message)
+        coffeeProgressView.animate()
+                .alpha(1f)
+                .start()
     }
 
-    private fun hideStatusBar() {
-        val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-        window.decorView.systemUiVisibility = uiOptions
+    override fun updateCoffeeProgress(newProgress: Int) {
+        coffeeProgressView.setProgress(newProgress)
+    }
+
+    override fun newCoffeeAvailable() {
+        toast("NEW COFFEE AVAILABLE!")
+    }
+
+    override fun noCoffeeAnyMore() {
+        coffeeStatusTitle.text = getString(R.string.did_you_start_the_coffee_machine)
+        coffeeStatusMessage.text = getString(R.string.touch_here_to_notify_when_coffee_ready)
+        coffeeProgressView.animate()
+                .alpha(0.2f)
+                .start()
+    }
+
+    override fun showCancelCoffeeProgressPrompt() {
+        alert {
+            title(R.string.really_cancel_coffee_progress_title)
+            message(R.string.really_cancel_coffee_progress_message)
+
+            cancelButton()
+            okButton { presenter.cancelCoffeeCountDown() }
+        }.show()
     }
 }
