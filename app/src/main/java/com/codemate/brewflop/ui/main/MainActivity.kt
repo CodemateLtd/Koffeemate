@@ -2,13 +2,13 @@ package com.codemate.brewflop.ui.main
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.codemate.brewflop.BuildConfig
+import android.view.View
+import android.view.WindowManager
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.ui.secret.SecretSettingsActivity
-import com.codemate.brewflop.util.extensions.hideStatusBar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 import java.util.concurrent.TimeUnit
@@ -19,7 +19,9 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        hideStatusBar()
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
         val coffeePreferences = CoffeePreferences(this)
         val brewingProgressUpdater = BrewingProgressUpdater(
