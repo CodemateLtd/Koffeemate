@@ -8,6 +8,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
+import com.codemate.brewflop.Constants
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.StickerApplier
 import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
@@ -21,8 +22,6 @@ import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
-    private val CHANNEL_NAME = "iiro-test"
-
     private lateinit var userSelectorAdapter: UserSelectorAdapter
     private lateinit var presenter: UserSelectorPresenter
 
@@ -72,7 +71,12 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
                         .asBitmap()
                         .into(object : SimpleTarget<Bitmap>(512, 512) {
                             override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {
-                                presenter.postMessageToSlack(CHANNEL_NAME, comment, user, resource)
+                                presenter.postMessageToSlack(
+                                        Constants.ACCIDENT_ANNOUNCEMENT_CHANNEL,
+                                        comment,
+                                        user,
+                                        resource
+                                )
                             }
                         })
             }
