@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.main
+package com.codemate.brewflop.data
 
 import android.os.Handler
 import com.codemate.brewflop.data.BrewingProgressUpdater
