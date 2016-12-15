@@ -25,7 +25,7 @@
     <string name="names_nth_brewing_accident_fmt">This is %1$s\'s *%2$s* coffee brewing accident.</string>
     <string name="name_got_his_first_certificate_fmt">Congratulations to *%1$s* for their first MoccaMaster Certificate! :clap::clap:\n%2$d accident-free days were had.</string>
     <string name="did_you_start_the_coffee_machine">Brewing fresh coffee?</string>
-    <string name="touch_here_to_notify_when_coffee_ready">Touch the coffee pan above!</string>
+    <string name="touch_here_to_notify_when_coffee_ready">Touch the coffee pot above!</string>
 
     <string name="coffee_loader_title">Cancel Coffee Progress</string>
     <string name="coffee_loader_message">Are you sure you want to cancel current coffee brewing timer?</string>
