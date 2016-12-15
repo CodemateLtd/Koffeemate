@@ -3,6 +3,8 @@ package com.codemate.brewflop.data.network.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 public class User {
     @SerializedName("id")
     @Expose
@@ -71,4 +73,19 @@ public class User {
     @SerializedName("is_bot")
     @Expose
     public boolean isBot;
+
+    @NotNull
+    public String getLargestAvailableProfileImageUrl() {
+        String imageUrl = profile.image512;
+
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = profile.image192;
+        }
+
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = profile.image72;
+        }
+
+        return imageUrl;
+    }
 }

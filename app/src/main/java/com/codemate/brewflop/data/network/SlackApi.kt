@@ -2,6 +2,7 @@ package com.codemate.brewflop.data.network
 
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.data.network.model.UserListResponse
+import com.codemate.brewflop.util.extensions.toRequestBody
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -28,11 +29,11 @@ interface SlackApi {
     @Multipart
     @POST("files.upload")
     fun postImage(
-            @Part("token") token: RequestBody,
+            @Part file: MultipartBody.Part,
+            @Part("filename") filename: RequestBody,
             @Part("channels") channels: RequestBody,
             @Part("initial_comment") comment: RequestBody,
-            @Part("filename") filename: RequestBody,
-            @Part file: MultipartBody.Part
+            @Part("token") token: RequestBody = BuildConfig.SLACK_AUTH_TOKEN.toRequestBody()
     ): Call<ResponseBody>
 
     companion object {

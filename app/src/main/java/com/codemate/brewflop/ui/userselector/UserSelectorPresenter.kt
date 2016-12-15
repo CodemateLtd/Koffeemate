@@ -1,5 +1,6 @@
 package com.codemate.brewflop.ui.userselector
 
+import android.graphics.Bitmap
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.data.StickerApplier
 import com.codemate.brewflop.data.local.CoffeeStatisticLogger
@@ -17,11 +18,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UserSelectorPresenter(
-        private val slackApi: SlackApi,
         private val coffeeStatisticLogger: CoffeeStatisticLogger,
-        private val stickerApplier: StickerApplier) : BasePresenter<UserSelectorView>() {
+        private val stickerApplier: StickerApplier,
+        private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
-        super.ensureViewIsAttached()
+        ensureViewIsAttached()
         getView()?.showProgress()
 
         slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN).enqueue(object : Callback<UserListResponse> {
@@ -49,36 +50,41 @@ class UserSelectorPresenter(
         })
     }
 
-    fun postMessageToSlack(user: User) {
-        super.ensureViewIsAttached()
+    fun postMessageToSlack(channelName: String, comment: String, user: User, resource: Bitmap) {
+        ensureViewIsAttached()
 
-        stickerApplier.applySticker(user) { stickeredProfilePic ->
-            val token = BuildConfig.SLACK_AUTH_TOKEN.toRequestBody()
-            val channelName = "iiro-test".toRequestBody()
-            val comment = "jorma".toRequestBody()
-            val fileName = "${user.profile.firstName.toLowerCase()}s-moccamaster-certificate.png"
-            val filePart = RequestBody.create(MediaType.parse("image/png"), stickeredProfilePic)
-            val fileBody = MultipartBody.Part.createFormData("file", fileName, filePart)
+        val stickeredProfilePic = stickerApplier.applySticker(resource)
 
-            slackApi.postImage(
-                    token = token,
-                    channels = channelName,
-                    comment = comment,
-                    filename = fileName.toRequestBody(),
-                    file = fileBody).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                    if (response.isSuccessful) {
-                        getView()?.messagePostedSuccessfully()
-                        coffeeStatisticLogger.recordBrewingAccident(user)
-                    } else {
-                        getView()?.errorPostingMessage()
-                    }
-                }
+        // Evaluates to "johns-certificate.png" etc
+        val fileName = "${user.profile.firstName.toLowerCase()}s-certificate.png"
+        val fileBody = MultipartBody.Part.createFormData(
+                "file",
+                fileName,
+                RequestBody.create(
+                        MediaType.parse("image/png"),
+                        stickeredProfilePic
+                )
+        )
 
-                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+        slackApi.postImage(
+                file = fileBody,
+                filename = fileName.toRequestBody(),
+                channels = channelName.toRequestBody(),
+                comment = comment.toRequestBody()
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    getView()?.messagePostedSuccessfully()
+                } else {
                     getView()?.errorPostingMessage()
                 }
-            })
-        }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                getView()?.errorPostingMessage()
+            }
+        })
+
+        coffeeStatisticLogger.recordBrewingAccident(user)
     }
 }

@@ -1,9 +1,13 @@
 package com.codemate.brewflop.ui.userselector
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.StickerApplier
 import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
@@ -17,6 +21,8 @@ import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
+    private val CHANNEL_NAME = "iiro-test"
+
     private lateinit var userSelectorAdapter: UserSelectorAdapter
     private lateinit var presenter: UserSelectorPresenter
 
@@ -25,12 +31,10 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         setContentView(R.layout.activity_user_selector)
         setUpUserRecycler()
 
-        val failureLogger = RealmCoffeeStatisticLogger()
-
         presenter = UserSelectorPresenter(
-                SlackService.getApi(SlackApi.BASE_URL),
-                failureLogger,
-                StickerApplier(this, R.drawable.approved_sticker)
+                RealmCoffeeStatisticLogger(),
+                StickerApplier(this, R.drawable.approved_sticker),
+                SlackService.getApi(SlackApi.BASE_URL)
         )
         presenter.attachView(this)
         presenter.loadUsers()
@@ -55,14 +59,22 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     }
 
     private fun confirmUser(user: User) {
-        val title = getString(R.string.reset_the_counter)
-        val message = getString(R.string.posting_to_slack_fmt, user.profile.realName)
+        alert {
+            title(R.string.reset_the_counter)
+            message(getString(R.string.posting_to_slack_fmt, user.profile.realName))
 
-        alert(message, title) {
-            negativeButton(R.string.try_again)
-            neutralButton(R.string.cancel)
+            negativeButton(R.string.cancel)
             positiveButton(R.string.inform_everyone) {
-                presenter.postMessageToSlack(user)
+                val comment = getString(R.string.congratulations_to_user_fmt, user.profile.firstName)
+
+                Glide.with(this@UserSelectorActivity)
+                        .load(user.largestAvailableProfileImageUrl)
+                        .asBitmap()
+                        .into(object : SimpleTarget<Bitmap>(512, 512) {
+                            override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {
+                                presenter.postMessageToSlack(CHANNEL_NAME, comment, user, resource)
+                            }
+                        })
             }
         }.show()
     }
