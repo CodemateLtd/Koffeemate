@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         val coffeePreferences = CoffeePreferences(this)
         val brewingProgressUpdater = BrewingProgressUpdater(
-                brewingTimeMillis = TimeUnit.MINUTES.toMillis(6),
+                brewingTimeMillis = TimeUnit.MINUTES.toMillis(7),
                 totalSteps = 30
         )
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         coffeeProgressView.alpha = 0.2f
         coffeeProgressView.onClick {
-            presenter.startCountDownForNewCoffee("@channel Freshly brewed coffee available!")
+            presenter.startCountDownForNewCoffee("<!channel> Freshly brewed coffee available!")
         }
 
         coffeeProgressView.onLongClick {
