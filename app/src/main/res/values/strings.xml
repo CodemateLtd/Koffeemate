@@ -44,6 +44,8 @@
     <string name="new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
     <string name="coffee_brewing_accident_text">Log an accident</string>
 
+    <string name="congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
+
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
