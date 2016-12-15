@@ -11,6 +11,7 @@ import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.ui.secretsettings.SecretSettingsActivity
+import com.codemate.brewflop.ui.userselector.UserSelectorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 import java.util.concurrent.TimeUnit
@@ -49,6 +50,10 @@ class MainActivity : AppCompatActivity(), MainView {
         coffeeProgressView.onLongClick {
             startActivity(intentFor<SecretSettingsActivity>())
             true
+        }
+
+        logAccidentButton.onClick {
+            startActivity(intentFor<UserSelectorActivity>())
         }
     }
 
