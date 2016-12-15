@@ -21,7 +21,6 @@
         <activity android:name=".ui.userselector.UserSelectorActivity" android:screenOrientation="sensorLandscape"/>
         <activity
             android:name=".ui.secret.SecretSettingsActivity"
-            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.Settings"/>
     </application>
 

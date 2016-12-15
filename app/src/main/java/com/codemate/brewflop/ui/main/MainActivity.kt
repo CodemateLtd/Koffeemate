@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         val coffeePreferences = CoffeePreferences(this)
         val brewingProgressUpdater = BrewingProgressUpdater(
-                brewingTimeMillis = TimeUnit.MINUTES.toMillis(5),
+                brewingTimeMillis = TimeUnit.MINUTES.toMillis(6),
                 totalSteps = 30
         )
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         coffeeProgressView.alpha = 0.2f
         coffeeProgressView.onClick {
-            presenter.startCountDownForNewCoffee("Freshly brewed coffee available!")
+            presenter.startCountDownForNewCoffee("@channel Freshly brewed coffee available!")
         }
 
         coffeeProgressView.onLongClick {
@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun updateCoffeeProgress(newProgress: Int) {
-        coffeeProgressView.setProgress(newProgress)
+        val adjustedProgress = if (newProgress < 10) 10 else newProgress
+
+        coffeeProgressView.setProgress(adjustedProgress)
     }
 
     override fun newCoffeeAvailable() {
