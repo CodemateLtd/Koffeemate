@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BrewFlop.iml" filepath="$PROJECT_DIR$/BrewFlop.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/brewflop.iml" filepath="$PROJECT_DIR$/brewflop.iml" />
     </modules>
   </component>
 </project>

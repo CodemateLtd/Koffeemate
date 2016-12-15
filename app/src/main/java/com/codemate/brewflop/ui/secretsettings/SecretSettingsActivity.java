@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.secret;
+package com.codemate.brewflop.ui.secretsettings;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

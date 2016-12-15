@@ -1,7 +1,8 @@
 package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
-import com.codemate.brewflop.data.local.BrewFailureLogger
+import com.codemate.brewflop.data.StickerApplier
+import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.model.User
 import com.codemate.brewflop.data.network.model.UserListResponse
@@ -17,7 +18,7 @@ import retrofit2.Response
 
 class UserSelectorPresenter(
         private val slackApi: SlackApi,
-        private val brewFailureLogger: BrewFailureLogger,
+        private val coffeeStatisticLogger: CoffeeStatisticLogger,
         private val stickerApplier: StickerApplier) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         super.ensureViewIsAttached()
@@ -68,7 +69,7 @@ class UserSelectorPresenter(
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         getView()?.messagePostedSuccessfully()
-                        brewFailureLogger.incrementFailureCountForUser(user)
+                        coffeeStatisticLogger.recordBrewingAccident(user)
                     } else {
                         getView()?.errorPostingMessage()
                     }

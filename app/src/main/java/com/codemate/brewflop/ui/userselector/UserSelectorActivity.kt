@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.codemate.brewflop.R
-import com.codemate.brewflop.data.local.BrewFailureLogger
-import com.codemate.brewflop.data.local.brewFailureDB
+import com.codemate.brewflop.data.StickerApplier
+import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.User
@@ -25,7 +25,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         setContentView(R.layout.activity_user_selector)
         setUpUserRecycler()
 
-        val failureLogger = BrewFailureLogger(brewFailureDB)
+        val failureLogger = RealmCoffeeStatisticLogger()
 
         presenter = UserSelectorPresenter(
                 SlackService.getApi(SlackApi.BASE_URL),

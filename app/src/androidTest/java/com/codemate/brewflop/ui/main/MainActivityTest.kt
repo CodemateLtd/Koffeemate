@@ -9,7 +9,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
 import com.codemate.brewflop.R
-import com.codemate.brewflop.ui.secret.SecretSettingsActivity
+import com.codemate.brewflop.ui.secretsettings.SecretSettingsActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

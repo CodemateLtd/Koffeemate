@@ -1,6 +1,8 @@
 package com.codemate.brewflop.ui.main
 
+import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
+import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.ui.base.BasePresenter
 import okhttp3.ResponseBody
@@ -10,13 +12,15 @@ import retrofit2.Response
 
 class MainPresenter(
         private val coffeePreferences: CoffeePreferences,
+        private val coffeeStatisticLogger: CoffeeStatisticLogger,
         private val brewingProgressUpdater: BrewingProgressUpdater,
         private val slackApi: SlackApi
 ) : BasePresenter<MainView>() {
-    fun startCountDownForNewCoffee(newCoffeeMessage: String) {
+    fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
         ensureViewIsAttached()
 
-        if (!coffeePreferences.isChannelNameSet()) {
+        if (!brewingProgressUpdater.isUpdating
+                && !coffeePreferences.isChannelNameSet()) {
             getView()?.noChannelNameSet()
             return
         }
@@ -44,8 +48,8 @@ class MainPresenter(
                             }
                         })
 
-                        getView()?.updateCoffeeProgress(0)
-                        getView()?.noCoffeeAnyMore()
+                        getView()?.resetCoffeeViewStatus()
+                        coffeeStatisticLogger.recordCoffeeBrewingEvent()
                     }
             )
         } else {
@@ -57,7 +61,7 @@ class MainPresenter(
         ensureViewIsAttached()
 
         getView()?.updateCoffeeProgress(0)
-        getView()?.noCoffeeAnyMore()
+        getView()?.resetCoffeeViewStatus()
 
         brewingProgressUpdater.reset()
     }

@@ -1,4 +1,4 @@
-package com.codemate.brewflop.ui.userselector
+package com.codemate.brewflop.data
 
 import android.content.Context
 import android.graphics.Bitmap

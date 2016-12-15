@@ -3,7 +3,9 @@ package com.codemate.brewflop.ui.main
 import android.content.SharedPreferences
 import android.os.Handler
 import com.codemate.brewflop.BuildConfig
+import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
+import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import okhttp3.mockwebserver.MockResponse
@@ -20,18 +22,22 @@ class MainPresenterTest {
     private val CHANNEL_NAME = "fake-channel"
 
     private lateinit var coffeePreferences: CoffeePreferences
+    private lateinit var mockStatisticLogger: CoffeeStatisticLogger
     private lateinit var mockHandler: Handler
     private lateinit var updater: BrewingProgressUpdater
+    private lateinit var mockServer: MockWebServer
     private lateinit var slackApi: SlackApi
+
     private lateinit var presenter: MainPresenter
     private lateinit var view: MainView
-    private lateinit var mockServer: MockWebServer
 
     @Before
     fun setUp() {
         coffeePreferences = mock(CoffeePreferences::class.java)
         coffeePreferences.preferences = mock(SharedPreferences::class.java)
         `when`(coffeePreferences.getChannelName()).thenReturn(CHANNEL_NAME)
+
+        mockStatisticLogger = mock(CoffeeStatisticLogger::class.java)
 
         mockHandler = mock(Handler::class.java)
         updater = BrewingProgressUpdater(9, 3)
@@ -41,9 +47,9 @@ class MainPresenterTest {
         mockServer.start()
 
         slackApi = SlackService.getApi(mockServer.url("/"))
-        presenter = MainPresenter(coffeePreferences, updater, slackApi)
-
+        presenter = MainPresenter(coffeePreferences, mockStatisticLogger, updater, slackApi)
         view = mock(MainView::class.java)
+
         presenter.attachView(view)
     }
 
@@ -53,46 +59,50 @@ class MainPresenterTest {
     }
 
     @Test
-    fun startCountDownForNewCoffee_WhenChannelNameNotSet_InformsView() {
+    fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
         `when`(coffeePreferences.getChannelName()).thenReturn("")
+        updater.isUpdating = false
 
-        presenter.startCountDownForNewCoffee("")
+        presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).noChannelNameSet()
         verifyNoMoreInteractions(view)
+        verifyZeroInteractions(mockStatisticLogger)
     }
 
     @Test
-    fun startCountDownForNewCoffee_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
-        presenter.startCountDownForNewCoffee("")
+    fun startDelayedCoffeeAnnouncement_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
+        presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).newCoffeeIsComing()
         verify(view, times(1)).updateCoffeeProgress(0)
+        verifyZeroInteractions(mockStatisticLogger)
     }
 
     @Test
-    fun startCountDownForNewCoffee_WhenUpdaterAlreadyUpdating_ShowsCancelCoffeeProgressPrompt() {
+    fun startDelayedCoffeeAnnouncement_WhenUpdaterAlreadyUpdating_ShowsCancelCoffeeProgressPrompt() {
         updater.isUpdating = true
-        presenter.startCountDownForNewCoffee("")
+        presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
+        verifyZeroInteractions(mockStatisticLogger)
     }
 
     @Test
-    fun startCountDownForNewCoffee_WhenRunToEnd_UpdatesCoffeeProgressAndPostsToSlack() {
+    fun startDelayedCoffeeAnnouncement_WhenRunToEnd_UpdatesCoffeeProgressAndPostsToSlack() {
         mockServer.enqueue(MockResponse().setBody(""))
-        presenter.startCountDownForNewCoffee("A happy message about coffee status")
+        presenter.startDelayedCoffeeAnnouncement("A happy message about coffee status")
 
         updater.run()
         updater.run()
         updater.run()
 
-        val inOrder = inOrder(view)
+        val inOrder = inOrder(view, mockStatisticLogger)
         inOrder.verify(view).updateCoffeeProgress(0)
         inOrder.verify(view).updateCoffeeProgress(33)
         inOrder.verify(view).updateCoffeeProgress(67)
-        inOrder.verify(view).updateCoffeeProgress(0)
-        inOrder.verify(view).noCoffeeAnyMore()
+        inOrder.verify(view).resetCoffeeViewStatus()
+        inOrder.verify(mockStatisticLogger).recordCoffeeBrewingEvent()
 
         val apiRequest = mockServer.takeRequest()
         assertThat(apiRequest.path, equalTo("/chat.postMessage"))
@@ -109,8 +119,9 @@ class MainPresenterTest {
         presenter.cancelCoffeeCountDown()
 
         verify(view).updateCoffeeProgress(0)
-        verify(view).noCoffeeAnyMore()
+        verify(view).resetCoffeeViewStatus()
 
         verify(mockHandler).removeCallbacks(updater)
+        verifyZeroInteractions(mockStatisticLogger)
     }
 }

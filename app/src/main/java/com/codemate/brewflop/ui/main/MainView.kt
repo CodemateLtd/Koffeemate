@@ -5,8 +5,7 @@ import com.codemate.brewflop.ui.base.MvpView
 interface MainView : MvpView {
     fun newCoffeeIsComing()
     fun updateCoffeeProgress(newProgress: Int)
-    fun newCoffeeAvailable()
-    fun noCoffeeAnyMore()
+    fun resetCoffeeViewStatus()
     fun showCancelCoffeeProgressPrompt()
     fun noChannelNameSet()
 }

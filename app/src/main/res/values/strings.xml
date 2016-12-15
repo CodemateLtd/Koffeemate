@@ -41,6 +41,9 @@
 
     <string name="no_channel_name_set">No Slack channel name set for coffee announcements, set it in the preferences.</string>
 
+    <string name="new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
+    <string name="coffee_brewing_accident_text">Log an accident</string>
+
     <plurals name="number_of_days">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>

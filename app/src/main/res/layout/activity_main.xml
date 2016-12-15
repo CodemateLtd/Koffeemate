@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context="com.codemate.brewflop.ui.main.MainActivity">
+    android:layout_height="match_parent">
 
-    <com.codemate.brewflop.CoffeeProgressView
-        android:id="@+id/coffeeProgressView"
-        android:layout_width="128dp"
-        android:layout_height="128dp" />
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.codemate.brewflop.CoffeeProgressView
+            android:id="@+id/coffeeProgressView"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:alpha="0.2" />
+
+        <TextView
+            android:id="@+id/coffeeStatusTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/did_you_start_the_coffee_machine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+        <TextView
+            android:id="@+id/coffeeStatusMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/touch_here_to_notify_when_coffee_ready"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/coffeeStatusTitle"
+        android:id="@+id/logAccidentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:layout_gravity="top|right"
+        android:gravity="center_vertical"
         android:layout_marginTop="16dp"
-        android:text="@string/did_you_start_the_coffee_machine"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+        android:layout_marginRight="16dp"
+        android:drawableLeft="@drawable/ic_thumb_down"
+        android:drawablePadding="4dp"
+        android:textSize="14sp"
+        android:text="@string/coffee_brewing_accident_text"/>
 
-    <TextView
-        android:id="@+id/coffeeStatusMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/touch_here_to_notify_when_coffee_ready"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"/>
-
-</LinearLayout>
+</FrameLayout>

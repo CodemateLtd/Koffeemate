@@ -1,6 +1,7 @@
 package com.codemate.brewflop.ui.main
 
 import android.os.Handler
+import com.codemate.brewflop.data.BrewingProgressUpdater
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.*
 import org.junit.Before
