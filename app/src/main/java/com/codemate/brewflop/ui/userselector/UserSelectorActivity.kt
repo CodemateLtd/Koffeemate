@@ -83,7 +83,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }.show()
     }
 
-    override fun showSearchResults(users: List<User>) {
+    override fun showUsers(users: List<User>) {
         userSelectorAdapter.setItems(users)
     }
 

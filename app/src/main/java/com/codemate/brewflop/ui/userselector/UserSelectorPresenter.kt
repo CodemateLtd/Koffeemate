@@ -37,7 +37,7 @@ class UserSelectorPresenter(
                             }
                             .sortedBy { it.profile.realNameNormalized }
 
-                    getView()?.showSearchResults(users)
+                    getView()?.showUsers(users)
                     getView()?.hideProgress()
                 } else {
                     getView()?.showError()
