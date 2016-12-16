@@ -3,11 +3,13 @@ package com.codemate.brewflop.ui.main
 import android.content.SharedPreferences
 import android.os.Handler
 import com.codemate.brewflop.BuildConfig
+import com.codemate.brewflop.SynchronousExecutorService
 import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
+import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.Matchers.containsString
@@ -46,7 +48,7 @@ class MainPresenterTest {
         mockServer = MockWebServer()
         mockServer.start()
 
-        slackApi = SlackService.getApi(mockServer.url("/"))
+        slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
         presenter = MainPresenter(coffeePreferences, mockStatisticLogger, updater, slackApi)
         view = mock(MainView::class.java)
 

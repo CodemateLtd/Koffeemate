@@ -7,7 +7,7 @@ import android.graphics.Canvas
 import java.io.File
 import java.io.FileOutputStream
 
-class StickerApplier(private val context: Context, stickerResource: Int) {
+open class StickerApplier(private val context: Context, stickerResource: Int) {
     private val sticker: Bitmap
 
     init {
