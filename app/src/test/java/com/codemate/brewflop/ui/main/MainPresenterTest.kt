@@ -104,7 +104,7 @@ class MainPresenterTest {
             verify(view).updateCoffeeProgress(33)
             verify(view).updateCoffeeProgress(67)
             verify(view).resetCoffeeViewStatus()
-            verify(mockCoffeeEventRepository).recordCoffeeBrewingEvent()
+            verify(mockCoffeeEventRepository).recordBrewingEvent()
         }
 
         val apiRequest = mockServer.takeRequest()
