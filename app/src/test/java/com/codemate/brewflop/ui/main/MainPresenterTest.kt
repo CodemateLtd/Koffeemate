@@ -24,7 +24,7 @@ class MainPresenterTest {
     val CHANNEL_NAME = "fake-channel"
 
     lateinit var coffeePreferences: CoffeePreferences
-    lateinit var mockEventRepository: CoffeeEventRepository
+    lateinit var mockCoffeeEventRepository: CoffeeEventRepository
     lateinit var mockHandler: Handler
     lateinit var updater: BrewingProgressUpdater
     lateinit var mockServer: MockWebServer
@@ -39,7 +39,7 @@ class MainPresenterTest {
         coffeePreferences.preferences = mock<SharedPreferences>()
         whenever(coffeePreferences.getChannelName()).thenReturn(CHANNEL_NAME)
 
-        mockEventRepository = mock<CoffeeEventRepository>()
+        mockCoffeeEventRepository = mock<CoffeeEventRepository>()
 
         mockHandler = mock<Handler>()
         updater = BrewingProgressUpdater(9, 3)
@@ -49,7 +49,7 @@ class MainPresenterTest {
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-        presenter = MainPresenter(coffeePreferences, mockEventRepository, updater, slackApi)
+        presenter = MainPresenter(coffeePreferences, mockCoffeeEventRepository, updater, slackApi)
         view = mock<MainView>()
 
         presenter.attachView(view)
@@ -69,7 +69,7 @@ class MainPresenterTest {
 
         verify(view, times(1)).noChannelNameSet()
         verifyNoMoreInteractions(view)
-        verifyZeroInteractions(mockEventRepository)
+        verifyZeroInteractions(mockCoffeeEventRepository)
     }
 
     @Test
@@ -78,7 +78,7 @@ class MainPresenterTest {
 
         verify(view, times(1)).newCoffeeIsComing()
         verify(view, times(1)).updateCoffeeProgress(0)
-        verifyZeroInteractions(mockEventRepository)
+        verifyZeroInteractions(mockCoffeeEventRepository)
     }
 
     @Test
@@ -87,7 +87,7 @@ class MainPresenterTest {
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
-        verifyZeroInteractions(mockEventRepository)
+        verifyZeroInteractions(mockCoffeeEventRepository)
     }
 
     @Test
@@ -99,12 +99,12 @@ class MainPresenterTest {
         updater.run()
         updater.run()
 
-        inOrder(view, mockEventRepository) {
+        inOrder(view, mockCoffeeEventRepository) {
             verify(view).updateCoffeeProgress(0)
             verify(view).updateCoffeeProgress(33)
             verify(view).updateCoffeeProgress(67)
             verify(view).resetCoffeeViewStatus()
-            verify(mockEventRepository).recordCoffeeBrewingEvent()
+            verify(mockCoffeeEventRepository).recordCoffeeBrewingEvent()
         }
 
         val apiRequest = mockServer.takeRequest()
@@ -125,6 +125,6 @@ class MainPresenterTest {
         verify(view).resetCoffeeViewStatus()
 
         verify(mockHandler).removeCallbacks(updater)
-        verifyZeroInteractions(mockEventRepository)
+        verifyZeroInteractions(mockCoffeeEventRepository)
     }
 }

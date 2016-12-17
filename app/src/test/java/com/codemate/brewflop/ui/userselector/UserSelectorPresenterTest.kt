@@ -21,7 +21,7 @@ import org.junit.Test
 import java.io.File
 
 class UserSelectorPresenterTest {
-    lateinit var mockCoffeeStatLogger: CoffeeEventRepository
+    lateinit var mockCoffeeEventRepository: CoffeeEventRepository
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var presenter: UserSelectorPresenter
@@ -29,13 +29,13 @@ class UserSelectorPresenterTest {
 
     @Before
     fun setUp() {
-        mockCoffeeStatLogger = mock<CoffeeEventRepository>()
+        mockCoffeeEventRepository = mock<CoffeeEventRepository>()
 
         mockServer = MockWebServer()
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-        presenter = UserSelectorPresenter(mockCoffeeStatLogger, slackApi)
+        presenter = UserSelectorPresenter(mockCoffeeEventRepository, slackApi)
         view = mock<UserSelectorView>()
 
         presenter.attachView(view)
@@ -122,8 +122,33 @@ class UserSelectorPresenterTest {
         assertThat(requestBody, matchesPattern(".*token.*${BuildConfig.SLACK_AUTH_TOKEN}.*"))
     }
 
+    @Test
+    fun announceCoffeeBrewingAccident_WhenSuccessful_NotifiesUIAndStoresEvent() {
+        val user = getFakeUser()
+
+        mockServer.enqueue(MockResponse().setBody(""))
+        presenter.announceCoffeeBrewingAccident("", "", user, File.createTempFile("test", "png"))
+
+        verify(view, times(1)).messagePostedSuccessfully()
+        verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)
+        verifyNoMoreInteractions(view, mockCoffeeEventRepository)
+    }
+
+    @Test
+    fun announceCoffeeBrewingAccident_WhenNotSuccessful_DisplaysErrorMessage() {
+        val user = getFakeUser()
+
+        mockServer.enqueue(MockResponse().setResponseCode(400))
+        presenter.announceCoffeeBrewingAccident("", "", user, File.createTempFile("test", "png"))
+
+        verify(view, times(1)).errorPostingMessage()
+        verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)
+        verifyNoMoreInteractions(view, mockCoffeeEventRepository)
+    }
+
     private fun getFakeUser(): User {
         val user = User()
+        user.id = "abc123"
         user.profile = Profile()
         user.profile.first_name = "Jorma"
 
