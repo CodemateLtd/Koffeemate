@@ -50,7 +50,7 @@ class UserSelectorPresenter(
         })
     }
 
-    fun postMessageToSlack(channelName: String, comment: String, user: User, resource: Bitmap) {
+    fun announceCoffeeBrewingAccident(channelName: String, comment: String, user: User, resource: Bitmap) {
         ensureViewIsAttached()
 
         val stickeredProfilePic = stickerApplier.applySticker(resource)

@@ -71,7 +71,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
                         .asBitmap()
                         .into(object : SimpleTarget<Bitmap>(512, 512) {
                             override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {
-                                presenter.postMessageToSlack(
+                                presenter.announceCoffeeBrewingAccident(
                                         Constants.ACCIDENT_ANNOUNCEMENT_CHANNEL,
                                         comment,
                                         user,
