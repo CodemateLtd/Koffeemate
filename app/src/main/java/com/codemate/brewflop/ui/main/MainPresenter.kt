@@ -49,7 +49,7 @@ class MainPresenter(
                         })
 
                         getView()?.resetCoffeeViewStatus()
-                        coffeeEventRepository.recordCoffeeBrewingEvent()
+                        coffeeEventRepository.recordBrewingEvent()
                     }
             )
         } else {

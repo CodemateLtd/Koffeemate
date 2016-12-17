@@ -1,6 +1,7 @@
 package com.codemate.brewflop.data.local
 
 interface CoffeeEventRepository {
-    fun recordCoffeeBrewingEvent()
+    fun recordBrewingEvent()
     fun recordBrewingAccident(userId: String)
+    fun getAccidentCountForUser(userId: String): Long
 }
