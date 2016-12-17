@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.codemate.brewflop.R
-import com.codemate.brewflop.data.network.model.User
+import com.codemate.brewflop.data.network.models.User
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 import org.jetbrains.anko.onClick
 import java.util.*

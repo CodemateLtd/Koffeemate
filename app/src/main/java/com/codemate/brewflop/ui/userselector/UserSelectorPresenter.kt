@@ -1,10 +1,10 @@
 package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
-import com.codemate.brewflop.data.local.CoffeeStatisticLogger
+import com.codemate.brewflop.data.local.CoffeeEventRepository
 import com.codemate.brewflop.data.network.SlackApi
-import com.codemate.brewflop.data.network.model.User
-import com.codemate.brewflop.data.network.model.UserListResponse
+import com.codemate.brewflop.data.network.models.User
+import com.codemate.brewflop.data.network.models.UserListResponse
 import com.codemate.brewflop.ui.base.BasePresenter
 import com.codemate.brewflop.util.extensions.toRequestBody
 import okhttp3.MediaType
@@ -17,7 +17,7 @@ import retrofit2.Response
 import java.io.File
 
 class UserSelectorPresenter(
-        private val coffeeStatisticLogger: CoffeeStatisticLogger,
+        private val coffeeEventRepository: CoffeeEventRepository,
         private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         ensureViewIsAttached()
@@ -81,6 +81,6 @@ class UserSelectorPresenter(
             }
         })
 
-        coffeeStatisticLogger.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user.id)
     }
 }

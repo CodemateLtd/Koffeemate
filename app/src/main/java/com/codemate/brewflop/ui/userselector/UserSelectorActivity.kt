@@ -12,10 +12,10 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.codemate.brewflop.Constants
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.StickerApplier
-import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
+import com.codemate.brewflop.data.local.RealmCoffeeEventRepository
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
-import com.codemate.brewflop.data.network.model.User
+import com.codemate.brewflop.data.network.models.User
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
 import org.jetbrains.anko.*
@@ -32,7 +32,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
         stickerApplier = StickerApplier(this, R.drawable.approved_sticker)
         presenter = UserSelectorPresenter(
-                RealmCoffeeStatisticLogger(),
+                RealmCoffeeEventRepository(),
                 SlackService.getApi(SlackApi.BASE_URL)
         )
         presenter.attachView(this)

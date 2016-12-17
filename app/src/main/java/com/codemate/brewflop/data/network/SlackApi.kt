@@ -1,7 +1,7 @@
 package com.codemate.brewflop.data.network
 
 import com.codemate.brewflop.BuildConfig
-import com.codemate.brewflop.data.network.model.UserListResponse
+import com.codemate.brewflop.data.network.models.UserListResponse
 import com.codemate.brewflop.util.extensions.toRequestBody
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody

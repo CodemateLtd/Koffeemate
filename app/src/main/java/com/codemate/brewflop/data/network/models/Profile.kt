@@ -1,4 +1,4 @@
-package com.codemate.brewflop.data.network.model
+package com.codemate.brewflop.data.network.models
 
 class Profile {
     lateinit var first_name: String

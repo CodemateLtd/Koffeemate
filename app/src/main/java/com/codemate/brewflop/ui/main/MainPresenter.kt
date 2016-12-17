@@ -2,7 +2,7 @@ package com.codemate.brewflop.ui.main
 
 import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
-import com.codemate.brewflop.data.local.CoffeeStatisticLogger
+import com.codemate.brewflop.data.local.CoffeeEventRepository
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.ui.base.BasePresenter
 import okhttp3.ResponseBody
@@ -12,7 +12,7 @@ import retrofit2.Response
 
 class MainPresenter(
         private val coffeePreferences: CoffeePreferences,
-        private val coffeeStatisticLogger: CoffeeStatisticLogger,
+        private val coffeeEventRepository: CoffeeEventRepository,
         private val brewingProgressUpdater: BrewingProgressUpdater,
         private val slackApi: SlackApi
 ) : BasePresenter<MainView>() {
@@ -49,7 +49,7 @@ class MainPresenter(
                         })
 
                         getView()?.resetCoffeeViewStatus()
-                        coffeeStatisticLogger.recordCoffeeBrewingEvent()
+                        coffeeEventRepository.recordCoffeeBrewingEvent()
                     }
             )
         } else {

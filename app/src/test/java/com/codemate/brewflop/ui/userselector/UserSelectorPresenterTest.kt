@@ -3,11 +3,11 @@ package com.codemate.brewflop.ui.userselector
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.RegexMatcher.Companion.matchesPattern
 import com.codemate.brewflop.SynchronousExecutorService
-import com.codemate.brewflop.data.local.CoffeeStatisticLogger
+import com.codemate.brewflop.data.local.CoffeeEventRepository
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
-import com.codemate.brewflop.data.network.model.Profile
-import com.codemate.brewflop.data.network.model.User
+import com.codemate.brewflop.data.network.models.Profile
+import com.codemate.brewflop.data.network.models.User
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -21,7 +21,7 @@ import org.junit.Test
 import java.io.File
 
 class UserSelectorPresenterTest {
-    lateinit var mockCoffeeStatLogger: CoffeeStatisticLogger
+    lateinit var mockCoffeeStatLogger: CoffeeEventRepository
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var presenter: UserSelectorPresenter
@@ -29,7 +29,7 @@ class UserSelectorPresenterTest {
 
     @Before
     fun setUp() {
-        mockCoffeeStatLogger = mock<CoffeeStatisticLogger>()
+        mockCoffeeStatLogger = mock<CoffeeEventRepository>()
 
         mockServer = MockWebServer()
         mockServer.start()

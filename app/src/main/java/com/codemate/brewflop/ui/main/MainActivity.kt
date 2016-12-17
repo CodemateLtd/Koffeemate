@@ -7,7 +7,7 @@ import android.view.WindowManager
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
-import com.codemate.brewflop.data.local.RealmCoffeeStatisticLogger
+import com.codemate.brewflop.data.local.RealmCoffeeEventRepository
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.ui.secretsettings.SecretSettingsActivity
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), MainView {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
         val coffeePreferences = CoffeePreferences(this)
-        val coffeeStatisticLogger = RealmCoffeeStatisticLogger()
+        val coffeeStatisticLogger = RealmCoffeeEventRepository()
         val brewingProgressUpdater = BrewingProgressUpdater(BREWING_TIME, TOTAL_UPDATE_STEPS)
         val slackApi = SlackService.getApi(SlackApi.BASE_URL)
 

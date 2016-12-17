@@ -1,6 +1,6 @@
 package com.codemate.brewflop.ui.userselector
 
-import com.codemate.brewflop.data.network.model.User
+import com.codemate.brewflop.data.network.models.User
 import com.codemate.brewflop.ui.base.MvpView
 
 interface UserSelectorView : MvpView {
