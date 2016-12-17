@@ -1,8 +1,8 @@
 package com.codemate.brewflop.ui.main
 
 import com.codemate.brewflop.data.BrewingProgressUpdater
-import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.CoffeeEventRepository
+import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.ui.base.BasePresenter
 import okhttp3.ResponseBody
