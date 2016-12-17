@@ -9,7 +9,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.MainActivity" android:screenOrientation="sensorLandscape">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +20,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.userselector.UserSelectorActivity" android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name=".ui.userselector.UserSelectorActivity"
+            android:screenOrientation="sensorLandscape"/>
+
         <activity
             android:name=".ui.secretsettings.SecretSettingsActivity"
             android:theme="@style/AppTheme.Settings"/>
