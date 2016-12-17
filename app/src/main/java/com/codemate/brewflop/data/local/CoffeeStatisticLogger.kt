@@ -6,7 +6,3 @@ interface CoffeeStatisticLogger {
     fun recordCoffeeBrewingEvent()
     fun recordBrewingAccident(user: User)
 }
-
-class CoffeeBrewingEvent {
-
-}

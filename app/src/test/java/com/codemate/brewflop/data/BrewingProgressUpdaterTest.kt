@@ -1,20 +1,22 @@
 package com.codemate.brewflop.data
 
 import android.os.Handler
-import com.codemate.brewflop.data.BrewingProgressUpdater
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
 import java.util.concurrent.TimeUnit
 
 class BrewingProgressUpdaterTest {
-    private lateinit var mockHandler: Handler
+    lateinit var mockHandler: Handler
 
     @Before
     fun setUp() {
-        mockHandler = mock(Handler::class.java)
+        mockHandler = mock<Handler>()
     }
 
     @Test

@@ -66,7 +66,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
                 val comment = getString(R.string.congratulations_to_user_fmt, user.profile.first_name)
 
                 Glide.with(this@UserSelectorActivity)
-                        .load(user.largestAvailableProfileImageUrl)
+                        .load(user.profile.largestAvailableImage)
                         .asBitmap()
                         .into(object : SimpleTarget<Bitmap>(512, 512) {
                             override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {

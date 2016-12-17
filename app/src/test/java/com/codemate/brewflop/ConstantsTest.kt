@@ -1,7 +1,5 @@
-package com.codemate.brewflop.ui.main
+package com.codemate.brewflop
 
-import com.codemate.brewflop.BuildConfig
-import com.codemate.brewflop.Constants
 import org.hamcrest.core.IsEqual.equalTo
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert.assertThat

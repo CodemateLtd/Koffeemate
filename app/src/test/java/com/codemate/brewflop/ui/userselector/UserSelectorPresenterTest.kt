@@ -21,11 +21,11 @@ import org.junit.Test
 import java.io.File
 
 class UserSelectorPresenterTest {
-    private lateinit var mockCoffeeStatLogger: CoffeeStatisticLogger
-    private lateinit var mockServer: MockWebServer
-    private lateinit var slackApi: SlackApi
-    private lateinit var presenter: UserSelectorPresenter
-    private lateinit var view: UserSelectorView
+    lateinit var mockCoffeeStatLogger: CoffeeStatisticLogger
+    lateinit var mockServer: MockWebServer
+    lateinit var slackApi: SlackApi
+    lateinit var presenter: UserSelectorPresenter
+    lateinit var view: UserSelectorView
 
     @Before
     fun setUp() {

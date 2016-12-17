@@ -21,17 +21,17 @@ import org.junit.Before
 import org.junit.Test
 
 class MainPresenterTest {
-    private val CHANNEL_NAME = "fake-channel"
+    val CHANNEL_NAME = "fake-channel"
 
-    private lateinit var coffeePreferences: CoffeePreferences
-    private lateinit var mockStatisticLogger: CoffeeStatisticLogger
-    private lateinit var mockHandler: Handler
-    private lateinit var updater: BrewingProgressUpdater
-    private lateinit var mockServer: MockWebServer
-    private lateinit var slackApi: SlackApi
+    lateinit var coffeePreferences: CoffeePreferences
+    lateinit var mockStatisticLogger: CoffeeStatisticLogger
+    lateinit var mockHandler: Handler
+    lateinit var updater: BrewingProgressUpdater
+    lateinit var mockServer: MockWebServer
+    lateinit var slackApi: SlackApi
 
-    private lateinit var presenter: MainPresenter
-    private lateinit var view: MainView
+    lateinit var presenter: MainPresenter
+    lateinit var view: MainView
 
     @Before
     fun setUp() {
