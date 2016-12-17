@@ -59,11 +59,11 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private fun confirmUser(user: User) {
         alert {
             title(R.string.reset_the_counter)
-            message(getString(R.string.posting_to_slack_fmt, user.profile.realName))
+            message(getString(R.string.posting_to_slack_fmt, user.profile.real_name))
 
             negativeButton(R.string.cancel)
             positiveButton(R.string.inform_everyone) {
-                val comment = getString(R.string.congratulations_to_user_fmt, user.profile.firstName)
+                val comment = getString(R.string.congratulations_to_user_fmt, user.profile.first_name)
 
                 Glide.with(this@UserSelectorActivity)
                         .load(user.largestAvailableProfileImageUrl)

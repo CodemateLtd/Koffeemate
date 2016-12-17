@@ -93,7 +93,7 @@ class UserSelectorPresenterTest {
     private fun getFakeUser(): User {
         val user = User()
         user.profile = Profile()
-        user.profile.firstName = "Jorma"
+        user.profile.first_name = "Jorma"
 
         return user
     }

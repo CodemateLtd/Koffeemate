@@ -29,11 +29,11 @@ class UserSelectorPresenter(
                     val users = response.body().members
                             .toMutableList()
                             .filter {
-                                !it.isBot
-                                        && !it.profile.firstName.startsWith("Ext-")
-                                        && it.realName != "slackbot"
+                                !it.is_bot
+                                        && !it.profile.first_name.startsWith("Ext-")
+                                        && it.real_name != "slackbot"
                             }
-                            .sortedBy { it.profile.realNameNormalized }
+                            .sortedBy { it.profile.real_name_normalized }
 
                     getView()?.showUsers(users)
                     getView()?.hideProgress()
@@ -52,7 +52,7 @@ class UserSelectorPresenter(
         ensureViewIsAttached()
 
         // Evaluates to "johns-certificate.png" etc
-        val fileName = "${user.profile.firstName.toLowerCase()}s-certificate.png"
+        val fileName = "${user.profile.first_name.toLowerCase()}s-certificate.png"
         val fileBody = MultipartBody.Part.createFormData(
                 "file",
                 fileName,
