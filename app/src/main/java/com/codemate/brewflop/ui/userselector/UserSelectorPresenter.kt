@@ -1,8 +1,6 @@
 package com.codemate.brewflop.ui.userselector
 
-import android.graphics.Bitmap
 import com.codemate.brewflop.BuildConfig
-import com.codemate.brewflop.data.StickerApplier
 import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.model.User
@@ -16,10 +14,10 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class UserSelectorPresenter(
         private val coffeeStatisticLogger: CoffeeStatisticLogger,
-        private val stickerApplier: StickerApplier,
         private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         ensureViewIsAttached()
@@ -50,10 +48,8 @@ class UserSelectorPresenter(
         })
     }
 
-    fun announceCoffeeBrewingAccident(channelName: String, comment: String, user: User, resource: Bitmap) {
+    fun announceCoffeeBrewingAccident(channelName: String, comment: String, user: User, stickeredProfilePic: File) {
         ensureViewIsAttached()
-
-        val stickeredProfilePic = stickerApplier.applySticker(resource)
 
         // Evaluates to "johns-certificate.png" etc
         val fileName = "${user.profile.firstName.toLowerCase()}s-certificate.png"

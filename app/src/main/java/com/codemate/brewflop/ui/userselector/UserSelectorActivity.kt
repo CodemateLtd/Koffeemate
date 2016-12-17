@@ -17,12 +17,11 @@ import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.User
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private lateinit var userSelectorAdapter: UserSelectorAdapter
+    private lateinit var stickerApplier: StickerApplier
     private lateinit var presenter: UserSelectorPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +29,9 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         setContentView(R.layout.activity_user_selector)
         setUpUserRecycler()
 
+        stickerApplier = StickerApplier(this, R.drawable.approved_sticker)
         presenter = UserSelectorPresenter(
                 RealmCoffeeStatisticLogger(),
-                StickerApplier(this, R.drawable.approved_sticker),
                 SlackService.getApi(SlackApi.BASE_URL)
         )
         presenter.attachView(this)
@@ -71,12 +70,18 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
                         .asBitmap()
                         .into(object : SimpleTarget<Bitmap>(512, 512) {
                             override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {
-                                presenter.announceCoffeeBrewingAccident(
-                                        Constants.ACCIDENT_ANNOUNCEMENT_CHANNEL,
-                                        comment,
-                                        user,
-                                        resource
-                                )
+                                doAsync {
+                                    val stickeredProfilePic = stickerApplier.applySticker(resource)
+
+                                    uiThread {
+                                        presenter.announceCoffeeBrewingAccident(
+                                                Constants.ACCIDENT_ANNOUNCEMENT_CHANNEL,
+                                                comment,
+                                                user,
+                                                stickeredProfilePic
+                                        )
+                                    }
+                                }
                             }
                         })
             }
