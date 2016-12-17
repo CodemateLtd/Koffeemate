@@ -74,6 +74,8 @@ class UserSelectorPresenterTest {
             assertThat(john.profile.last_name, equalTo("Smith"))
             assertThat(john.profile.real_name, equalTo("John Smith"))
         }
+
+        verify(view).hideProgress()
     }
 
     @Test
