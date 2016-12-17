@@ -8,7 +8,7 @@ import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.Profile
 import com.codemate.brewflop.data.network.model.User
-import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.*
 import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -18,7 +18,6 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
 import java.io.File
 
 class UserSelectorPresenterTest {
@@ -30,14 +29,14 @@ class UserSelectorPresenterTest {
 
     @Before
     fun setUp() {
-        mockCoffeeStatLogger = mock(CoffeeStatisticLogger::class.java)
+        mockCoffeeStatLogger = mock<CoffeeStatisticLogger>()
 
         mockServer = MockWebServer()
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
         presenter = UserSelectorPresenter(mockCoffeeStatLogger, slackApi)
-        view = mock(UserSelectorView::class.java)
+        view = mock<UserSelectorView>()
 
         presenter.attachView(view)
     }

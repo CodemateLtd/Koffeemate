@@ -9,6 +9,7 @@ import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.CoffeeStatisticLogger
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
+import com.nhaarman.mockito_kotlin.*
 import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -18,7 +19,6 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
 
 class MainPresenterTest {
     private val CHANNEL_NAME = "fake-channel"
@@ -35,13 +35,13 @@ class MainPresenterTest {
 
     @Before
     fun setUp() {
-        coffeePreferences = mock(CoffeePreferences::class.java)
-        coffeePreferences.preferences = mock(SharedPreferences::class.java)
-        `when`(coffeePreferences.getChannelName()).thenReturn(CHANNEL_NAME)
+        coffeePreferences = mock<CoffeePreferences>()
+        coffeePreferences.preferences = mock<SharedPreferences>()
+        whenever(coffeePreferences.getChannelName()).thenReturn(CHANNEL_NAME)
 
-        mockStatisticLogger = mock(CoffeeStatisticLogger::class.java)
+        mockStatisticLogger = mock<CoffeeStatisticLogger>()
 
-        mockHandler = mock(Handler::class.java)
+        mockHandler = mock<Handler>()
         updater = BrewingProgressUpdater(9, 3)
         updater.updateHandler = mockHandler
 
@@ -50,7 +50,7 @@ class MainPresenterTest {
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
         presenter = MainPresenter(coffeePreferences, mockStatisticLogger, updater, slackApi)
-        view = mock(MainView::class.java)
+        view = mock<MainView>()
 
         presenter.attachView(view)
     }
@@ -62,7 +62,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
-        `when`(coffeePreferences.getChannelName()).thenReturn("")
+        whenever(coffeePreferences.getChannelName()).thenReturn("")
         updater.isUpdating = false
 
         presenter.startDelayedCoffeeAnnouncement("")
@@ -99,12 +99,13 @@ class MainPresenterTest {
         updater.run()
         updater.run()
 
-        val inOrder = inOrder(view, mockStatisticLogger)
-        inOrder.verify(view).updateCoffeeProgress(0)
-        inOrder.verify(view).updateCoffeeProgress(33)
-        inOrder.verify(view).updateCoffeeProgress(67)
-        inOrder.verify(view).resetCoffeeViewStatus()
-        inOrder.verify(mockStatisticLogger).recordCoffeeBrewingEvent()
+        inOrder(view, mockStatisticLogger) {
+            verify(view).updateCoffeeProgress(0)
+            verify(view).updateCoffeeProgress(33)
+            verify(view).updateCoffeeProgress(67)
+            verify(view).resetCoffeeViewStatus()
+            verify(mockStatisticLogger).recordCoffeeBrewingEvent()
+        }
 
         val apiRequest = mockServer.takeRequest()
         assertThat(apiRequest.path, equalTo("/chat.postMessage"))
