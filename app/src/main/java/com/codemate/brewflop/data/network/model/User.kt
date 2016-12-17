@@ -6,9 +6,6 @@ class User {
     lateinit var profile: Profile
 
     var real_name: String? = null
-    var tz: String? = null
-    var tz_label: String? = null
-    var tz_offset = 0
     var is_bot: Boolean = false
 
     val largestAvailableProfileImageUrl: String

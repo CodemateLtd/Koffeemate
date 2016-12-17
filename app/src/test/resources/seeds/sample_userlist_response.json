@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "members": [{
+    "id": "abc123",
+    "name": "bobby",
+    "is_bot": false,
+    "profile": {
+      "first_name": "Bobby",
+      "last_name": "Tables",
+      "real_name": "Bobby Tables"
+    }
+  }, {
+    "id": "123abc",
+    "name": "john",
+    "is_bot": false,
+    "profile": {
+      "first_name": "John",
+      "last_name": "Smith",
+      "real_name": "John Smith"
+    }
+  }, {
+    "id": "a1b2c3",
+    "name": "slackbot",
+    "is_bot": true,
+    "profile": {
+      "first_name": "Slack",
+      "last_name": "Bot",
+      "real_name": "Slackbot"
+    }
+  }],
+  "cache_ts": 123456789
+}

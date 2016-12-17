@@ -33,7 +33,7 @@ class UserSelectorPresenter(
                                         && !it.profile.first_name.startsWith("Ext-")
                                         && it.real_name != "slackbot"
                             }
-                            .sortedBy { it.profile.real_name_normalized }
+                            .sortedBy { it.profile.real_name }
 
                     getView()?.showUsers(users)
                     getView()?.hideProgress()

@@ -8,6 +8,7 @@ import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.model.Profile
 import com.codemate.brewflop.data.network.model.User
+import com.nhaarman.mockito_kotlin.argumentCaptor
 import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -44,6 +45,36 @@ class UserSelectorPresenterTest {
     @After
     fun tearDown() {
         mockServer.shutdown()
+    }
+
+    @Test
+    fun loadUsers_LoadsUsersAndDisplaysThemInUI() {
+        val userListJson = File("src/test/resources/seeds/sample_userlist_response.json").readText()
+        mockServer.enqueue(MockResponse().setBody(userListJson))
+        presenter.loadUsers()
+
+        argumentCaptor<List<User>>().apply {
+            verify(view).showUsers(capture())
+
+            val userList = firstValue
+            assertThat(userList.size, equalTo(2))
+
+            val bobby = userList[0]
+            assertThat(bobby.id, equalTo("abc123"))
+            assertThat(bobby.name, equalTo("bobby"))
+            assertThat(bobby.is_bot, equalTo(false))
+            assertThat(bobby.profile.first_name, equalTo("Bobby"))
+            assertThat(bobby.profile.last_name, equalTo("Tables"))
+            assertThat(bobby.profile.real_name, equalTo("Bobby Tables"))
+
+            val john = userList[1]
+            assertThat(john.id, equalTo("123abc"))
+            assertThat(john.name, equalTo("john"))
+            assertThat(john.is_bot, equalTo(false))
+            assertThat(john.profile.first_name, equalTo("John"))
+            assertThat(john.profile.last_name, equalTo("Smith"))
+            assertThat(john.profile.real_name, equalTo("John Smith"))
+        }
     }
 
     @Test
