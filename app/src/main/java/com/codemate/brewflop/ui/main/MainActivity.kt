@@ -68,8 +68,8 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun newCoffeeIsComing() {
-        coffeeStatusTitle.text = getString(R.string.coffee_is_coming_title)
-        coffeeStatusMessage.text = getString(R.string.coffee_is_coming_message)
+        coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
+        coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)
         coffeeProgressView.animate()
                 .alpha(1f)
                 .start()
@@ -85,8 +85,8 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun resetCoffeeViewStatus() {
         coffeeProgressView.setProgress(0)
-        coffeeStatusTitle.text = getString(R.string.did_you_start_the_coffee_machine)
-        coffeeStatusMessage.text = getString(R.string.touch_here_to_notify_when_coffee_ready)
+        coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
+        coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
         coffeeProgressView.animate()
                 .alpha(0.2f)
                 .start()

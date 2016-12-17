@@ -1,53 +1,56 @@
 <resources>
-    <string name="since_the_last_brewing_accident">since the last coffee brewing incident</string>
-    <string name="reset">Reset</string>
+    <!-- Button Strings -->
+    <string name="button_log_an_accident">Log an accident</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_try_again">Try again</string>
+    <string name="button_announce_coffee_accident">Inform everyone!</string>
+
+    <!-- Coffee view Strings -->
+    <string name="title_coffeeview_idle">Brewing fresh coffee?</string>
+    <string name="message_coffeeview_idle">Touch the coffee pot above!</string>
+
+    <string name="title_coffeeview_brewing">Coffee is coming!</string>
+    <string name="message_coffeeview_brewing">Informing others on Slack when ready.</string>
+
+    <!-- Preference Strings -->
     <string name="preference_category_general">General</string>
-    <string name="pref_key_incident_free_day_count">pref_key_incident_free_day_count</string>
+
+    <string name="preference_coffee_announcement_slack_channel_key">coffee_announcement_slack_channel</string>
+    <string name="preference_coffee_announcement_slack_channel_title">Coffee announcement channel</string>
+    <string name="preference_coffee_announcement_slack_channel_summary">Slack channel name for announcing when new coffee is ready.</string>
+
+    <string name="preference_incident_free_days_key">incident_free_days</string>
     <string name="preference_incident_free_days_title">Incident-free days</string>
     <string name="preference_incident_free_days_summary">Set the incident-free days manually.</string>
     <string name="preference_incident_free_days_dialog_message">How many incident-free days there has been?</string>
-    <string name="day_count_updated_fmt">Day count updated to %s.</string>
+    <string name="preference_incident_free_days_updated_message">Incident-free days updated to %s.</string>
+
+
+    <!-- Misc -->
     <string name="posting_to_slack_fmt">Posting to Slack that %s didn\'t know how to make coffee.\n\nIs this correct?</string>
-    <string name="cancel">Cancel</string>
-    <string name="try_again">Try again</string>
-    <string name="inform_everyone">Inform everyone!</string>
     <string name="reset_the_counter">Reset the counter?</string>
+
+
     <string name="who_is_guilty">Who is guilty of this coffee incident?</string>
+
+
     <string name="message_posted_successfully">New MoccaMaster certified person announced successfully on Slack!</string>
     <string name="could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
-    <string name="slack_announcement_fmt">_%1$s_ didn\'t know how to make coffee.\n%2$s has failed to make coffee *%3$d* times.\nTotal number of *%4$d* incident free days were had.</string>
-    <string name="pref_key_secret_settings_password">pref_key_secret_settings_password</string>
+
     <string name="user_load_error">Couldn\'t load the profile list. :(</string>
     <string name="error_try_again">Try again</string>
+
     <string name="select_person_below">Click on a correct person below.</string>
-    <string name="name_reseted_counter_was_at_n_days_fmt">*%1$s* just had a coffee brewing accident, and reseted the counter which was at *%2$d* days.\nThis is their %3$s coffee brewing accident.</string>
-    <string name="name_is_leading_fmt">*%1$s* is the leading MoccaMaster with a score of *%2$d* accidents.</string>
-    <string name="names_nth_brewing_accident_fmt">This is %1$s\'s *%2$s* coffee brewing accident.</string>
-    <string name="name_got_his_first_certificate_fmt">Congratulations to *%1$s* for their first MoccaMaster Certificate! :clap::clap:\n%2$d accident-free days were had.</string>
-    <string name="did_you_start_the_coffee_machine">Brewing fresh coffee?</string>
-    <string name="touch_here_to_notify_when_coffee_ready">Touch the coffee pot above!</string>
 
-    <string name="coffee_loader_title">Cancel Coffee Progress</string>
-    <string name="coffee_loader_message">Are you sure you want to cancel current coffee brewing timer?</string>
-
-    <string name="coffee_is_coming_title">Coffee is coming!</string>
-    <string name="coffee_is_coming_message">Informing others on Slack when ready.</string>
 
     <string name="really_cancel_coffee_progress_title">Cancel Coffee Progress</string>
     <string name="really_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
-    <string name="pref_key_coffee_announcement_slack_channel">coffee_announcement_slack_channel</string>
-    <string name="preference_coffee_announcement_slack_channel_title">Coffee announcement channel</string>
-    <string name="preference_coffee_announcement_slack_channel_summary">Slack channel name for announcing when new coffee is ready.</string>
 
     <string name="no_channel_name_set">No Slack channel name set for coffee announcements, set it in the preferences.</string>
 
     <string name="new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
-    <string name="coffee_brewing_accident_text">Log an accident</string>
+
 
     <string name="congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
 
-    <plurals name="number_of_days">
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
 </resources>

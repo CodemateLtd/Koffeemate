@@ -42,14 +42,14 @@ public class SecretSettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.secret_preferences);
 
-            Preference dayCount = findPreference(getString(R.string.pref_key_incident_free_day_count));
+            Preference dayCount = findPreference(getString(R.string.preference_incident_free_days_key));
             dayCount.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     String newValueStr = newValue.toString();
                     // TODO: dayCountUpdater.setCount(Integer.parseInt(newValueStr));
 
-                    Toast.makeText(getActivity(), getString(R.string.day_count_updated_fmt, newValueStr), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.preference_incident_free_days_updated_message, newValueStr), Toast.LENGTH_LONG).show();
                     return false;
                 }
             });

@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/did_you_start_the_coffee_machine"
+            android:text="@string/title_coffeeview_idle"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/touch_here_to_notify_when_coffee_ready"
+            android:text="@string/message_coffeeview_idle"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead" />
 
     </LinearLayout>
@@ -47,6 +47,6 @@
         android:drawableLeft="@drawable/ic_thumb_down"
         android:drawablePadding="4dp"
         android:textSize="14sp"
-        android:text="@string/coffee_brewing_accident_text"/>
+        android:text="@string/button_log_an_accident"/>
 
 </FrameLayout>

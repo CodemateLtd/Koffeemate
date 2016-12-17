@@ -11,7 +11,7 @@ open class CoffeePreferences(ctx: Context) {
 
     init {
         preferences = ctx.defaultSharedPreferences
-        channelNameKey = ctx.getString(R.string.pref_key_coffee_announcement_slack_channel)
+        channelNameKey = ctx.getString(R.string.preference_coffee_announcement_slack_channel_key)
     }
 
     fun isChannelNameSet() = !getChannelName().isBlank()

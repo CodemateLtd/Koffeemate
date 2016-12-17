@@ -61,8 +61,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             title(R.string.reset_the_counter)
             message(getString(R.string.posting_to_slack_fmt, user.profile.real_name))
 
-            negativeButton(R.string.cancel)
-            positiveButton(R.string.inform_everyone) {
+            negativeButton(R.string.button_cancel)
+            positiveButton(R.string.button_announce_coffee_accident) {
                 val comment = getString(R.string.congratulations_to_user_fmt, user.profile.first_name)
 
                 Glide.with(this@UserSelectorActivity)
