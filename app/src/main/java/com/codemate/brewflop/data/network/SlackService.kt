@@ -14,33 +14,30 @@
  * limitations under the License.
  */
 
-package com.codemate.brewflop.data.network;
+package com.codemate.brewflop.data.network
 
-import okhttp3.Dispatcher;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Dispatcher
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Created by iiro on 4.10.2016.
- */
-public class SlackService {
-    public static SlackApi getApi(HttpUrl baseUrl) {
-        return getApi(new Dispatcher(), baseUrl);
+object SlackService {
+    fun getApi(baseUrl: HttpUrl): SlackApi {
+        return getApi(Dispatcher(), baseUrl)
     }
 
-    public static SlackApi getApi(Dispatcher dispatcher, HttpUrl baseUrl) {
-        OkHttpClient client = new OkHttpClient.Builder()
+    fun getApi(dispatcher: Dispatcher, baseUrl: HttpUrl): SlackApi {
+        val client = OkHttpClient.Builder()
                 .dispatcher(dispatcher)
-                .build();
+                .build()
 
-        Retrofit retrofit = new Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
 
-        return retrofit.create(SlackApi.class);
+        return retrofit.create(SlackApi::class.java)
     }
 }
