@@ -18,6 +18,6 @@ open class CoffeePreferences(ctx: Context) {
     fun isCoffeeAnnouncementChannelSet() = !getCoffeeAnnouncementChannel().isBlank()
 
     fun getCoffeeAnnouncementChannel(): String {
-        return preferences.getString(channelNameKey, null) ?: BuildConfig.NEW_COFFEE_ANNOUNCEMENT_CHANNEL
+        return preferences.getString(channelNameKey, null) ?: ""
     }
 }
