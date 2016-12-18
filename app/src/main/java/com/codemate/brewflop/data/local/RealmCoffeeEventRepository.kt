@@ -53,4 +53,12 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .findAllSorted("time", Sort.DESCENDING)
                 .firstOrNull()
     }
+
+    override fun getLastBrewingAccident(): CoffeeBrewingEvent? {
+        return Realm.getDefaultInstance()
+                .where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", false)
+                .findAllSorted("time", Sort.DESCENDING)
+                .firstOrNull()
+    }
 }

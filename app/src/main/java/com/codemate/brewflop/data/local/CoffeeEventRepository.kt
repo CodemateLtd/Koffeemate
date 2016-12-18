@@ -7,4 +7,5 @@ interface CoffeeEventRepository {
     fun recordBrewingAccident(userId: String): CoffeeBrewingEvent
     fun getAccidentCountForUser(userId: String): Long
     fun getLastBrewingEvent(): CoffeeBrewingEvent?
+    fun getLastBrewingAccident(): CoffeeBrewingEvent?
 }

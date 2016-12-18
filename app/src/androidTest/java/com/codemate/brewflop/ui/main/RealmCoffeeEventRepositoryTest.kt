@@ -43,13 +43,17 @@ class RealmCoffeeEventRepositoryTest {
         val userId = "abc123"
         assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(0L))
 
-        coffeeEventRepository.recordBrewingAccident(userId)
+        val firstAccident = coffeeEventRepository.recordBrewingAccident(userId)
+        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(firstAccident))
+
         coffeeEventRepository.recordBrewingAccident(userId)
         coffeeEventRepository.recordBrewingAccident(userId)
 
         val otherUserId = "someotherid"
         coffeeEventRepository.recordBrewingAccident(otherUserId)
-        coffeeEventRepository.recordBrewingAccident(otherUserId)
+
+        val lastAccident = coffeeEventRepository.recordBrewingAccident(otherUserId)
+        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(lastAccident))
 
         assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(3L))
     }
