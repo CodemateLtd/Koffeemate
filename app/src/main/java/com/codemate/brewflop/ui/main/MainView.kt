@@ -8,6 +8,8 @@ interface MainView : MvpView {
     fun updateCoffeeProgress(newProgress: Int)
     fun resetCoffeeViewStatus()
     fun showCancelCoffeeProgressPrompt()
-    fun noChannelNameSet()
+    fun noAnnouncementChannelSet()
     fun setLastBrewingEvent(event: CoffeeBrewingEvent)
+    fun noAccidentChannelSet()
+    fun launchUserSelector()
 }

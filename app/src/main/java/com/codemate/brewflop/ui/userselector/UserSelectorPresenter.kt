@@ -2,6 +2,7 @@ package com.codemate.brewflop.ui.userselector
 
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.data.local.CoffeeEventRepository
+import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.models.User
 import com.codemate.brewflop.data.network.models.UserListResponse
@@ -18,6 +19,7 @@ import java.io.File
 import javax.inject.Inject
 
 class UserSelectorPresenter @Inject constructor(
+        val coffeePreferences: CoffeePreferences,
         val coffeeEventRepository: CoffeeEventRepository,
         val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
@@ -49,7 +51,7 @@ class UserSelectorPresenter @Inject constructor(
         })
     }
 
-    fun announceCoffeeBrewingAccident(channelName: String, comment: String, user: User, stickeredProfilePic: File) {
+    fun announceCoffeeBrewingAccident(comment: String, user: User, stickeredProfilePic: File) {
         ensureViewIsAttached()
 
         // Evaluates to "johns-certificate.png" etc
@@ -66,7 +68,7 @@ class UserSelectorPresenter @Inject constructor(
         slackApi.postImage(
                 file = fileBody,
                 filename = fileName.toRequestBody(),
-                channels = channelName.toRequestBody(),
+                channels = coffeePreferences.getAccidentChannel().toRequestBody(),
                 comment = comment.toRequestBody()).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {

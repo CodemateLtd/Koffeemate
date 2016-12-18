@@ -40,9 +40,7 @@ class MainActivity : AppCompatActivity(), MainView {
             true
         }
 
-        logAccidentButton.onClick {
-            startActivity(intentFor<UserSelectorActivity>())
-        }
+        logAccidentButton.onClick { presenter.launchUserSelector() }
     }
 
     override fun onResume() {
@@ -55,9 +53,18 @@ class MainActivity : AppCompatActivity(), MainView {
         presenter.detachView()
     }
 
-    override fun noChannelNameSet() {
-        longToast(R.string.no_channel_name_set)
+    override fun noAnnouncementChannelSet() {
+        longToast(R.string.no_announcement_channel_set)
         startActivity(intentFor<SecretSettingsActivity>())
+    }
+
+    override fun noAccidentChannelSet() {
+        longToast(R.string.no_accident_channel_set)
+        startActivity(intentFor<SecretSettingsActivity>())
+    }
+
+    override fun launchUserSelector() {
+        startActivity(intentFor<UserSelectorActivity>())
     }
 
     override fun setLastBrewingEvent(event: CoffeeBrewingEvent) {

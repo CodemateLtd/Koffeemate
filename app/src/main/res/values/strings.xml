@@ -21,6 +21,10 @@
     <string name="preference_coffee_announcement_slack_channel_title">Coffee announcement channel</string>
     <string name="preference_coffee_announcement_slack_channel_summary">Slack channel name for announcing when new coffee is ready.</string>
 
+    <string name="preference_coffee_accident_slack_channel_key">coffee_accident_slack_channel</string>
+    <string name="preference_coffee_accident_slack_channel_title">Accident announcement channel</string>
+    <string name="preference_coffee_accident_slack_channel_summary">Slack channel name for announcing when new coffee brewing accidents happen.</string>
+
     <string name="preference_incident_free_days_key">incident_free_days</string>
     <string name="preference_incident_free_days_title">Incident-free days</string>
     <string name="preference_incident_free_days_summary">Set the incident-free days manually.</string>
@@ -48,7 +52,8 @@
     <string name="really_cancel_coffee_progress_title">Cancel Coffee Progress</string>
     <string name="really_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
 
-    <string name="no_channel_name_set">No Slack channel name set for coffee announcements, set it in the preferences.</string>
+    <string name="no_announcement_channel_set">No Slack channel set for coffee announcements. Please set it in the preferences.</string>
+    <string name="no_accident_channel_set">No Slack channel set for brewing failures. Please set it in the preferences.</string>
 
     <string name="new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
 

@@ -16,7 +16,6 @@ android {
 
         buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
         buildConfigField "String", "SLACK_BOT_NAME", SLACK_BOT_NAME
-        buildConfigField "String", "BREWING_ACCIDENT_CHANNEL", BREWING_ACCIDENT_CHANNEL
     }
     buildTypes {
         release {

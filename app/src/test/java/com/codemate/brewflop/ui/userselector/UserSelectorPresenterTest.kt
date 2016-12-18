@@ -1,9 +1,11 @@
 package com.codemate.brewflop.ui.userselector
 
+import android.content.SharedPreferences
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.RegexMatcher.Companion.matchesPattern
 import com.codemate.brewflop.SynchronousExecutorService
 import com.codemate.brewflop.data.local.CoffeeEventRepository
+import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.data.network.models.Profile
@@ -21,6 +23,7 @@ import org.junit.Test
 import java.io.File
 
 class UserSelectorPresenterTest {
+    lateinit var mockCoffeePreferences: CoffeePreferences
     lateinit var mockCoffeeEventRepository: CoffeeEventRepository
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
@@ -29,13 +32,17 @@ class UserSelectorPresenterTest {
 
     @Before
     fun setUp() {
+        mockCoffeePreferences = mock<CoffeePreferences>()
+        mockCoffeePreferences.preferences = mock<SharedPreferences>()
+        whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("test-channel")
+
         mockCoffeeEventRepository = mock<CoffeeEventRepository>()
 
         mockServer = MockWebServer()
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-        presenter = UserSelectorPresenter(mockCoffeeEventRepository, slackApi)
+        presenter = UserSelectorPresenter(mockCoffeePreferences, mockCoffeeEventRepository, slackApi)
         view = mock<UserSelectorView>()
 
         presenter.attachView(view)
@@ -112,7 +119,7 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setBody(""))
-        presenter.announceCoffeeBrewingAccident("test-channel", "Test comment", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("Test comment", user, File.createTempFile("test", "png"))
 
         // TODO: There has to be a better way to verify these multipart post params, right? :S
         val requestBody = mockServer.takeRequest().body.readUtf8()
@@ -127,7 +134,7 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setBody(""))
-        presenter.announceCoffeeBrewingAccident("", "", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("", user, File.createTempFile("test", "png"))
 
         verify(view, times(1)).messagePostedSuccessfully()
         verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)
@@ -139,7 +146,7 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setResponseCode(400))
-        presenter.announceCoffeeBrewingAccident("", "", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("", user, File.createTempFile("test", "png"))
 
         verify(view, times(1)).errorPostingMessage()
         verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)

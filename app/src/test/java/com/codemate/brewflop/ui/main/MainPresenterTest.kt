@@ -5,8 +5,8 @@ import android.os.Handler
 import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.SynchronousExecutorService
 import com.codemate.brewflop.data.BrewingProgressUpdater
-import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.CoffeeEventRepository
+import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.models.CoffeeBrewingEvent
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
@@ -38,6 +38,7 @@ class MainPresenterTest {
     fun setUp() {
         coffeePreferences = mock<CoffeePreferences>()
         coffeePreferences.preferences = mock<SharedPreferences>()
+        whenever(coffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
         mockCoffeeEventRepository = mock<CoffeeEventRepository>()
@@ -62,13 +63,30 @@ class MainPresenterTest {
     }
 
     @Test
+    fun launchUserSelector_WhenNoAccidentChannelSet_InformsView() {
+        whenever(coffeePreferences.getAccidentChannel()).thenReturn("")
+        presenter.launchUserSelector()
+
+        verify(view).noAccidentChannelSet()
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun testName() {
+        presenter.launchUserSelector()
+
+        verify(view).launchUserSelector()
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn("")
         updater.isUpdating = false
 
         presenter.startDelayedCoffeeAnnouncement("")
 
-        verify(view, times(1)).noChannelNameSet()
+        verify(view, times(1)).noAnnouncementChannelSet()
         verifyNoMoreInteractions(view)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
@@ -127,7 +145,7 @@ class MainPresenterTest {
     }
 
     @Test
-    fun testupdateLastBrewingEventTime_WhenHasCoffeeBrewingEvents_ShowsLastInUI() {
+    fun updateLastBrewingEventTime_WhenHasCoffeeBrewingEvents_ShowsLastInUI() {
         val lastEvent = CoffeeBrewingEvent(time = System.currentTimeMillis())
 
         whenever(mockCoffeeEventRepository.getLastBrewingEvent()).thenReturn(lastEvent)

@@ -22,7 +22,7 @@ class MainPresenter @Inject constructor(
 
         if (!brewingProgressUpdater.isUpdating
                 && !coffeePreferences.isCoffeeAnnouncementChannelSet()) {
-            getView()?.noChannelNameSet()
+            getView()?.noAnnouncementChannelSet()
             return
         }
 
@@ -73,5 +73,13 @@ class MainPresenter @Inject constructor(
         getView()?.resetCoffeeViewStatus()
 
         brewingProgressUpdater.reset()
+    }
+
+    fun launchUserSelector() {
+        if (!coffeePreferences.isAccidentChannelSet()) {
+            getView()?.noAccidentChannelSet()
+        } else {
+            getView()?.launchUserSelector()
+        }
     }
 }

@@ -8,16 +8,25 @@ import org.jetbrains.anko.defaultSharedPreferences
 
 open class CoffeePreferences(ctx: Context) {
     var preferences: SharedPreferences
-    private val channelNameKey: String
+
+    private val announcementChannelKey: String
+    private val accidentChannelKey: String
 
     init {
         preferences = ctx.defaultSharedPreferences
-        channelNameKey = ctx.getString(R.string.preference_coffee_announcement_slack_channel_key)
+        announcementChannelKey = ctx.getString(R.string.preference_coffee_announcement_slack_channel_key)
+        accidentChannelKey = ctx.getString(R.string.preference_coffee_accident_slack_channel_key)
     }
 
     fun isCoffeeAnnouncementChannelSet() = !getCoffeeAnnouncementChannel().isBlank()
 
     fun getCoffeeAnnouncementChannel(): String {
-        return preferences.getString(channelNameKey, null) ?: ""
+        return preferences.getString(announcementChannelKey, null) ?: ""
+    }
+
+    fun isAccidentChannelSet() = !getAccidentChannel().isBlank()
+
+    fun getAccidentChannel(): String {
+        return preferences.getString(accidentChannelKey, null) ?: ""
     }
 }
