@@ -25,7 +25,7 @@ Of course you do. Here's the steps to get it working:
 2. Click the green ```Add Configuration``` button.
 3. Choose a username for your bot and click ```Add bot integration```.
 4. Configure your bot the way you like. **Take note of the API token, you'll need it next.**
-5. **Important:** Invite the newly-made bot to any channels you would like the coffee announcements to be made on.
+5. **IMPORTANT:** Invite the newly-made bot to any channels you would like the coffee announcements to be made on.
 
 ## Make it work with BrewStat
 1. Change to a folder of your liking and do a ```git clone https://github.com/roughike/BrewStat.git```
