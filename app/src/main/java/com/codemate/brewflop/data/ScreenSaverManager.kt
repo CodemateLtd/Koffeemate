@@ -29,6 +29,7 @@ import com.codemate.brewflop.R
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.onClick
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ScreenSaverManager private constructor(val activity: Activity) {
     private val ACTION_ENABLE_SCREENSAVER = "com.codemate.brewstat.ACTION_ENABLE_SCREENSAVER"
@@ -83,7 +84,10 @@ class ScreenSaverManager private constructor(val activity: Activity) {
         val alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = System.currentTimeMillis()
+
+        // We're adding one extra day here to prevent the screensaver from turning on the
+        // first time the app is launched
+        calendar.timeInMillis = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, 0)
 
