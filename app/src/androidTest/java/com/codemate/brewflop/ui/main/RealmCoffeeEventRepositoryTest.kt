@@ -26,34 +26,45 @@ class RealmCoffeeEventRepositoryTest {
     }
 
     @Test
-    fun testRecordingBrewingEvents() {
-        assertThat(coffeeEventCount(), equalTo(0L))
-
-        val firstEvent = coffeeEventRepository.recordBrewingEvent()
+    fun recordBrewingEvent_PersistsEventsInDatabase() {
+        coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
 
         assertThat(coffeeEventCount(), equalTo(3L))
-
-        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(firstEvent))
     }
 
     @Test
-    fun testRecordingBrewingAccidents() {
+    fun getLastBrewingEvent_ReturnsLastBrewingEvent() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val lastEvent = coffeeEventRepository.recordBrewingEvent()
+        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(lastEvent))
+    }
+
+    @Test
+    fun getLastBrewingAccident_ReturnsLastBrewingAccident() {
+        val userId = "abc123"
+        coffeeEventRepository.recordBrewingAccident(userId)
+        coffeeEventRepository.recordBrewingAccident(userId)
+
+        val lastAccident = coffeeEventRepository.recordBrewingAccident(userId)
+        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(lastAccident))
+    }
+
+    @Test
+    fun getAccidentCountForUser_ReturnsAccidentCountForThatSpecificUser() {
         val userId = "abc123"
         assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(0L))
 
-        val firstAccident = coffeeEventRepository.recordBrewingAccident(userId)
-        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(firstAccident))
-
+        coffeeEventRepository.recordBrewingAccident(userId)
         coffeeEventRepository.recordBrewingAccident(userId)
         coffeeEventRepository.recordBrewingAccident(userId)
 
         val otherUserId = "someotherid"
         coffeeEventRepository.recordBrewingAccident(otherUserId)
-
-        val lastAccident = coffeeEventRepository.recordBrewingAccident(otherUserId)
-        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(lastAccident))
+        coffeeEventRepository.recordBrewingAccident(otherUserId)
 
         assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(3L))
     }
