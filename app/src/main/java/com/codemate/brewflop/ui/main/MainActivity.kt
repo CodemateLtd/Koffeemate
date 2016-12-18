@@ -4,47 +4,34 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import com.codemate.brewflop.BrewFlopApp
 import com.codemate.brewflop.R
-import com.codemate.brewflop.data.BrewingProgressUpdater
-import com.codemate.brewflop.data.local.CoffeePreferences
-import com.codemate.brewflop.data.local.RealmCoffeeEventRepository
 import com.codemate.brewflop.data.local.models.CoffeeBrewingEvent
-import com.codemate.brewflop.data.network.SlackApi
-import com.codemate.brewflop.data.network.SlackService
 import com.codemate.brewflop.ui.secretsettings.SecretSettingsActivity
 import com.codemate.brewflop.ui.userselector.UserSelectorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
-import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView {
-    private val BREWING_TIME = TimeUnit.MINUTES.toMillis(7)
-    private val TOTAL_UPDATE_STEPS = 30
-
+    @Inject
     lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        BrewFlopApp.appComponent.inject(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
-        val coffeePreferences = CoffeePreferences(this)
-        val coffeeEventRepository = RealmCoffeeEventRepository()
-        val brewingProgressUpdater = BrewingProgressUpdater(BREWING_TIME, TOTAL_UPDATE_STEPS)
-        val slackApi = SlackService.getApi(SlackApi.BASE_URL)
-
-        presenter = MainPresenter(
-                coffeePreferences,
-                coffeeEventRepository,
-                brewingProgressUpdater,
-                slackApi
-        )
         presenter.attachView(this)
+        setUpListeners()
+    }
 
-        val newCoffeeMessage = getString(R.string.new_coffee_available)
+    fun setUpListeners() {
         coffeeProgressView.onClick {
+            val newCoffeeMessage = getString(R.string.new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
 

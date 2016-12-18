@@ -9,12 +9,13 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainPresenter(
-        private val coffeePreferences: CoffeePreferences,
-        private val coffeeEventRepository: CoffeeEventRepository,
-        private val brewingProgressUpdater: BrewingProgressUpdater,
-        private val slackApi: SlackApi
+class MainPresenter @Inject constructor(
+        val coffeePreferences: CoffeePreferences,
+        val coffeeEventRepository: CoffeeEventRepository,
+        val brewingProgressUpdater: BrewingProgressUpdater,
+        val slackApi: SlackApi
 ) : BasePresenter<MainView>() {
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
         ensureViewIsAttached()

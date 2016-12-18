@@ -15,10 +15,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import javax.inject.Inject
 
-class UserSelectorPresenter(
-        private val coffeeEventRepository: CoffeeEventRepository,
-        private val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
+class UserSelectorPresenter @Inject constructor(
+        val coffeeEventRepository: CoffeeEventRepository,
+        val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         ensureViewIsAttached()
         getView()?.showProgress()
@@ -66,8 +67,7 @@ class UserSelectorPresenter(
                 file = fileBody,
                 filename = fileName.toRequestBody(),
                 channels = channelName.toRequestBody(),
-                comment = comment.toRequestBody()
-        ).enqueue(object : Callback<ResponseBody> {
+                comment = comment.toRequestBody()).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     getView()?.messagePostedSuccessfully()

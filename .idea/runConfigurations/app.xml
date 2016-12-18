@@ -43,7 +43,7 @@
     <option name="DEEP_LINK" value="" />
     <option name="ACTIVITY_CLASS" value="" />
     <method>
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Unit Tests" run_configuration_type="JUnit" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="All Unit Tests" run_configuration_type="JUnit" />
     </method>
   </configuration>
 </component>
