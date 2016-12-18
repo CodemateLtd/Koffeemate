@@ -1,7 +1,8 @@
-package com.codemate.brewflop
+package com.codemate.brewflop.data
 
 import android.content.Context
 import android.graphics.*
+import com.codemate.brewflop.R
 
 object Trophy {
     fun make(ctx: Context, value: Int): Bitmap {

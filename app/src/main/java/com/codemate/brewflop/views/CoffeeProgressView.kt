@@ -1,8 +1,9 @@
-package com.codemate.brewflop
+package com.codemate.brewflop.views
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import com.codemate.brewflop.R
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
 
 class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, attrs) {
