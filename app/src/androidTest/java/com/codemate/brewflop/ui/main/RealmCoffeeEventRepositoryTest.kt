@@ -15,6 +15,7 @@ class RealmCoffeeEventRepositoryTest {
     @Before
     fun setUp() {
         val realmConfig = RealmConfiguration.Builder()
+                .name("test.realm")
                 .inMemory()
                 .build()
 
@@ -28,11 +29,13 @@ class RealmCoffeeEventRepositoryTest {
     fun testRecordingBrewingEvents() {
         assertThat(coffeeEventCount(), equalTo(0L))
 
-        coffeeEventRepository.recordBrewingEvent()
+        val firstEvent = coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
 
         assertThat(coffeeEventCount(), equalTo(3L))
+
+        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(firstEvent))
     }
 
     @Test

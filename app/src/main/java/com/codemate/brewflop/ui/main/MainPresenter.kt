@@ -50,10 +50,18 @@ class MainPresenter(
 
                         getView()?.resetCoffeeViewStatus()
                         coffeeEventRepository.recordBrewingEvent()
+
+                        updateLastBrewingEventTime()
                     }
             )
         } else {
             getView()?.showCancelCoffeeProgressPrompt()
+        }
+    }
+
+    fun updateLastBrewingEventTime() {
+        coffeeEventRepository.getLastBrewingEvent()?.let {
+            getView()?.setLastBrewingEvent(it)
         }
     }
 

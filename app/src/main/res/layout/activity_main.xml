@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/activity_main"
@@ -10,10 +12,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <com.roughike.timeagotextview.TimeAgoTextView
+            android:id="@+id/lastBrewingEventTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            tools:text="Last brewed: just now"
+            app:tatv_customText="@string/last_brewed_time" />
+
         <com.codemate.brewflop.CoffeeProgressView
             android:id="@+id/coffeeProgressView"
             android:layout_width="128dp"
             android:layout_height="128dp"
+            android:layout_marginTop="16dp"
             android:alpha="0.2" />
 
         <TextView

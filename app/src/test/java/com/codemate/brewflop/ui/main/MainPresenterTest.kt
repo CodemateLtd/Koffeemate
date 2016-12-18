@@ -7,6 +7,7 @@ import com.codemate.brewflop.SynchronousExecutorService
 import com.codemate.brewflop.data.BrewingProgressUpdater
 import com.codemate.brewflop.data.local.CoffeePreferences
 import com.codemate.brewflop.data.local.CoffeeEventRepository
+import com.codemate.brewflop.data.local.models.CoffeeBrewingEvent
 import com.codemate.brewflop.data.network.SlackApi
 import com.codemate.brewflop.data.network.SlackService
 import com.nhaarman.mockito_kotlin.*
@@ -115,6 +116,24 @@ class MainPresenterTest {
         assertThat(requestBody, containsString("channel=$CHANNEL_NAME"))
         assertThat(requestBody, containsString("text=A%20happy%20message%20about%20coffee%20status"))
         assertThat(requestBody, containsString("as_user=false"))
+    }
+
+    @Test
+    fun updateLastBrewingEventTime_WhenNoCoffeeBrewingEvents_DoesNothing() {
+        whenever(mockCoffeeEventRepository.getLastBrewingEvent()).thenReturn(null)
+        presenter.updateLastBrewingEventTime()
+
+        verifyZeroInteractions(view)
+    }
+
+    @Test
+    fun testupdateLastBrewingEventTime_WhenHasCoffeeBrewingEvents_ShowsLastInUI() {
+        val lastEvent = CoffeeBrewingEvent(time = System.currentTimeMillis())
+
+        whenever(mockCoffeeEventRepository.getLastBrewingEvent()).thenReturn(lastEvent)
+        presenter.updateLastBrewingEventTime()
+
+        verify(view).setLastBrewingEvent(lastEvent)
     }
 
     @Test

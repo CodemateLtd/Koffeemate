@@ -52,5 +52,6 @@
 
 
     <string name="congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
+    <string name="last_brewed_time">Last brewed: %s</string>
 
 </resources>
