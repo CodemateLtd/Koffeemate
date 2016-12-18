@@ -60,5 +60,6 @@
 
     <string name="congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
     <string name="last_brewed_time">Last brewed: %s</string>
+    <string name="screensaver_on">Screensaver is on. Touch here to stop.</string>
 
 </resources>

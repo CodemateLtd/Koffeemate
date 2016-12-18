@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import com.codemate.brewflop.BrewFlopApp
 import com.codemate.brewflop.R
+import com.codemate.brewflop.data.ScreenSaverManager
 import com.codemate.brewflop.data.local.models.CoffeeBrewingEvent
 import com.codemate.brewflop.ui.secretsettings.SecretSettingsActivity
 import com.codemate.brewflop.ui.userselector.UserSelectorActivity
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        ScreenSaverManager.attach(this)
         BrewFlopApp.appComponent.inject(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
