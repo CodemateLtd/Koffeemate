@@ -2,6 +2,7 @@ package com.codemate.brewflop.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.R
 import org.jetbrains.anko.defaultSharedPreferences
 
@@ -14,9 +15,9 @@ open class CoffeePreferences(ctx: Context) {
         channelNameKey = ctx.getString(R.string.preference_coffee_announcement_slack_channel_key)
     }
 
-    fun isChannelNameSet() = !getChannelName().isBlank()
+    fun isCoffeeAnnouncementChannelSet() = !getCoffeeAnnouncementChannel().isBlank()
 
-    fun getChannelName(): String {
-        return preferences.getString(channelNameKey, null) ?: ""
+    fun getCoffeeAnnouncementChannel(): String {
+        return preferences.getString(channelNameKey, null) ?: BuildConfig.NEW_COFFEE_ANNOUNCEMENT_CHANNEL
     }
 }

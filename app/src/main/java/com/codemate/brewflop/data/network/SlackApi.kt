@@ -22,7 +22,7 @@ interface SlackApi {
             @Field("text") text: String,
             @Field("token") token: String = BuildConfig.SLACK_AUTH_TOKEN,
             @Field("as_user") asUser: Boolean = false,
-            @Field("username") username: String = "MoccaMaster Certifier",
+            @Field("username") username: String = BuildConfig.SLACK_BOT_NAME,
             @Field("icon_emoji") icon: String = ":coffee:"
     ): Call<ResponseBody>
 

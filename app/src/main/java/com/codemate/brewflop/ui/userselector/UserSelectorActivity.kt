@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.codemate.brewflop.BrewFlopApp
-import com.codemate.brewflop.Constants
+import com.codemate.brewflop.BuildConfig
 import com.codemate.brewflop.R
 import com.codemate.brewflop.data.StickerApplier
 import com.codemate.brewflop.data.network.models.User
@@ -72,7 +72,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
                 uiThread {
                     presenter.announceCoffeeBrewingAccident(
-                            Constants.ACCIDENT_ANNOUNCEMENT_CHANNEL,
+                            BuildConfig.BREWING_ACCIDENT_CHANNEL,
                             comment,
                             user,
                             stickeredProfilePic

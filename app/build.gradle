@@ -15,21 +15,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
+        buildConfigField "String", "SLACK_BOT_NAME", SLACK_BOT_NAME
+        buildConfigField "String", "BREWING_ACCIDENT_CHANNEL", BREWING_ACCIDENT_CHANNEL
+        buildConfigField "String", "NEW_COFFEE_ANNOUNCEMENT_CHANNEL", NEW_COFFEE_ANNOUNCEMENT_CHANNEL
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    productFlavors {
-        mock {}
-        prod {}
-    }
-    android.variantFilter { variant ->
-        if (variant.buildType.name.equals('release')
-                && variant.getFlavors().get(0).name.equals('mock')) {
-            variant.setIgnore(true);
         }
     }
     packagingOptions {

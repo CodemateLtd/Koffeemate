@@ -21,7 +21,7 @@ class MainPresenter @Inject constructor(
         ensureViewIsAttached()
 
         if (!brewingProgressUpdater.isUpdating
-                && !coffeePreferences.isChannelNameSet()) {
+                && !coffeePreferences.isCoffeeAnnouncementChannelSet()) {
             getView()?.noChannelNameSet()
             return
         }
@@ -34,7 +34,7 @@ class MainPresenter @Inject constructor(
                         getView()?.updateCoffeeProgress(progress)
                     },
                     completeListener = {
-                        val channel = coffeePreferences.getChannelName()
+                        val channel = coffeePreferences.getCoffeeAnnouncementChannel()
 
                         slackApi.postMessage(
                                 channel,

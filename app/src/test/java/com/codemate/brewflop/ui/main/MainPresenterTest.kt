@@ -38,7 +38,7 @@ class MainPresenterTest {
     fun setUp() {
         coffeePreferences = mock<CoffeePreferences>()
         coffeePreferences.preferences = mock<SharedPreferences>()
-        whenever(coffeePreferences.getChannelName()).thenReturn(CHANNEL_NAME)
+        whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
         mockCoffeeEventRepository = mock<CoffeeEventRepository>()
 
@@ -63,7 +63,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
-        whenever(coffeePreferences.getChannelName()).thenReturn("")
+        whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn("")
         updater.isUpdating = false
 
         presenter.startDelayedCoffeeAnnouncement("")
