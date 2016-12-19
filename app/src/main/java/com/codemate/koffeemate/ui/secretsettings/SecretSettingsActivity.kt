@@ -18,11 +18,8 @@ package com.codemate.koffeemate.ui.secretsettings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
-import android.widget.Toast
-
 import com.codemate.koffeemate.R
 
 class SecretSettingsActivity : AppCompatActivity() {
@@ -50,15 +47,6 @@ class SecretSettingsActivity : AppCompatActivity() {
     class SecretSettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.secret_preferences)
-
-            val dayCount = findPreference(getString(R.string.preference_incident_free_days_key))
-            dayCount.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
-                val newValueStr = newValue.toString()
-                // TODO: dayCountUpdater.setCount(Integer.parseInt(newValueStr));
-
-                Toast.makeText(activity, getString(R.string.preference_incident_free_days_updated_message, newValueStr), Toast.LENGTH_LONG).show()
-                false
-            }
         }
     }
 }

@@ -25,13 +25,6 @@
     <string name="preference_coffee_accident_slack_channel_title">Accident announcement channel</string>
     <string name="preference_coffee_accident_slack_channel_summary">Slack channel name for announcing when new coffee brewing accidents happen.</string>
 
-    <string name="preference_incident_free_days_key">incident_free_days</string>
-    <string name="preference_incident_free_days_title">Incident-free days</string>
-    <string name="preference_incident_free_days_summary">Set the incident-free days manually.</string>
-    <string name="preference_incident_free_days_dialog_message">How many incident-free days there has been?</string>
-    <string name="preference_incident_free_days_updated_message">Incident-free days updated to %s.</string>
-
-
     <!-- Misc -->
     <string name="posting_to_slack_fmt">Posting to Slack that %s didn\'t know how to make coffee.\n\nIs this correct?</string>
     <string name="reset_the_counter">Reset the counter?</string>
