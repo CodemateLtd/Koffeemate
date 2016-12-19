@@ -7,9 +7,9 @@ We at Codemate **love** coffee. Numerous cups of that sweet black nectar are bre
 # Okay, but still, what?
 Koffeemate was made for three purposes:
 
-1. Informing on Slack when freshly brewed coffee is available
+1. Informing others on Slack when freshly brewed coffee is available
 2. Gathering interesting data of our coffee consumption
-3. Publicly shaming those who leave a giant mess behind while they brew (=try to brew) their coffee.
+3. Publicly shaming those who leave a giant mess behind while they try to brew coffee.
 
 # How does it work?
 The system is very elegant: we have a cheap Android phone glued to the wall next to our coffee machine. Running this app is the only thing that phone can do. We made this extra secure by taping some cardboard over the physical buttons.
