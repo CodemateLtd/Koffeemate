@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.brewflop.ui.secretsettings
+package com.codemate.koffeemate.ui.secretsettings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -23,7 +23,7 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
 import android.widget.Toast
 
-import com.codemate.brewflop.R
+import com.codemate.koffeemate.R
 
 class SecretSettingsActivity : AppCompatActivity() {
 

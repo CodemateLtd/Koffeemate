@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.brewflop.data.network
+package com.codemate.koffeemate.data.network
 
 import okhttp3.Dispatcher
 import okhttp3.HttpUrl
