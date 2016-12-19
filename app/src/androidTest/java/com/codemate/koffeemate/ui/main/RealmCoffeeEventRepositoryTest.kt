@@ -44,6 +44,14 @@ class RealmCoffeeEventRepositoryTest {
     }
 
     @Test
+    fun getLastBrewingEvent_WhenHavingAccidentsAndSuccessfulEvents_ReturnsOnlyLastBrewingEvent() {
+        val lastSuccessfulEvent = coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingAccident("test")
+
+        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(lastSuccessfulEvent))
+    }
+
+    @Test
     fun getLastBrewingAccident_ReturnsLastBrewingAccident() {
         val userId = "abc123"
         coffeeEventRepository.recordBrewingAccident(userId)
