@@ -1,9 +1,12 @@
 package com.codemate.koffeemate.ui.userselector
 
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.RegexMatcher.Companion.matchesPattern
 import com.codemate.koffeemate.SynchronousExecutorService
+import com.codemate.koffeemate.data.AndroidAwardBadgeCreator
+import com.codemate.koffeemate.data.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
@@ -20,15 +23,22 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.stubbing.Answer
 import java.io.File
 
 class UserSelectorPresenterTest {
+    val TEST_USER_ID = "abc123"
+
     lateinit var mockCoffeePreferences: CoffeePreferences
     lateinit var mockCoffeeEventRepository: CoffeeEventRepository
+    lateinit var mockAwardBadgeCreator: AwardBadgeCreator
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var presenter: UserSelectorPresenter
     lateinit var view: UserSelectorView
+
+    lateinit var mockBitmap: Bitmap
 
     @Before
     fun setUp() {
@@ -37,14 +47,25 @@ class UserSelectorPresenterTest {
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("test-channel")
 
         mockCoffeeEventRepository = mock<CoffeeEventRepository>()
+        whenever(mockCoffeeEventRepository.getAccidentCountForUser(TEST_USER_ID)).thenReturn(1)
+
+        mockBitmap = mock<Bitmap>()
+        mockAwardBadgeCreator = mock<AwardBadgeCreator>()
+        whenever(mockAwardBadgeCreator.createBitmapFileWithAward(mockBitmap, 1))
+                .thenReturn(File.createTempFile("test", "png"))
 
         mockServer = MockWebServer()
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-        presenter = UserSelectorPresenter(mockCoffeePreferences, mockCoffeeEventRepository, slackApi)
-        view = mock<UserSelectorView>()
+        presenter = UserSelectorPresenter(
+                mockCoffeePreferences,
+                mockCoffeeEventRepository,
+                mockAwardBadgeCreator,
+                slackApi
+        )
 
+        view = mock<UserSelectorView>()
         presenter.attachView(view)
     }
 
@@ -82,7 +103,9 @@ class UserSelectorPresenterTest {
             assertThat(john.profile.real_name, equalTo("John Smith"))
         }
 
+        verify(view).showProgress()
         verify(view).hideProgress()
+        verifyNoMoreInteractions(view)
     }
 
     @Test
@@ -99,8 +122,8 @@ class UserSelectorPresenterTest {
         mockServer.enqueue(MockResponse().setResponseCode(400))
         presenter.loadUsers()
 
-        verify(view, times(1)).showProgress()
-        verify(view, times(1)).showError()
+        verify(view).showProgress()
+        verify(view).showError()
         verifyNoMoreInteractions(view)
     }
 
@@ -109,8 +132,8 @@ class UserSelectorPresenterTest {
         mockServer.enqueue(MockResponse().setBody("What is love?"))
         presenter.loadUsers()
 
-        verify(view, times(1)).showProgress()
-        verify(view, times(1)).showError()
+        verify(view).showProgress()
+        verify(view).showError()
         verifyNoMoreInteractions(view)
     }
 
@@ -119,7 +142,7 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setBody(""))
-        presenter.announceCoffeeBrewingAccident("Test comment", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("Test comment", user, mockBitmap)
 
         // TODO: There has to be a better way to verify these multipart post params, right? :S
         val requestBody = mockServer.takeRequest().body.readUtf8()
@@ -134,10 +157,11 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setBody(""))
-        presenter.announceCoffeeBrewingAccident("", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("", user, mockBitmap)
 
-        verify(view, times(1)).messagePostedSuccessfully()
-        verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)
+        verify(view).messagePostedSuccessfully()
+        verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
+        verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
         verifyNoMoreInteractions(view, mockCoffeeEventRepository)
     }
 
@@ -146,16 +170,17 @@ class UserSelectorPresenterTest {
         val user = getFakeUser()
 
         mockServer.enqueue(MockResponse().setResponseCode(400))
-        presenter.announceCoffeeBrewingAccident("", user, File.createTempFile("test", "png"))
+        presenter.announceCoffeeBrewingAccident("", user, mockBitmap)
 
-        verify(view, times(1)).errorPostingMessage()
-        verify(mockCoffeeEventRepository, times(1)).recordBrewingAccident(user.id)
+        verify(view).errorPostingMessage()
+        verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
+        verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
         verifyNoMoreInteractions(view, mockCoffeeEventRepository)
     }
 
     private fun getFakeUser(): User {
         val user = User()
-        user.id = "abc123"
+        user.id = TEST_USER_ID
         user.profile = Profile()
         user.profile.first_name = "Jorma"
 

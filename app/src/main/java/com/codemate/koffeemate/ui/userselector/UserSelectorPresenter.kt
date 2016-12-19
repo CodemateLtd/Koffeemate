@@ -1,6 +1,8 @@
 package com.codemate.koffeemate.ui.userselector
 
+import android.graphics.Bitmap
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
@@ -15,12 +17,12 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import javax.inject.Inject
 
 class UserSelectorPresenter @Inject constructor(
         val coffeePreferences: CoffeePreferences,
         val coffeeEventRepository: CoffeeEventRepository,
+        val awardBadgeCreator: AwardBadgeCreator,
         val slackApi: SlackApi) : BasePresenter<UserSelectorView>() {
     fun loadUsers() {
         ensureViewIsAttached()
@@ -51,8 +53,12 @@ class UserSelectorPresenter @Inject constructor(
         })
     }
 
-    fun announceCoffeeBrewingAccident(comment: String, user: User, stickeredProfilePic: File) {
+    fun announceCoffeeBrewingAccident(comment: String, user: User, profilePic: Bitmap) {
         ensureViewIsAttached()
+        coffeeEventRepository.recordBrewingAccident(user.id)
+
+        val awardCount = coffeeEventRepository.getAccidentCountForUser(user.id)
+        val profilePicWithAward = awardBadgeCreator.createBitmapFileWithAward(profilePic, awardCount)
 
         // Evaluates to "johns-certificate.png" etc
         val fileName = "${user.profile.first_name.toLowerCase()}s-certificate.png"
@@ -61,7 +67,7 @@ class UserSelectorPresenter @Inject constructor(
                 fileName,
                 RequestBody.create(
                         MediaType.parse("image/png"),
-                        stickeredProfilePic
+                        profilePicWithAward
                 )
         )
 
@@ -82,7 +88,5 @@ class UserSelectorPresenter @Inject constructor(
                 getView()?.errorPostingMessage()
             }
         })
-
-        coffeeEventRepository.recordBrewingAccident(user.id)
     }
 }

@@ -8,17 +8,17 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.data.StickerApplier
 import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.util.extensions.loadBitmap
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.onClick
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private lateinit var userSelectorAdapter: UserSelectorAdapter
-    private lateinit var stickerApplier: StickerApplier
 
     @Inject
     lateinit var presenter: UserSelectorPresenter
@@ -29,7 +29,6 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         KoffeemateApp.appComponent.inject(this)
 
         setUpUserRecycler()
-        stickerApplier = StickerApplier(this, R.drawable.approved_sticker)
 
         presenter.attachView(this)
         presenter.loadUsers()
@@ -65,18 +64,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     private fun applyStickerToProfilePicAndAnnounce(user: User) {
         val comment = getString(R.string.congratulations_to_user_fmt, user.profile.first_name)
 
-        Glide.with(this).loadBitmap(user.profile.largestAvailableImage) {
-            doAsync {
-                val stickeredProfilePic = stickerApplier.applySticker(it)
-
-                uiThread {
-                    presenter.announceCoffeeBrewingAccident(
-                            comment,
-                            user,
-                            stickeredProfilePic
-                    )
-                }
-            }
+        Glide.with(this).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
+            presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
         }
     }
 

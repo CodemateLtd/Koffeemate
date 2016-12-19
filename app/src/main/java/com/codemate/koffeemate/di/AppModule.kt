@@ -2,6 +2,8 @@ package com.codemate.koffeemate.di
 
 import android.content.Context
 import com.codemate.koffeemate.KoffeemateApp
+import com.codemate.koffeemate.data.AndroidAwardBadgeCreator
+import com.codemate.koffeemate.data.AwardBadgeCreator
 import com.codemate.koffeemate.data.BrewingProgressUpdater
 import dagger.Module
 import dagger.Provides
@@ -21,4 +23,7 @@ class AppModule(val app: KoffeemateApp) {
     @Provides
     @Singleton
     fun provideBrewingProgressUpdater() = BrewingProgressUpdater(TimeUnit.MINUTES.toMillis(7), 30)
+
+    @Provides
+    fun provideAwardBadgeCreator(ctx: Context): AwardBadgeCreator = AndroidAwardBadgeCreator(ctx)
 }
