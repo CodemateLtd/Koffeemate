@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BrewStat</string>
+    <string name="app_name">Koffeemate</string>
 
     <!-- Button Strings -->
     <string name="button_log_an_accident">Log an accident</string>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.codemate.brewflop">
+    package="com.codemate.koffeemate">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".BrewFlopApp"
+        android:name="com.codemate.koffeemate.KoffeemateApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="com.codemate.koffeemate.ui.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
@@ -22,11 +22,11 @@
         </activity>
 
         <activity
-            android:name=".ui.userselector.UserSelectorActivity"
+            android:name="com.codemate.koffeemate.ui.userselector.UserSelectorActivity"
             android:screenOrientation="sensorLandscape"/>
 
         <activity
-            android:name=".ui.secretsettings.SecretSettingsActivity"
+            android:name="com.codemate.koffeemate.ui.secretsettings.SecretSettingsActivity"
             android:theme="@style/AppTheme.Settings"/>
     </application>
 

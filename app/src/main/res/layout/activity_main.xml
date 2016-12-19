@@ -20,7 +20,7 @@
             tools:text="Last brewed: just now"
             app:tatv_customText="@string/last_brewed_time" />
 
-        <com.codemate.brewflop.views.CoffeeProgressView
+        <com.codemate.koffeemate.views.CoffeeProgressView
             android:id="@+id/coffeeProgressView"
             android:layout_width="128dp"
             android:layout_height="128dp"
