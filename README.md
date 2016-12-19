@@ -1,10 +1,11 @@
-<img src="https://github.com/roughike/BrewStat/blob/master/art/screenshot-coffee-incoming.png?raw=true" />
+# Koffeemate
+<img src="https://github.com/roughike/Koffeemate/blob/master/art/screenshot-coffee-incoming.png?raw=true" />
 
 # What?
 We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
 
 # Okay, but still, what?
-BrewStat was made for three purposes:
+Koffeemate was made for three purposes:
 
 1. Informing on Slack when freshly brewed coffee is available
 2. Gathering interesting data of our coffee consumption
@@ -27,12 +28,12 @@ Of course you do. Here's the steps to get it working:
 4. Configure your bot the way you like. **Take note of the API token, you'll need it next.**
 5. **IMPORTANT:** Invite the newly-made bot to any channels you would like the coffee announcements to be made on.
 
-## Make it work with BrewStat
-1. Change to a folder of your liking and do a ```git clone https://github.com/roughike/BrewStat.git```
+## Make it work with Koffeemate
+1. Change to a folder of your liking and do a ```git clone https://github.com/roughike/Koffeemate.git```
 2. **Don't open the project yet.**
 3. Create an empty ```gradle.properties``` file in the **project root** with the following contents:
 
-**BrewStat/gradle.properties:**
+**Koffeemate/gradle.properties:**
 ```groovy
 SLACK_AUTH_TOKEN = "YOUR_SLACK_BOT_API_TOKEN" // Replace with the actual token
 SLACK_BOT_NAME = "YOUR_SLACK_BOT_NAME" // Whatever you like your bot's name to be.
