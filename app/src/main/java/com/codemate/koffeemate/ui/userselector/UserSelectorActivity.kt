@@ -1,5 +1,6 @@
 package com.codemate.koffeemate.ui.userselector
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -12,9 +13,7 @@ import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.util.extensions.loadBitmap
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 import javax.inject.Inject
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
@@ -22,6 +21,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
     @Inject
     lateinit var presenter: UserSelectorPresenter
+    lateinit var accidentProgress: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +38,10 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
+        accidentProgress.setCancelable(false)
+        accidentProgress.hide()
     }
 
     private fun setUpUserRecycler() {
@@ -56,6 +60,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
             negativeButton(R.string.button_cancel)
             positiveButton(R.string.button_announce_coffee_accident) {
+                accidentProgress.show()
                 applyStickerToProfilePicAndAnnounce(user)
             }
         }.show()
@@ -105,11 +110,14 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     }
 
     override fun messagePostedSuccessfully() {
+        accidentProgress.hide()
+
         toast(R.string.message_posted_successfully)
         finish()
     }
 
     override fun errorPostingMessage() {
+        accidentProgress.hide()
         toast(R.string.could_not_post_message)
     }
 }
