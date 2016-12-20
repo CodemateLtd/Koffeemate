@@ -17,12 +17,13 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainView {
     @Inject
     lateinit var presenter: MainPresenter
+    lateinit var screenSaverManager: ScreenSaverManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ScreenSaverManager.attach(this)
+        screenSaverManager = ScreenSaverManager.attach(this)
         KoffeemateApp.appComponent.inject(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -34,11 +35,15 @@ class MainActivity : AppCompatActivity(), MainView {
 
     fun setUpListeners() {
         coffeeProgressView.onClick {
+            screenSaverManager.deferScreenSaver()
+
             val newCoffeeMessage = getString(R.string.new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
 
         coffeeProgressView.onLongClick {
+            screenSaverManager.deferScreenSaver()
+
             startActivity(intentFor<SecretSettingsActivity>())
             true
         }

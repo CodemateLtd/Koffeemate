@@ -13,6 +13,7 @@ import com.codemate.koffeemate.R
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.onClick
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ScreenSaverManager private constructor(val activity: Activity) {
     private val ACTION_ENABLE_SCREENSAVER = "com.codemate.brewstat.ACTION_ENABLE_SCREENSAVER"
@@ -27,10 +28,25 @@ class ScreenSaverManager private constructor(val activity: Activity) {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, intent: Intent) {
             when (intent.action) {
-                ACTION_DISABLE_SCREENSAVER -> screenOverlay.visibility = View.GONE
-                ACTION_ENABLE_SCREENSAVER -> screenOverlay.visibility = View.VISIBLE
+                ACTION_DISABLE_SCREENSAVER -> {
+                    screenOverlay.visibility = View.GONE
+                    screenOverlay.onClick {
+                        screenOverlay.visibility = View.GONE
+                    }
+                }
+                ACTION_ENABLE_SCREENSAVER -> {
+                    showScreenSaverDelayed()
+                    screenOverlay.onClick {
+                        screenOverlay.visibility = View.GONE
+                        showScreenSaverDelayed()
+                    }
+                }
             }
         }
+    }
+
+    private val showScreenSaverRunnable = {
+        screenOverlay.visibility = View.VISIBLE
     }
 
     init {
@@ -39,6 +55,15 @@ class ScreenSaverManager private constructor(val activity: Activity) {
         registerScreenSaverReceiver()
         initializeOverlay()
         scheduleDailyAlarms()
+    }
+
+    fun deferScreenSaver() {
+        screenOverlay.removeCallbacks(showScreenSaverRunnable)
+        showScreenSaverDelayed()
+    }
+
+    private fun showScreenSaverDelayed() {
+        screenOverlay.postDelayed(showScreenSaverRunnable, TimeUnit.MINUTES.toMillis(5))
     }
 
     private fun registerScreenSaverReceiver() {
@@ -58,8 +83,8 @@ class ScreenSaverManager private constructor(val activity: Activity) {
     }
 
     private fun scheduleDailyAlarms() {
-        scheduleAlarm(ACTION_DISABLE_SCREENSAVER, 6)
-        scheduleAlarm(ACTION_ENABLE_SCREENSAVER, 18)
+        scheduleAlarm(ACTION_DISABLE_SCREENSAVER, 7)
+        scheduleAlarm(ACTION_ENABLE_SCREENSAVER, 17)
     }
 
     private fun scheduleAlarm(action: String, hourOfDay: Int) {
