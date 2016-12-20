@@ -52,7 +52,7 @@ We'd love to have you contribute, and we do not have any strict rules.
 However, here's some tips for a great start:
 
 * We love PR's related to test coverage / code cleanliness improvements.
-* Out of ideas? Look for the [issue tracker](https://github.com/roughike/Koffeemate/issues) for something to do. Tell if want to do something, and we'll assign it to you.
+* Out of ideas? Look for the [issue tracker](https://github.com/roughike/Koffeemate/issues) for something to do. Tell if you want to do something, and we'll assign it to you.
 * If you have something big in mind, create an issue first. Major functionality changes might not necessarily get merged.
 
 # License
