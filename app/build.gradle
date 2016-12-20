@@ -15,7 +15,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
-        buildConfigField "String", "SLACK_BOT_NAME", SLACK_BOT_NAME
     }
     buildTypes {
         release {

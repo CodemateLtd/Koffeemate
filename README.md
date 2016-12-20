@@ -36,7 +36,6 @@ Of course you do. Here's the steps to get it working:
 **Koffeemate/gradle.properties:**
 ```groovy
 SLACK_AUTH_TOKEN = "YOUR_SLACK_BOT_API_TOKEN" // Replace with the actual token
-SLACK_BOT_NAME = "YOUR_SLACK_BOT_NAME" // Whatever you like your bot's name to be.
 ```
 
 Now you can open the project in Android Studio. 
