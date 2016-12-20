@@ -35,10 +35,11 @@ class ScreenSaverManager private constructor(val activity: Activity) {
                     }
                 }
                 ACTION_ENABLE_SCREENSAVER -> {
-                    showScreenSaverDelayed()
+                    showScreenSaverDelayedIfNecessary()
+
                     screenOverlay.onClick {
                         screenOverlay.visibility = View.GONE
-                        showScreenSaverDelayed()
+                        showScreenSaverDelayedIfNecessary()
                     }
                 }
             }
@@ -63,11 +64,18 @@ class ScreenSaverManager private constructor(val activity: Activity) {
 
     fun deferScreenSaver() {
         screenOverlay.removeCallbacks(showScreenSaverRunnable)
-        showScreenSaverDelayed()
+        showScreenSaverDelayedIfNecessary()
     }
 
-    private fun showScreenSaverDelayed() {
-        screenOverlay.postDelayed(showScreenSaverRunnable, TimeUnit.MINUTES.toMillis(5))
+    private fun showScreenSaverDelayedIfNecessary() {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+
+        if (currentHour < 7 && currentHour > 17) {
+            screenOverlay.postDelayed(showScreenSaverRunnable, TimeUnit.MINUTES.toMillis(5))
+        }
     }
 
     private fun registerScreenSaverReceiver() {
