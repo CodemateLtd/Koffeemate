@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.util.extensions.BasicListItemAnimator
 import com.codemate.koffeemate.util.extensions.loadBitmap
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
@@ -47,8 +48,9 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             confirmUser(user)
         }
 
-        userRecycler.layoutManager = LinearLayoutManager(this)
         userRecycler.adapter = userSelectorAdapter
+        userRecycler.layoutManager = LinearLayoutManager(this)
+        userRecycler.itemAnimator = BasicListItemAnimator()
     }
 
     private fun confirmUser(user: User) {
@@ -92,19 +94,16 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
     override fun showProgress() {
         progress.visibility = View.VISIBLE
-        userRecycler.visibility = View.GONE
         errorLayout.visibility = View.GONE
     }
 
     override fun hideProgress() {
         progress.visibility = View.GONE
-        userRecycler.visibility = View.VISIBLE
         errorLayout.visibility = View.GONE
     }
 
     override fun showError() {
         progress.visibility = View.GONE
-        userRecycler.visibility = View.GONE
         errorLayout.visibility = View.VISIBLE
     }
 

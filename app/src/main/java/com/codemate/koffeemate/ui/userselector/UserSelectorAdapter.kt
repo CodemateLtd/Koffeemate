@@ -31,7 +31,7 @@ class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
 
     fun setItems(users: List<User>) {
         this.users = users
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, users.size)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
