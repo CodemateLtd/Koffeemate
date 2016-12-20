@@ -12,6 +12,8 @@ Koffeemate was made for three purposes:
 2. Gathering interesting data of our coffee consumption
 3. Publicly shaming those who leave a giant mess behind while they try to brew coffee.
 
+This project is also a great opportunity to practice some Android testing skills. 
+
 # How does it work?
 The system is very elegant: we have a cheap Android phone glued to the wall next to our coffee machine. Running this app is the only thing that phone can do. We made this extra secure by taping some cardboard over the physical buttons.
 
@@ -42,6 +44,16 @@ SLACK_AUTH_TOKEN = "YOUR_SLACK_BOT_API_TOKEN" // Replace with the actual token
 Now you can open the project in Android Studio. 
 
 Install the app to an old phone, glue it to a wall near a coffee machine and enjoy!
+
+# Contributing
+
+We'd love to have you contribute, and we do not have any strict rules.
+
+However, here's some tips for a great start:
+
+* We love PR's related to test coverage / code cleanliness improvements.
+* Out of ideas? Look for the [issue tracker](https://github.com/roughike/Koffeemate/issues) for something to do. Tell if want to do something, and we'll assign it to you.
+* If you have something big in mind, create an issue first. Major functionality changes might not necessarily get merged.
 
 # License
 
