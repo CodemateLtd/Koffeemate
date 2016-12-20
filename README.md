@@ -2,7 +2,7 @@
 ![Koffeemate Screenshot](https://github.com/roughike/Koffeemate/blob/master/art/screenshot-coffee-incoming.png?raw=true)
 
 # What?
-We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
+We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
 
 # Okay, but still, what?
 Koffeemate was made for three purposes:
@@ -11,7 +11,7 @@ Koffeemate was made for three purposes:
 2. Gathering interesting data of our coffee consumption
 3. Publicly shaming those who leave a giant mess behind while they try to brew coffee.
 
-This project is also a great opportunity to practice some Android testing skills. 
+This project is also a great opportunity to practice some Android testing and architecture skills. 
 
 # How does it work?
 The system is very elegant: we have a cheap Android phone glued to the wall next to our coffee machine. Running this app is the only thing that phone can do. We made this extra secure by taping some cardboard over the physical buttons.
