@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+        screenSaverManager.detach()
     }
 
     override fun noAnnouncementChannelSet() {

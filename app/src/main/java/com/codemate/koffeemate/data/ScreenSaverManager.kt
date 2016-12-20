@@ -57,6 +57,10 @@ class ScreenSaverManager private constructor(val activity: Activity) {
         scheduleDailyAlarms()
     }
 
+    fun detach() {
+        activity.unregisterReceiver(receiver)
+    }
+
     fun deferScreenSaver() {
         screenOverlay.removeCallbacks(showScreenSaverRunnable)
         showScreenSaverDelayed()
