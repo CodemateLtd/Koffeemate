@@ -57,7 +57,7 @@
     <string name="user_load_error">Couldn\'t load the profile list. :(</string>
     <string name="error_try_again">Try again</string>
 
-    <string name="select_person_below">Click on a correct person below.</string>
+    <string name="select_person_below">Select the guilty one</string>
 
 
     <string name="really_cancel_coffee_progress_title">Cancel Coffee Progress</string>

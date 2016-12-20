@@ -39,6 +39,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.select_person_below)
     }
 
     private fun setUpUserRecycler() {
