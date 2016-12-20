@@ -1,4 +1,5 @@
-# Koffeemate
+# <img src="https://github.com/roughike/Koffeemate/blob/master/art/koffeemate_logo.png?raw=true" />
+
 <img src="https://github.com/roughike/Koffeemate/blob/master/art/screenshot-coffee-incoming.png?raw=true" />
 
 # What?
