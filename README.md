@@ -25,7 +25,7 @@ Of course you do. Here's the steps to get it working:
 
 ## Create a bot user on Slack
 1. Go to [the custom integrations page on Slack](https://api.slack.com/custom-integrations), and click the ```Create a bot user``` button.
-2. Click the green ```Add Configuration``` button.
+2. Click the green ```Add Configuration``` button on the left.
 3. Choose a username for your bot and click ```Add bot integration```.
 4. Configure your bot the way you like. **Take note of the API token, you'll need it next.**
 5. **IMPORTANT:** Invite the newly-made bot to any channels you would like the coffee announcements to be made on.
