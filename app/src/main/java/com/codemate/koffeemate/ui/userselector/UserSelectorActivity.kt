@@ -21,7 +21,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
     @Inject
     lateinit var presenter: UserSelectorPresenter
-    lateinit var accidentProgress: ProgressDialog
+
+    var accidentProgress: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +39,6 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-        accidentProgress.setCancelable(false)
-        accidentProgress.hide()
     }
 
     private fun setUpUserRecycler() {
@@ -60,7 +57,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
             negativeButton(R.string.button_cancel)
             positiveButton(R.string.button_announce_coffee_accident) {
-                accidentProgress.show()
+                accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
                 applyStickerToProfilePicAndAnnounce(user)
             }
         }.show()
@@ -85,6 +82,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+        accidentProgress?.dismiss()
     }
 
     override fun showUsers(users: List<User>) {
@@ -110,14 +108,14 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     }
 
     override fun messagePostedSuccessfully() {
-        accidentProgress.hide()
+        accidentProgress?.dismiss()
 
         toast(R.string.message_posted_successfully)
         finish()
     }
 
     override fun errorPostingMessage() {
-        accidentProgress.hide()
+        accidentProgress?.dismiss()
         toast(R.string.could_not_post_message)
     }
 }
