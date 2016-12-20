@@ -31,7 +31,11 @@ class MainPresenter @Inject constructor(
 
             brewingProgressUpdater.startUpdating(
                     updateListener = { progress ->
-                        getView()?.updateCoffeeProgress(progress)
+                        // For UX: this way the user gets instant feedback, as the waves
+                        // can't be below 10%
+                        val adjustedProgress = Math.max(10, progress)
+
+                        getView()?.updateCoffeeProgress(adjustedProgress)
                     },
                     completeListener = {
                         val channel = coffeePreferences.getCoffeeAnnouncementChannel()
@@ -49,9 +53,10 @@ class MainPresenter @Inject constructor(
                             }
                         })
 
+                        getView()?.updateCoffeeProgress(0)
                         getView()?.resetCoffeeViewStatus()
-                        coffeeEventRepository.recordBrewingEvent()
 
+                        coffeeEventRepository.recordBrewingEvent()
                         updateLastBrewingEventTime()
                     }
             )

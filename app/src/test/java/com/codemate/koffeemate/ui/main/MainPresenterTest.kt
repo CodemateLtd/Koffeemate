@@ -95,8 +95,10 @@ class MainPresenterTest {
     fun startDelayedCoffeeAnnouncement_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
         presenter.startDelayedCoffeeAnnouncement("")
 
-        verify(view, times(1)).newCoffeeIsComing()
-        verify(view, times(1)).updateCoffeeProgress(0)
+        verify(view).newCoffeeIsComing()
+        verify(view).updateCoffeeProgress(10)
+
+        verifyNoMoreInteractions(view)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
 
@@ -119,9 +121,10 @@ class MainPresenterTest {
         updater.run()
 
         inOrder(view, mockCoffeeEventRepository) {
-            verify(view).updateCoffeeProgress(0)
+            verify(view).updateCoffeeProgress(10)
             verify(view).updateCoffeeProgress(33)
             verify(view).updateCoffeeProgress(67)
+            verify(view).updateCoffeeProgress(0)
             verify(view).resetCoffeeViewStatus()
             verify(mockCoffeeEventRepository).recordBrewingEvent()
         }

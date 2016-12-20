@@ -88,15 +88,10 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun updateCoffeeProgress(newProgress: Int) {
-        // For UX: this way the user gets instant feedback, as the waves
-        // can't be below 10%
-        val adjustedProgress = if (newProgress < 10) 10 else newProgress
-
-        coffeeProgressView.setProgress(adjustedProgress)
+        coffeeProgressView.setProgress(newProgress)
     }
 
     override fun resetCoffeeViewStatus() {
-        coffeeProgressView.setProgress(0)
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
         coffeeProgressView.animate()
