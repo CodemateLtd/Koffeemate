@@ -50,7 +50,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
         userRecycler.adapter = userSelectorAdapter
         userRecycler.layoutManager = LinearLayoutManager(this)
-        userRecycler.itemAnimator = BasicListItemAnimator()
+        userRecycler.itemAnimator = BasicListItemAnimator(this)
     }
 
     private fun confirmUser(user: User) {

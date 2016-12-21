@@ -21,20 +21,28 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.view.animation.DecelerateInterpolator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import org.jetbrains.anko.dip
 
-class BasicListItemAnimator() : DefaultItemAnimator() {
+class BasicListItemAnimator(ctx: Context) : DefaultItemAnimator() {
+    private val startOffset: Float
+    private val interpolator: DecelerateInterpolator
+
+    init {
+        startOffset = ctx.dip(500).toFloat()
+        interpolator = DecelerateInterpolator(3f)
+    }
+
     override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
         runEnterAnimation(viewHolder)
-        return false
+        return true
     }
 
     private fun runEnterAnimation(viewHolder: RecyclerView.ViewHolder) {
-        viewHolder.itemView.translationY = viewHolder.itemView.context.dip(500).toFloat()
-        viewHolder.itemView.scaleX = 0.9f
+        viewHolder.itemView.translationY = startOffset
         viewHolder.itemView.alpha = 0.5f
         viewHolder.itemView.animate()
-                .setInterpolator(DecelerateInterpolator(3f))
+                .setInterpolator(interpolator)
                 .setDuration(1000)
                 .setStartDelay((250 + viewHolder.layoutPosition * 75).toLong())
                 .setListener(object : AnimatorListenerAdapter() {
@@ -43,7 +51,6 @@ class BasicListItemAnimator() : DefaultItemAnimator() {
                     }
                 })
                 .translationY(0f)
-                .scaleX(1f)
                 .alpha(1f)
                 .start()
     }
