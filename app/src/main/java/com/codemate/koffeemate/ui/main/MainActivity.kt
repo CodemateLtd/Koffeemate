@@ -6,7 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.data.ScreenSaverManager
+import com.codemate.koffeemate.data.ScreenSaver
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.ui.secretsettings.SecretSettingsActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
@@ -17,13 +17,13 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainView {
     @Inject
     lateinit var presenter: MainPresenter
-    lateinit var screenSaverManager: ScreenSaverManager
+    lateinit var screensaver: ScreenSaver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        screenSaverManager = ScreenSaverManager.attach(this)
+        screensaver = ScreenSaver(this)
         KoffeemateApp.appComponent.inject(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -35,31 +35,35 @@ class MainActivity : AppCompatActivity(), MainView {
 
     fun setUpListeners() {
         coffeeProgressView.onClick {
-            screenSaverManager.deferScreenSaver()
+            screensaver.defer()
 
             val newCoffeeMessage = getString(R.string.new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
 
         coffeeProgressView.onLongClick {
-            screenSaverManager.deferScreenSaver()
+            screensaver.defer()
 
             startActivity(intentFor<SecretSettingsActivity>())
             true
         }
 
-        logAccidentButton.onClick { presenter.launchUserSelector() }
+        logAccidentButton.onClick {
+            screensaver.defer()
+            presenter.launchUserSelector()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         presenter.updateLastBrewingEventTime()
+        screensaver.start()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         presenter.detachView()
-        screenSaverManager.detach()
+        screensaver.stop()
     }
 
     override fun noAnnouncementChannelSet() {
