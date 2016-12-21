@@ -3,7 +3,7 @@ package com.codemate.koffeemate.ui.main
 import android.content.SharedPreferences
 import android.os.Handler
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.SynchronousExecutorService
+import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import com.codemate.koffeemate.data.BrewingProgressUpdater
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
@@ -20,30 +20,37 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 class MainPresenterTest {
     val CHANNEL_NAME = "fake-channel"
 
+    @Mock
     lateinit var coffeePreferences: CoffeePreferences
+
+    @Mock
     lateinit var mockCoffeeEventRepository: CoffeeEventRepository
+
+    @Mock
     lateinit var mockHandler: Handler
+
+    @Mock
+    lateinit var view: MainView
+
     lateinit var updater: BrewingProgressUpdater
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
-
     lateinit var presenter: MainPresenter
-    lateinit var view: MainView
 
     @Before
     fun setUp() {
-        coffeePreferences = mock<CoffeePreferences>()
+        MockitoAnnotations.initMocks(this)
+
         coffeePreferences.preferences = mock<SharedPreferences>()
         whenever(coffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
-        mockCoffeeEventRepository = mock<CoffeeEventRepository>()
-
-        mockHandler = mock<Handler>()
         updater = BrewingProgressUpdater(9, 3)
         updater.updateHandler = mockHandler
 
@@ -51,9 +58,8 @@ class MainPresenterTest {
         mockServer.start()
 
         slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-        presenter = MainPresenter(coffeePreferences, mockCoffeeEventRepository, updater, slackApi)
-        view = mock<MainView>()
 
+        presenter = MainPresenter(coffeePreferences, mockCoffeeEventRepository, updater, slackApi)
         presenter.attachView(view)
     }
 

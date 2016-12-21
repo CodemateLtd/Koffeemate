@@ -3,9 +3,8 @@ package com.codemate.koffeemate.ui.userselector
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.RegexMatcher.Companion.matchesPattern
-import com.codemate.koffeemate.SynchronousExecutorService
-import com.codemate.koffeemate.data.AndroidAwardBadgeCreator
+import com.codemate.koffeemate.testutils.RegexMatcher.Companion.matchesPattern
+import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import com.codemate.koffeemate.data.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
@@ -23,36 +22,42 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.stubbing.Answer
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import java.io.File
 
 class UserSelectorPresenterTest {
     val TEST_USER_ID = "abc123"
 
+    @Mock
     lateinit var mockCoffeePreferences: CoffeePreferences
+
+    @Mock
     lateinit var mockCoffeeEventRepository: CoffeeEventRepository
+
+    @Mock
     lateinit var mockAwardBadgeCreator: AwardBadgeCreator
+
+    @Mock
+    lateinit var mockBitmap: Bitmap
+
+    @Mock
+    lateinit var view: UserSelectorView
+
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var presenter: UserSelectorPresenter
-    lateinit var view: UserSelectorView
-
-    lateinit var mockBitmap: Bitmap
 
     @Before
     fun setUp() {
-        mockCoffeePreferences = mock<CoffeePreferences>()
+        MockitoAnnotations.initMocks(this)
+
         mockCoffeePreferences.preferences = mock<SharedPreferences>()
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("test-channel")
-
-        mockCoffeeEventRepository = mock<CoffeeEventRepository>()
         whenever(mockCoffeeEventRepository.getAccidentCountForUser(TEST_USER_ID)).thenReturn(1)
 
-        mockBitmap = mock<Bitmap>()
-        mockAwardBadgeCreator = mock<AwardBadgeCreator>()
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(mockBitmap, 1))
-                .thenReturn(File.createTempFile("test", "png"))
+                .thenReturn(File("src/test/resources/images/empty.png"))
 
         mockServer = MockWebServer()
         mockServer.start()
@@ -65,7 +70,6 @@ class UserSelectorPresenterTest {
                 slackApi
         )
 
-        view = mock<UserSelectorView>()
         presenter.attachView(view)
     }
 
