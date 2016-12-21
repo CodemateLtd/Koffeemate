@@ -14,7 +14,7 @@ import com.nhaarman.mockito_kotlin.*
 import okhttp3.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.After
 import org.junit.Assert.assertThat
