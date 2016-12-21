@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.util.extensions
+package com.codemate.koffeemate.util
 
 import android.animation.Animator
 import android.support.v7.widget.DefaultItemAnimator
