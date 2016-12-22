@@ -10,6 +10,10 @@ interface AwardBadgeCreator {
     fun createBitmapFileWithAward(bitmap: Bitmap, awardCount: Long): File
 }
 
+/**
+ * Creates a nice little badge with a number on it, stores it to a file
+ * and returns the File object that points to it.
+ */
 class AndroidAwardBadgeCreator(private val ctx: Context) : AwardBadgeCreator {
     private val MARGIN = 5
 

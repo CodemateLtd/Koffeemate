@@ -2,6 +2,15 @@ package com.codemate.koffeemate.data
 
 import android.os.Handler
 
+/**
+ * Class responsible for updating the CircularFillableLoader on
+ * the main screen from empty to full state, since the library
+ * doesn't support it out of the box.
+ *
+ * This is generalized enough for other purposes as well.
+ *
+ * See MainPresenter & BrewingProgressUpdateTest for usage.
+ */
 class BrewingProgressUpdater(
         brewingTimeMillis: Long,
         private val totalSteps: Int) : Runnable {
