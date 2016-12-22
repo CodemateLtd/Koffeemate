@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="Last brewed: just now"
-            app:tatv_customText="@string/last_brewed_time" />
+            app:tatv_customText="@string/info_last_brewed_time" />
 
         <com.codemate.koffeemate.views.CoffeeProgressView
             android:id="@+id/coffeeProgressView"
@@ -58,6 +58,6 @@
         android:drawableLeft="@drawable/ic_thumb_down"
         android:drawablePadding="4dp"
         android:textSize="14sp"
-        android:text="@string/button_log_an_accident"/>
+        android:text="@string/action_log_an_accident"/>
 
 </FrameLayout>

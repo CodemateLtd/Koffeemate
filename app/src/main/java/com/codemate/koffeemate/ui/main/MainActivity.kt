@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), MainView {
         coffeeProgressView.onClick {
             screensaver.defer()
 
-            val newCoffeeMessage = getString(R.string.new_coffee_available)
+            val newCoffeeMessage = getString(R.string.message_new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
 
@@ -75,12 +75,12 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun noAnnouncementChannelSet() {
-        longToast(R.string.no_announcement_channel_set)
+        longToast(R.string.prompt_no_announcement_channel_set)
         startActivity(intentFor<SettingsActivity>())
     }
 
     override fun noAccidentChannelSet() {
-        longToast(R.string.no_accident_channel_set)
+        longToast(R.string.prompt_no_accident_channel_set)
         startActivity(intentFor<SettingsActivity>())
     }
 
@@ -114,11 +114,11 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun showCancelCoffeeProgressPrompt() {
         alert {
-            title(R.string.really_cancel_coffee_progress_title)
-            message(R.string.really_cancel_coffee_progress_message)
+            title(R.string.prompt_cancel_coffee_progress_title)
+            message(R.string.prompt_cancel_coffee_progress_message)
 
-            negativeButton(R.string.no)
-            positiveButton(R.string.yes) {
+            negativeButton(R.string.action_no)
+            positiveButton(R.string.action_yes) {
                 presenter.cancelCoffeeCountDown()
             }
         }.show()

@@ -40,7 +40,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle(R.string.select_person_below)
+        supportActionBar?.setTitle(R.string.prompt_select_person_below)
     }
 
     private fun setUpUserRecycler() {
@@ -55,11 +55,11 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
     private fun confirmUser(user: User) {
         alert {
-            title(R.string.reset_the_counter)
-            message(getString(R.string.posting_to_slack_fmt, user.profile.real_name))
+            title(R.string.prompt_reset_the_counter)
+            message(getString(R.string.message_posting_to_slack_fmt, user.profile.real_name))
 
-            negativeButton(R.string.button_cancel)
-            positiveButton(R.string.button_announce_coffee_accident) {
+            negativeButton(R.string.action_cancel)
+            positiveButton(R.string.action_announce_coffee_accident) {
                 accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
                 applyStickerToProfilePicAndAnnounce(user)
             }
@@ -67,7 +67,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
     }
 
     private fun applyStickerToProfilePicAndAnnounce(user: User) {
-        val comment = getString(R.string.congratulations_to_user_fmt, user.profile.first_name)
+        val comment = getString(R.string.message_congratulations_to_user_fmt, user.profile.first_name)
 
         Glide.with(this).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
             presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
@@ -116,6 +116,6 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
 
     override fun errorPostingMessage() {
         accidentProgress?.dismiss()
-        toast(R.string.could_not_post_message)
+        toast(R.string.error_could_not_post_message)
     }
 }

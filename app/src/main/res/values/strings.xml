@@ -1,20 +1,22 @@
 <resources>
     <string name="app_name">Koffeemate</string>
 
-    <!-- Button Strings -->
-    <string name="button_log_an_accident">Log an accident</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="button_try_again">Try again</string>
-    <string name="button_announce_coffee_accident">Inform everyone!</string>
+    <!-- Actions -->
+    <string name="action_log_an_accident">Log an accident</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_try_again">Try again</string>
+    <string name="action_announce_coffee_accident">Inform everyone!</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 
-    <!-- Coffee view Strings -->
+    <!-- Coffee view -->
     <string name="title_coffeeview_idle">Brewing fresh coffee?</string>
     <string name="message_coffeeview_idle">Touch the coffee pot above!</string>
 
     <string name="title_coffeeview_brewing">Coffee is coming!</string>
     <string name="message_coffeeview_brewing">Informing others on Slack when ready.</string>
 
-    <!-- Preference Strings -->
+    <!-- Preferences -->
     <string name="preference_category_general">General</string>
 
     <string name="preference_coffee_announcement_slack_channel_key">coffee_announcement_slack_channel</string>
@@ -51,39 +53,31 @@
     <string name="time_n_weeks_ago">%d weeks ago</string>
 
     <!-- Progress -->
-    <string name="progress_message_shaming_person_on_slack">Shaming person on Slack...</string>
+    <string name="progress_message_shaming_person_on_slack">Shaming person on Slack…</string>
 
-    <!-- Misc -->
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <!-- Prompts (asking the user to do something) -->
+    <string name="prompt_reset_the_counter">Reset the counter?</string>
+    <string name="prompt_who_is_guilty">Who is guilty of this coffee brewing accident?</string>
+    <string name="prompt_select_person_below">Select the guilty one</string>
 
-    <string name="posting_to_slack_fmt">Posting to Slack that %s didn\'t know how to make coffee.\n\nIs this correct?</string>
-    <string name="reset_the_counter">Reset the counter?</string>
+    <string name="prompt_cancel_coffee_progress_title">Cancel Coffee Progress</string>
+    <string name="prompt_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
 
+    <string name="prompt_no_announcement_channel_set">No Slack channel set for coffee announcements. Please set it in the preferences.</string>
+    <string name="prompt_no_accident_channel_set">No Slack channel set for brewing failures. Please set it in the preferences.</string>
 
-    <string name="who_is_guilty">Who is guilty of this coffee brewing accident?</string>
-
-
+    <!-- Messages -->
+    <string name="message_posting_to_slack_fmt">Posting to Slack that %s didn\'t know how to make coffee.\n\nIs this correct?</string>
     <string name="message_posted_successfully">New MoccaMaster certified person announced successfully on Slack!</string>
-    <string name="could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
+    <string name="message_new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
+    <string name="message_congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
 
-    <string name="user_load_error">Couldn\'t load the profile list. :(</string>
-    <string name="error_try_again">Try again</string>
+    <!-- Informal messages -->
+    <string name="info_last_brewed_time">Last brewed: %s</string>
+    <string name="info_screensaver_on">Screensaver is on. Touch here to stop.</string>
 
-    <string name="select_person_below">Select the guilty one</string>
-
-
-    <string name="really_cancel_coffee_progress_title">Cancel Coffee Progress</string>
-    <string name="really_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
-
-    <string name="no_announcement_channel_set">No Slack channel set for coffee announcements. Please set it in the preferences.</string>
-    <string name="no_accident_channel_set">No Slack channel set for brewing failures. Please set it in the preferences.</string>
-
-    <string name="new_coffee_available"><![CDATA[<!here> Freshly brewed coffee available!]]></string>
-
-
-    <string name="congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
-    <string name="last_brewed_time">Last brewed: %s</string>
-    <string name="screensaver_on">Screensaver is on. Touch here to stop.</string>
+    <!-- Error messages -->
+    <string name="error_could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
+    <string name="error_loading_profiles">Couldn\'t load the profile list. :(</string>
 
 </resources>
