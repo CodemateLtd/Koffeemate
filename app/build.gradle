@@ -3,6 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
+apply from: 'dependencies.gradle'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
@@ -22,54 +24,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE-FIREBASE.txt'
-        exclude 'META-INF/LICENSE-FIREBASE_jvm.txt'
-    }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
     }
 }
 
 kapt {
     generateStubs = true
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
-    androidTestCompile 'org.mockito:mockito-core:2.+'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.anko:anko-sdk15:0.9"
-    compile 'org.jetbrains.anko:anko-sqlite:0.9'
-
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile "com.android.support:design:25.0.0"
-    compile "com.android.support:preference-v7:25.0.0"
-    compile "com.android.support:preference-v14:25.0.0"
-
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
-
-    compile 'com.google.dagger:dagger:2.4'
-    kapt 'com.google.dagger:dagger-compiler:2.4'
-    provided 'javax.annotation:jsr250-api:1.0'
-
-    testCompile 'org.hamcrest:hamcrest-core:1.3'
-    testCompile 'junit:junit-dep:4.10'
-    testCompile 'org.mockito:mockito-core:2.+'
-    testCompile 'com.nhaarman:mockito-kotlin:1.0.1'
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
 }
 
 repositories {
