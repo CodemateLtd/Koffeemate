@@ -40,26 +40,36 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
         return event
     }
 
-    override fun getAccidentCountForUser(userId: String) =
-            Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
+    override fun getAccidentCountForUser(userId: String): Long {
+        val realm = Realm.getDefaultInstance()
+        val count = realm.where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", false)
                 .equalTo("userId", userId)
                 .count()
 
+        realm.close()
+        return count
+    }
+
     override fun getLastBrewingEvent(): CoffeeBrewingEvent? {
-        return Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
+        val realm = Realm.getDefaultInstance()
+        val event = realm.where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", true)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+
+        realm.close()
+        return event
     }
 
     override fun getLastBrewingAccident(): CoffeeBrewingEvent? {
-        return Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
+        val realm = Realm.getDefaultInstance()
+        val accident = realm.where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", false)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+
+        realm.close()
+        return accident
     }
 }
