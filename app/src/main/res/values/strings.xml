@@ -29,6 +29,12 @@
     <string name="preference_coffee_accident_slack_channel_title">Accident announcement channel</string>
     <string name="preference_coffee_accident_slack_channel_summary">Slack channel name for announcing when new coffee brewing accidents happen.</string>
 
+    <string name="preference_category_screensaver">Screensaver settings</string>
+
+    <string name="preference_use_screensaver_key">use_screensaver</string>
+    <string name="preference_use_screensaver_title">Use screensaver</string>
+    <string name="preference_use_screensaver_summary">Extend your precious screen\'s lifetime and prevent it from getting screen burn-ins.</string>
+
     <!-- Different time measures for the TimeAgoTextView -->
     <string name="time_just_now">just now</string>
 

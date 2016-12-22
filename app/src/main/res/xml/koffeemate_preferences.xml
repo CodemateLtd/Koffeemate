@@ -29,4 +29,17 @@
 
     </PreferenceCategory>
 
+    <!-- TODO
+    <PreferenceCategory
+        android:title="@string/preference_category_screensaver">
+
+        <CheckBoxPreference
+            android:key="@string/preference_use_screensaver_key"
+            android:title="@string/preference_use_screensaver_title"
+            android:summary="@string/preference_use_screensaver_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+    -->
+
 </PreferenceScreen>
