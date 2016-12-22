@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), MainView {
         KoffeemateApp.appComponent.inject(this)
 
         screensaver = ScreenSaver(this)
-        screensaver.start()
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -53,6 +52,11 @@ class MainActivity : AppCompatActivity(), MainView {
             screensaver.defer()
             presenter.launchUserSelector()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        screensaver.start()
     }
 
     override fun onResume() {
