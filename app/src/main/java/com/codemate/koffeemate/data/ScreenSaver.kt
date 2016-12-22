@@ -73,7 +73,7 @@ class ScreenSaver constructor(private val activity: Activity) {
 
     private fun showScreenSaverDelayedIfNecessary() {
         screenOverlay.removeCallbacks(showScreenSaverRunnable)
-        screenOverlay.postDelayed(showScreenSaverRunnable, TimeUnit.SECONDS.toMillis(5))
+        screenOverlay.postDelayed(showScreenSaverRunnable, TimeUnit.MINUTES.toMillis(5))
     }
 
     private fun isScreenSavingTime(): Boolean {

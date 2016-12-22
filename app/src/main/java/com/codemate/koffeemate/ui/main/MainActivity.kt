@@ -22,9 +22,10 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        KoffeemateApp.appComponent.inject(this)
 
         screensaver = ScreenSaver(this)
-        KoffeemateApp.appComponent.inject(this)
+        screensaver.start()
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -57,13 +58,16 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onResume() {
         super.onResume()
         presenter.updateLastBrewingEventTime()
-        screensaver.start()
     }
 
     override fun onStop() {
         super.onStop()
-        presenter.detachView()
         screensaver.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 
     override fun noAnnouncementChannelSet() {
