@@ -21,6 +21,10 @@
     <string name="preference_coffee_announcement_slack_channel_title">Coffee announcement channel</string>
     <string name="preference_coffee_announcement_slack_channel_summary">Slack channel name for announcing when new coffee is ready.</string>
 
+    <string name="preference_use_different_channel_for_accidents_key">use_different_channel_for_accidents</string>
+    <string name="preference_use_different_channel_for_accidents_title">Different channel for accidents</string>
+    <string name="preference_use_different_channel_for_accidents_summary">Use different channel for posting brewing accidents.</string>
+
     <string name="preference_coffee_accident_slack_channel_key">coffee_accident_slack_channel</string>
     <string name="preference_coffee_accident_slack_channel_title">Accident announcement channel</string>
     <string name="preference_coffee_accident_slack_channel_summary">Slack channel name for announcing when new coffee brewing accidents happen.</string>
