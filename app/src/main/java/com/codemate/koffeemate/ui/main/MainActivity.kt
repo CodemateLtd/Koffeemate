@@ -8,7 +8,7 @@ import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.ScreenSaver
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.ui.secretsettings.SecretSettingsActivity
+import com.codemate.koffeemate.ui.settings.SettingsActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), MainView {
         coffeeProgressView.onLongClick {
             screensaver.defer()
 
-            startActivity(intentFor<SecretSettingsActivity>())
+            startActivity(intentFor<SettingsActivity>())
             true
         }
 
@@ -72,12 +72,12 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun noAnnouncementChannelSet() {
         longToast(R.string.no_announcement_channel_set)
-        startActivity(intentFor<SecretSettingsActivity>())
+        startActivity(intentFor<SettingsActivity>())
     }
 
     override fun noAccidentChannelSet() {
         longToast(R.string.no_accident_channel_set)
-        startActivity(intentFor<SecretSettingsActivity>())
+        startActivity(intentFor<SettingsActivity>())
     }
 
     override fun launchUserSelector() {
