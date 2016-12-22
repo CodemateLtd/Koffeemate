@@ -44,6 +44,9 @@
     <string name="progress_message_shaming_person_on_slack">Shaming person on Slack...</string>
 
     <!-- Misc -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <string name="posting_to_slack_fmt">Posting to Slack that %s didn\'t know how to make coffee.\n\nIs this correct?</string>
     <string name="reset_the_counter">Reset the counter?</string>
 

@@ -113,8 +113,10 @@ class MainActivity : AppCompatActivity(), MainView {
             title(R.string.really_cancel_coffee_progress_title)
             message(R.string.really_cancel_coffee_progress_message)
 
-            cancelButton()
-            okButton { presenter.cancelCoffeeCountDown() }
+            negativeButton(R.string.no)
+            positiveButton(R.string.yes) {
+                presenter.cancelCoffeeCountDown()
+            }
         }.show()
     }
 }
