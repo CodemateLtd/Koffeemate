@@ -6,46 +6,41 @@ import io.realm.Sort
 import java.util.*
 
 class RealmCoffeeEventRepository : CoffeeEventRepository {
-    override fun recordBrewingAccident(userId: String): CoffeeBrewingEvent {
-        val realm = Realm.getDefaultInstance()
-        var event = CoffeeBrewingEvent()
+    override fun recordBrewingAccident(userId: String) = with(Realm.getDefaultInstance()) {
+        var event: CoffeeBrewingEvent? = null
 
-        realm.executeTransaction {
-            event = realm.createObject(CoffeeBrewingEvent::class.java, UUID.randomUUID().toString())
-            with(event) {
+        executeTransaction {
+            event = newEvent(it).apply {
                 time = System.currentTimeMillis()
                 isSuccessful = false
-                event.userId = userId
+                this.userId = userId
             }
         }
 
-        realm.close()
-        return event
+        close()
+        return@with event!!
     }
 
-    override fun recordBrewingEvent(): CoffeeBrewingEvent {
-        val realm = Realm.getDefaultInstance()
-        var event = CoffeeBrewingEvent()
+    override fun recordBrewingEvent() = with(Realm.getDefaultInstance()) {
+        var event: CoffeeBrewingEvent? = null
 
-        realm.executeTransaction {
-            event = realm.createObject(CoffeeBrewingEvent::class.java, UUID.randomUUID().toString())
-
-            with(event) {
+        executeTransaction {
+            event = newEvent(it).apply {
                 time = System.currentTimeMillis()
                 isSuccessful = true
             }
         }
 
-        realm.close()
-        return event
+        close()
+        return@with event!!
     }
 
     override fun getAccidentCountForUser(userId: String) =
             Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
-                .equalTo("isSuccessful", false)
-                .equalTo("userId", userId)
-                .count()
+                    .where(CoffeeBrewingEvent::class.java)
+                    .equalTo("isSuccessful", false)
+                    .equalTo("userId", userId)
+                    .count()
 
     override fun getLastBrewingEvent(): CoffeeBrewingEvent? {
         return Realm.getDefaultInstance()
@@ -62,4 +57,10 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
     }
+
+    private fun newEvent(realm: Realm) =
+            realm.createObject(
+                    CoffeeBrewingEvent::class.java,
+                    UUID.randomUUID().toString()
+            )
 }
