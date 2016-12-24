@@ -78,7 +78,7 @@ class MainPresenterTest {
     }
 
     @Test
-    fun testName() {
+    fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
         presenter.launchUserSelector()
 
         verify(view).launchUserSelector()
