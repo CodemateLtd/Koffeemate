@@ -5,6 +5,7 @@ import android.os.Handler
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import com.codemate.koffeemate.data.BrewingProgressUpdater
+import com.codemate.koffeemate.data.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
@@ -38,6 +39,9 @@ class MainPresenterTest {
     @Mock
     lateinit var view: MainView
 
+    @Mock
+    lateinit var mockScreenSaver: ScreenSaver
+
     lateinit var updater: BrewingProgressUpdater
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
@@ -61,11 +65,24 @@ class MainPresenterTest {
 
         presenter = MainPresenter(coffeePreferences, mockCoffeeEventRepository, updater, slackApi)
         presenter.attachView(view)
+        presenter.setScreenSaver(mockScreenSaver)
     }
 
     @After
     fun tearDown() {
         mockServer.shutdown()
+    }
+
+    @Test
+    fun startDelayedCoffeeAnnouncement_DefersScreenSaver() {
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(mockScreenSaver).defer()
+    }
+
+    @Test
+    fun launchUserSelector_DefersScreenSaver() {
+        presenter.launchUserSelector()
+        verify(mockScreenSaver).defer()
     }
 
     @Test

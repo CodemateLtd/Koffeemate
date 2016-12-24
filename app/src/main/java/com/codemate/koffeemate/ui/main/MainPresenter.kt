@@ -1,6 +1,7 @@
 package com.codemate.koffeemate.ui.main
 
 import com.codemate.koffeemate.data.BrewingProgressUpdater
+import com.codemate.koffeemate.data.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
@@ -17,8 +18,11 @@ class MainPresenter @Inject constructor(
         val brewingProgressUpdater: BrewingProgressUpdater,
         val slackApi: SlackApi
 ) : BasePresenter<MainView>() {
+    private var screensaver: ScreenSaver? = null
+
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
         ensureViewIsAttached()
+        screensaver?.defer()
 
         if (!brewingProgressUpdater.isUpdating
                 && !coffeePreferences.isCoffeeAnnouncementChannelSet()) {
@@ -81,10 +85,16 @@ class MainPresenter @Inject constructor(
     }
 
     fun launchUserSelector() {
+        screensaver?.defer()
+
         if (!coffeePreferences.isAccidentChannelSet()) {
             getView()?.noAccidentChannelSet()
         } else {
             getView()?.launchUserSelector()
         }
+    }
+
+    fun setScreenSaver(screensaver: ScreenSaver) {
+        this.screensaver = screensaver
     }
 }

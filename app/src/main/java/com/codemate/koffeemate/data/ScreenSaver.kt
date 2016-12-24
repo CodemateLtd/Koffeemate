@@ -31,7 +31,13 @@ import org.jetbrains.anko.onClick
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ScreenSaver constructor(private val activity: Activity) {
+interface ScreenSaver {
+    fun defer()
+    fun start()
+    fun stop()
+}
+
+open class AndroidScreenSaver constructor(private val activity: Activity) : ScreenSaver{
     private val ACTION_ENABLE_SCREEN_SAVER = "com.codemate.brewstat.ACTION_ENABLE_SCREEN_SAVER"
     private val ACTION_DISABLE_SCREEN_SAVER = "com.codemate.brewstat.ACTION_DISABLE_SCREEN_SAVER"
 
@@ -57,16 +63,16 @@ class ScreenSaver constructor(private val activity: Activity) {
         initializeOverlay()
     }
 
-    fun start() {
+    override fun start() {
         registerScreenSaverReceiver()
         scheduleDailyAlarms()
     }
 
-    fun stop() {
+    override fun stop() {
         activity.unregisterReceiver(receiver)
     }
 
-    fun defer() {
+    override fun defer() {
         screenOverlay.removeCallbacks(showScreenSaverRunnable)
         showScreenSaverDelayedIfNecessary()
     }

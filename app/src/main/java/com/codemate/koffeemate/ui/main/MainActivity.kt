@@ -8,6 +8,7 @@ import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.ScreenSaver
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.ui.settings.SettingsActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,26 +18,28 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainView {
     @Inject
     lateinit var presenter: MainPresenter
+
+    @Inject
     lateinit var screensaver: ScreenSaver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        KoffeemateApp.appComponent.inject(this)
 
-        screensaver = ScreenSaver(this)
+        KoffeemateApp.appComponent
+                .plus(ActivityModule(this))
+                .inject(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
         presenter.attachView(this)
+        presenter.setScreenSaver(screensaver)
         setUpListeners()
     }
 
     fun setUpListeners() {
         coffeeProgressView.onClick {
-            screensaver.defer()
-
             val newCoffeeMessage = getString(R.string.message_new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
@@ -48,10 +51,7 @@ class MainActivity : AppCompatActivity(), MainView {
             true
         }
 
-        logAccidentButton.onClick {
-            screensaver.defer()
-            presenter.launchUserSelector()
-        }
+        logAccidentButton.onClick { presenter.launchUserSelector() }
     }
 
     override fun onStart() {

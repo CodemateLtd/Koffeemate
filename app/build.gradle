@@ -19,6 +19,9 @@ android {
         buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
     }
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -26,9 +29,6 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
     }
 }
 
