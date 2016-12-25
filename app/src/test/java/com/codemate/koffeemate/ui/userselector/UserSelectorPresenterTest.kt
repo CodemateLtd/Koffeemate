@@ -163,7 +163,7 @@ class UserSelectorPresenterTest {
         mockServer.enqueue(MockResponse().setBody(""))
         presenter.announceCoffeeBrewingAccident("", user, mockBitmap)
 
-        verify(view).messagePostedSuccessfully()
+        verify(view).showAccidentPostedSuccessfullyMessage()
         verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
         verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
         verifyNoMoreInteractions(view, mockCoffeeEventRepository)
@@ -176,7 +176,7 @@ class UserSelectorPresenterTest {
         mockServer.enqueue(MockResponse().setResponseCode(400))
         presenter.announceCoffeeBrewingAccident("", user, mockBitmap)
 
-        verify(view).errorPostingMessage()
+        verify(view).showErrorMessage()
         verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
         verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
         verifyNoMoreInteractions(view, mockCoffeeEventRepository)

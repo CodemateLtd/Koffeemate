@@ -74,30 +74,28 @@ class MainActivity : AppCompatActivity(), MainView {
         presenter.detachView()
     }
 
-    override fun noAnnouncementChannelSet() {
-        longToast(R.string.prompt_no_announcement_channel_set)
-        startActivity(intentFor<SettingsActivity>())
-    }
-
-    override fun noAccidentChannelSet() {
-        longToast(R.string.prompt_no_accident_channel_set)
-        startActivity(intentFor<SettingsActivity>())
-    }
-
-    override fun launchUserSelector() {
-        startActivity(intentFor<UserSelectorActivity>())
-    }
-
-    override fun setLastBrewingEvent(event: CoffeeBrewingEvent) {
-        lastBrewingEventTime.setTime(event.time)
-    }
-
-    override fun newCoffeeIsComing() {
+    override fun showNewCoffeeIsComing() {
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)
         coffeeProgressView.animate()
                 .alpha(1f)
                 .start()
+    }
+
+    override fun showCancelCoffeeProgressPrompt() {
+        alert {
+            title(R.string.prompt_cancel_coffee_progress_title)
+            message(R.string.prompt_cancel_coffee_progress_message)
+
+            negativeButton(R.string.action_no)
+            positiveButton(R.string.action_yes) {
+                presenter.cancelCoffeeCountDown()
+            }
+        }.show()
+    }
+
+    override fun updateLastBrewingEvent(event: CoffeeBrewingEvent) {
+        lastBrewingEventTime.setTime(event.time)
     }
 
     override fun updateCoffeeProgress(newProgress: Int) {
@@ -112,15 +110,17 @@ class MainActivity : AppCompatActivity(), MainView {
                 .start()
     }
 
-    override fun showCancelCoffeeProgressPrompt() {
-        alert {
-            title(R.string.prompt_cancel_coffee_progress_title)
-            message(R.string.prompt_cancel_coffee_progress_message)
+    override fun showNoAnnouncementChannelSetError() {
+        longToast(R.string.prompt_no_announcement_channel_set)
+        startActivity(intentFor<SettingsActivity>())
+    }
 
-            negativeButton(R.string.action_no)
-            positiveButton(R.string.action_yes) {
-                presenter.cancelCoffeeCountDown()
-            }
-        }.show()
+    override fun showNoAccidentChannelSetError() {
+        longToast(R.string.prompt_no_accident_channel_set)
+        startActivity(intentFor<SettingsActivity>())
+    }
+
+    override fun launchAccidentReportingScreen() {
+        startActivity(intentFor<UserSelectorActivity>())
     }
 }

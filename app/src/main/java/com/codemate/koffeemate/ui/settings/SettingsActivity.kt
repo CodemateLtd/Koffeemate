@@ -23,7 +23,6 @@ import android.view.MenuItem
 import com.codemate.koffeemate.R
 
 class SettingsActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

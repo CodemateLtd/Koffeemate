@@ -90,7 +90,7 @@ class MainPresenterTest {
         whenever(coffeePreferences.getAccidentChannel()).thenReturn("")
         presenter.launchUserSelector()
 
-        verify(view).noAccidentChannelSet()
+        verify(view).showNoAccidentChannelSetError()
         verifyNoMoreInteractions(view)
     }
 
@@ -98,7 +98,7 @@ class MainPresenterTest {
     fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
         presenter.launchUserSelector()
 
-        verify(view).launchUserSelector()
+        verify(view).launchAccidentReportingScreen()
         verifyNoMoreInteractions(view)
     }
 
@@ -109,7 +109,7 @@ class MainPresenterTest {
 
         presenter.startDelayedCoffeeAnnouncement("")
 
-        verify(view, times(1)).noAnnouncementChannelSet()
+        verify(view, times(1)).showNoAnnouncementChannelSetError()
         verifyNoMoreInteractions(view)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
@@ -118,7 +118,7 @@ class MainPresenterTest {
     fun startDelayedCoffeeAnnouncement_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
         presenter.startDelayedCoffeeAnnouncement("")
 
-        verify(view).newCoffeeIsComing()
+        verify(view).showNewCoffeeIsComing()
         verify(view).updateCoffeeProgress(10)
 
         verifyNoMoreInteractions(view)
@@ -177,7 +177,7 @@ class MainPresenterTest {
         whenever(mockCoffeeEventRepository.getLastBrewingEvent()).thenReturn(lastEvent)
         presenter.updateLastBrewingEventTime()
 
-        verify(view).setLastBrewingEvent(lastEvent)
+        verify(view).updateLastBrewingEvent(lastEvent)
     }
 
     @Test

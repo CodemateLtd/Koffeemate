@@ -26,12 +26,12 @@ class MainPresenter @Inject constructor(
 
         if (!brewingProgressUpdater.isUpdating
                 && !coffeePreferences.isCoffeeAnnouncementChannelSet()) {
-            getView()?.noAnnouncementChannelSet()
+            getView()?.showNoAnnouncementChannelSetError()
             return
         }
 
         if (!brewingProgressUpdater.isUpdating) {
-            getView()?.newCoffeeIsComing()
+            getView()?.showNewCoffeeIsComing()
 
             brewingProgressUpdater.startUpdating(
                     updateListener = { progress ->
@@ -71,7 +71,7 @@ class MainPresenter @Inject constructor(
 
     fun updateLastBrewingEventTime() {
         coffeeEventRepository.getLastBrewingEvent()?.let {
-            getView()?.setLastBrewingEvent(it)
+            getView()?.updateLastBrewingEvent(it)
         }
     }
 
@@ -88,9 +88,9 @@ class MainPresenter @Inject constructor(
         screensaver?.defer()
 
         if (!coffeePreferences.isAccidentChannelSet()) {
-            getView()?.noAccidentChannelSet()
+            getView()?.showNoAccidentChannelSetError()
         } else {
-            getView()?.launchUserSelector()
+            getView()?.launchAccidentReportingScreen()
         }
     }
 

@@ -88,10 +88,6 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         accidentProgress?.dismiss()
     }
 
-    override fun showUsers(users: List<User>) {
-        userSelectorAdapter.setItems(users)
-    }
-
     override fun showProgress() {
         progress.visibility = View.VISIBLE
         errorLayout.visibility = View.GONE
@@ -107,14 +103,18 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         errorLayout.visibility = View.VISIBLE
     }
 
-    override fun messagePostedSuccessfully() {
+    override fun showUsers(users: List<User>) {
+        userSelectorAdapter.setItems(users)
+    }
+
+    override fun showAccidentPostedSuccessfullyMessage() {
         accidentProgress?.dismiss()
 
         toast(R.string.message_posted_successfully)
         finish()
     }
 
-    override fun errorPostingMessage() {
+    override fun showErrorMessage() {
         accidentProgress?.dismiss()
         toast(R.string.error_could_not_post_message)
     }

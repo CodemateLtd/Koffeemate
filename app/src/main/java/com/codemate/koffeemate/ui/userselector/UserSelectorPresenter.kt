@@ -78,14 +78,14 @@ class UserSelectorPresenter @Inject constructor(
                 comment = comment.toRequestBody()).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    getView()?.messagePostedSuccessfully()
+                    getView()?.showAccidentPostedSuccessfullyMessage()
                 } else {
-                    getView()?.errorPostingMessage()
+                    getView()?.showErrorMessage()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                getView()?.errorPostingMessage()
+                getView()?.showErrorMessage()
             }
         })
     }

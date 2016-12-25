@@ -4,12 +4,15 @@ import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.ui.base.MvpView
 
 interface MainView : MvpView {
-    fun newCoffeeIsComing()
+    fun showNewCoffeeIsComing()
+    fun showCancelCoffeeProgressPrompt()
+
+    fun updateLastBrewingEvent(event: CoffeeBrewingEvent)
     fun updateCoffeeProgress(newProgress: Int)
     fun resetCoffeeViewStatus()
-    fun showCancelCoffeeProgressPrompt()
-    fun noAnnouncementChannelSet()
-    fun setLastBrewingEvent(event: CoffeeBrewingEvent)
-    fun noAccidentChannelSet()
-    fun launchUserSelector()
+
+    fun showNoAnnouncementChannelSetError()
+    fun showNoAccidentChannelSetError()
+
+    fun launchAccidentReportingScreen()
 }
