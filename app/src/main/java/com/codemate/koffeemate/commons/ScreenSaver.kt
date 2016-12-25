@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.data
+package com.codemate.koffeemate.commons
 
 import android.app.Activity
 import android.app.AlarmManager
@@ -37,7 +37,7 @@ interface ScreenSaver {
     fun stop()
 }
 
-open class AndroidScreenSaver constructor(private val activity: Activity) : ScreenSaver{
+open class AndroidScreenSaver constructor(private val activity: Activity) : ScreenSaver {
     private val ACTION_ENABLE_SCREEN_SAVER = "com.codemate.brewstat.ACTION_ENABLE_SCREEN_SAVER"
     private val ACTION_DISABLE_SCREEN_SAVER = "com.codemate.brewstat.ACTION_DISABLE_SCREEN_SAVER"
 

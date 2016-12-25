@@ -2,7 +2,7 @@ package com.codemate.koffeemate.data.network
 
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.network.models.UserListResponse
-import com.codemate.koffeemate.util.extensions.toRequestBody
+import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

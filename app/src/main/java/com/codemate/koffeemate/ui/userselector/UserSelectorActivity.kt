@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.util.BasicListItemAnimator
-import com.codemate.koffeemate.util.extensions.loadBitmap
+import com.codemate.koffeemate.commons.BasicListItemAnimator
+import com.codemate.koffeemate.extensions.loadBitmap
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.activity_user_selector.view.*
 import org.jetbrains.anko.*

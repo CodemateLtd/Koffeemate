@@ -6,7 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.data.ScreenSaver
+import com.codemate.koffeemate.commons.ScreenSaver
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.ui.settings.SettingsActivity

@@ -1,6 +1,7 @@
 package com.codemate.koffeemate.data
 
 import android.os.Handler
+import com.codemate.koffeemate.commons.BrewingProgressUpdater
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

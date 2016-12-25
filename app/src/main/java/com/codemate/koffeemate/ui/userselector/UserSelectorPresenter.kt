@@ -2,14 +2,14 @@ package com.codemate.koffeemate.ui.userselector
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.data.AwardBadgeCreator
+import com.codemate.koffeemate.commons.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.data.network.models.UserListResponse
 import com.codemate.koffeemate.ui.base.BasePresenter
-import com.codemate.koffeemate.util.extensions.toRequestBody
+import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

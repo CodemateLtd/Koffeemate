@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.util.extensions
+package com.codemate.koffeemate.extensions
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,4 +1,4 @@
-package com.codemate.koffeemate.util.extensions
+package com.codemate.koffeemate.extensions
 
 import okhttp3.MediaType
 import okhttp3.RequestBody

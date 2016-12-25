@@ -1,4 +1,4 @@
-package com.codemate.koffeemate.util.extensions
+package com.codemate.koffeemate.extensions
 
 import android.graphics.Bitmap
 import com.bumptech.glide.RequestManager

@@ -1,7 +1,7 @@
 package com.codemate.koffeemate.ui.main
 
-import com.codemate.koffeemate.data.BrewingProgressUpdater
-import com.codemate.koffeemate.data.ScreenSaver
+import com.codemate.koffeemate.commons.BrewingProgressUpdater
+import com.codemate.koffeemate.commons.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
