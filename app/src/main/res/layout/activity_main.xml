@@ -47,19 +47,14 @@
 
     </LinearLayout>
 
-    <TextView
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/logAccidentButton"
+        android:src="@drawable/ic_thumb_down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:layout_gravity="top|right"
-        android:gravity="center_vertical"
-        android:layout_marginTop="16dp"
+        android:layout_gravity="end|bottom"
         android:layout_marginRight="16dp"
-        android:drawableLeft="@drawable/ic_thumb_down"
-        android:drawablePadding="4dp"
-        android:textSize="14sp"
-        android:text="@string/action_log_an_accident"/>
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
 
 </FrameLayout>
