@@ -17,8 +17,8 @@
 package com.codemate.koffeemate.di.modules
 
 import android.app.Activity
-import com.codemate.koffeemate.commons.AndroidScreenSaver
-import com.codemate.koffeemate.commons.ScreenSaver
+import com.codemate.koffeemate.common.AndroidScreenSaver
+import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.di.scopes.PerActivity
 import dagger.Module
 import dagger.Provides

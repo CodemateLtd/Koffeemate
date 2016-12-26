@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.commons
+package com.codemate.koffeemate.common
 
 import android.os.Handler
 

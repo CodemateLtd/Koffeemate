@@ -2,7 +2,7 @@ package com.codemate.koffeemate.ui.userselector
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.commons.AwardBadgeCreator
+import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi

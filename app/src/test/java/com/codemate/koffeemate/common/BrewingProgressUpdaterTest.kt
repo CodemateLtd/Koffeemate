@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.commons
+package com.codemate.koffeemate.common
 
 import android.os.Handler
-import com.codemate.koffeemate.commons.BrewingProgressUpdater
+import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

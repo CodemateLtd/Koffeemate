@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import android.os.Handler
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.testutils.SynchronousExecutorService
-import com.codemate.koffeemate.commons.BrewingProgressUpdater
-import com.codemate.koffeemate.commons.ScreenSaver
+import com.codemate.koffeemate.common.BrewingProgressUpdater
+import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent

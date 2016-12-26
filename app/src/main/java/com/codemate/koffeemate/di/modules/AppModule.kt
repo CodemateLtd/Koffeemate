@@ -18,9 +18,9 @@ package com.codemate.koffeemate.di.modules
 
 import android.content.Context
 import com.codemate.koffeemate.KoffeemateApp
-import com.codemate.koffeemate.commons.AndroidAwardBadgeCreator
-import com.codemate.koffeemate.commons.AwardBadgeCreator
-import com.codemate.koffeemate.commons.BrewingProgressUpdater
+import com.codemate.koffeemate.common.AndroidAwardBadgeCreator
+import com.codemate.koffeemate.common.AwardBadgeCreator
+import com.codemate.koffeemate.common.BrewingProgressUpdater
 import dagger.Module
 import dagger.Provides
 import java.util.concurrent.TimeUnit
