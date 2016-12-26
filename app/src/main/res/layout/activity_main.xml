@@ -25,6 +25,8 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:hapticFeedbackEnabled="true"
             android:alpha="0.2" />
 
         <TextView
