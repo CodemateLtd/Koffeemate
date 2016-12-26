@@ -41,5 +41,6 @@ class AppModule(val app: KoffeemateApp) {
     fun provideBrewingProgressUpdater() = BrewingProgressUpdater(TimeUnit.MINUTES.toMillis(7), 30)
 
     @Provides
+    @Singleton
     fun provideAwardBadgeCreator(ctx: Context): AwardBadgeCreator = AndroidAwardBadgeCreator(ctx)
 }

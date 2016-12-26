@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         presenter.attachView(this)
         presenter.setScreenSaver(screensaver)
+
         setUpListeners()
     }
 
