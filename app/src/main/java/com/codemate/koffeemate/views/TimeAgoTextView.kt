@@ -28,11 +28,12 @@ class TimeAgoTextView : TextView, Runnable {
     private var customText: String? = null
     private var time: Long = -1
 
-    constructor(context: Context) : super(context) {
-    }
+    lateinit var formatter: TimeAgoTextFormatter
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.TimeAgoTextView, 0, 0)
+    constructor(context: Context) : super(context)
+
+    constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {
+        val ta = ctx.obtainStyledAttributes(attrs, R.styleable.TimeAgoTextView, 0, 0)
 
         try {
             customText = ta.getString(R.styleable.TimeAgoTextView_tatv_customText)
@@ -43,6 +44,8 @@ class TimeAgoTextView : TextView, Runnable {
         } finally {
             ta.recycle()
         }
+
+        formatter = TimeAgoTextFormatter(ctx)
     }
 
     fun setTime(date: Date) {
@@ -74,7 +77,7 @@ class TimeAgoTextView : TextView, Runnable {
     override fun run() {
         val elapsedTime = System.currentTimeMillis() - time
 
-        val timeAgo = getHowLongAgoText(context, elapsedTime)
+        val timeAgo = formatter.getHowLongAgoText(elapsedTime)
         text = String.format(customText!!, timeAgo)
 
         postDelayed(this, getUpdateInterval(elapsedTime))
@@ -90,45 +93,6 @@ class TimeAgoTextView : TextView, Runnable {
                 return DateUtils.DAY_IN_MILLIS
             } else {
                 return DateUtils.WEEK_IN_MILLIS
-            }
-        }
-
-        // TODO: Improve this monster somehow if possible
-        internal fun getHowLongAgoText(context: Context, timeDifferenceMs: Long): String {
-            if (timeDifferenceMs < TimeUnit.MINUTES.toMillis(1)) {
-                return context.getString(R.string.time_just_now)
-            } else if (timeDifferenceMs < TimeUnit.HOURS.toMillis(1)) {
-                val timeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(timeDifferenceMs)
-
-                if (timeDifferenceMinutes <= 1) {
-                    return context.getString(R.string.time_one_minute_ago)
-                } else {
-                    return context.getString(R.string.time_n_minutes_ago, timeDifferenceMinutes)
-                }
-            } else if (timeDifferenceMs < TimeUnit.DAYS.toMillis(1)) {
-                val timeDifferenceHours = TimeUnit.MILLISECONDS.toHours(timeDifferenceMs)
-
-                if (timeDifferenceHours <= 1) {
-                    return context.getString(R.string.time_one_hour_ago)
-                } else {
-                    return context.getString(R.string.time_n_hours_ago, timeDifferenceHours)
-                }
-            } else if (timeDifferenceMs < TimeUnit.DAYS.toMillis(7)) {
-                val timeDifferenceDays = TimeUnit.MILLISECONDS.toDays(timeDifferenceMs)
-
-                if (timeDifferenceDays <= 1) {
-                    return context.getString(R.string.time_one_day_ago)
-                } else {
-                    return context.getString(R.string.time_n_days_ago, timeDifferenceDays)
-                }
-            } else {
-                val timeDifferenceWeeks = TimeUnit.MILLISECONDS.toDays(timeDifferenceMs) / 7
-
-                if (timeDifferenceWeeks <= 1) {
-                    return context.getString(R.string.time_one_week_ago)
-                } else {
-                    return context.getString(R.string.time_n_weeks_ago, timeDifferenceWeeks)
-                }
             }
         }
     }
