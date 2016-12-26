@@ -40,7 +40,7 @@ Of course you do. Here's the steps to get it working:
 SLACK_AUTH_TOKEN = "YOUR_SLACK_BOT_API_TOKEN" // Replace with the actual token
 ```
 
-Now you can open the project in Android Studio. 
+Now you can open the project in Android Studio. Make sure you have the Kotlin plugin installed.
 
 Install the app to an old phone, glue it to a wall near a coffee machine and enjoy!
 
