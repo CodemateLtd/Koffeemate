@@ -45,11 +45,9 @@ class MainActivity : AppCompatActivity(), MainView {
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
 
-        coffeeProgressView.onLongClick {
+        settingsButton.onClick {
             screensaver.defer()
-
             startActivity(intentFor<SettingsActivity>())
-            true
         }
 
         logAccidentButton.onClick { presenter.launchUserSelector() }

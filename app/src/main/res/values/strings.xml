@@ -73,7 +73,7 @@
     <string name="message_congratulations_to_user_fmt">Congratulations to %s for being a certified MoccaMaster user!</string>
 
     <!-- Informal messages -->
-    <string name="info_last_brewed_time">Last brewed: %s</string>
+    <string name="info_last_brewed_time">Last brewed\n%s</string>
     <string name="info_screensaver_on">Screensaver is on. Touch here to stop.</string>
 
     <!-- Error messages -->
