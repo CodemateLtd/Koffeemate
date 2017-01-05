@@ -1,5 +1,5 @@
-# ![Koffeemate Logo](https://github.com/roughike/CodemateLtd/blob/master/art/koffeemate_logo.png?raw=true)
-![Koffeemate Screenshot](https://github.com/roughike/CodemateLtd/blob/master/art/screenshot-coffee-incoming.png?raw=true)
+# ![Koffeemate Logo](https://raw.githubusercontent.com/CodemateLtd/Koffeemate/master/art/koffeemate_logo.png)
+![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot-coffee-incoming.png)
 
 # What?
 We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
