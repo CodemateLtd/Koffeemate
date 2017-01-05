@@ -1,4 +1,7 @@
 # ![Koffeemate Logo](https://raw.githubusercontent.com/CodemateLtd/Koffeemate/master/art/koffeemate_logo.png)
+
+[![Coverage Status](https://coveralls.io/repos/github/CodemateLtd/Koffeemate/badge.svg?branch=master)](https://coveralls.io/github/CodemateLtd/Koffeemate?branch=master)
+
 ![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot-coffee-incoming.png)
 
 # What?
