@@ -1,5 +1,5 @@
-# ![Koffeemate Logo](https://github.com/roughike/Koffeemate/blob/master/art/koffeemate_logo.png?raw=true)
-![Koffeemate Screenshot](https://github.com/roughike/Koffeemate/blob/master/art/screenshot-coffee-incoming.png?raw=true)
+# ![Koffeemate Logo](https://github.com/roughike/CodemateLtd/blob/master/art/koffeemate_logo.png?raw=true)
+![Koffeemate Screenshot](https://github.com/roughike/CodemateLtd/blob/master/art/screenshot-coffee-incoming.png?raw=true)
 
 # What?
 We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
@@ -31,7 +31,7 @@ Of course you do. Here's the steps to get it working:
 5. **IMPORTANT:** Invite the newly-made bot to any channels you would like the coffee announcements to be made on.
 
 ## Make it work with Koffeemate
-1. Change to a folder of your liking and do a ```git clone https://github.com/roughike/Koffeemate.git```
+1. Change to a folder of your liking and do a ```git clone https://github.com/CodemateLtd/Koffeemate.git```
 2. **Don't open the project yet.**
 3. Create an empty ```gradle.properties``` file in the **project root** with the following contents:
 
@@ -51,7 +51,7 @@ We'd love to have you contribute, and we do not have any strict rules.
 However, here's some tips for a great start:
 
 * We love PR's related to test coverage / code cleanliness improvements.
-* Out of ideas? Look for the [issue tracker](https://github.com/roughike/Koffeemate/issues) for something to do. Tell if you want to do something, and we'll assign it to you.
+* Out of ideas? Look for the [issue tracker](https://github.com/CodemateLtd/Koffeemate/issues) for something to do. Tell if you want to do something, and we'll assign it to you.
 * If you have something big in mind, create an issue first. Major functionality changes might not necessarily get merged.
 
 # License
