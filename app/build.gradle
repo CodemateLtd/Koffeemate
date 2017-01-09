@@ -17,7 +17,9 @@ android {
         versionName "0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
+        buildConfigField "String", "SLACK_AUTH_TOKEN",
+                hasProperty('SLACK_AUTH_TOKEN')? SLACK_AUTH_TOKEN
+                        : System.getenv("SLACK_AUTH_TOKEN") != null? System.getenv("SLACK_AUTH_TOKEN") : ''
     }
     buildTypes {
         debug {
