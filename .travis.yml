@@ -18,4 +18,4 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-   - ./gradlew createDebugCoverageReport coveralls
+   - ./gradlew test connectedAndroidTest coveralls
