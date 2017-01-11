@@ -27,14 +27,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="Last brewed: just now"
+            tools:text="Last brewed:\njust now"
             app:tatv_customText="@string/info_last_brewed_time" />
 
         <com.codemate.koffeemate.views.CoffeeProgressView
             android:id="@+id/coffeeProgressView"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:clickable="true"
             android:hapticFeedbackEnabled="true"
             android:alpha="0.2" />
@@ -43,7 +43,6 @@
             android:id="@+id/coffeeStatusTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/title_coffeeview_idle"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 

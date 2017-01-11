@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     fun setUpListeners() {
-        coffeeProgressView.onClick {
+        coffeeProgressView.setOnCoffeePotClickListener {
             val newCoffeeMessage = getString(R.string.message_new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
         }
@@ -76,9 +76,7 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun showNewCoffeeIsComing() {
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)
-        coffeeProgressView.animate()
-                .alpha(1f)
-                .start()
+        coffeeProgressView.setCoffeeIncoming()
     }
 
     override fun showCancelCoffeeProgressPrompt() {
@@ -104,9 +102,7 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun resetCoffeeViewStatus() {
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
-        coffeeProgressView.animate()
-                .alpha(0.2f)
-                .start()
+        coffeeProgressView.reset()
     }
 
     override fun showNoAnnouncementChannelSetError() {
