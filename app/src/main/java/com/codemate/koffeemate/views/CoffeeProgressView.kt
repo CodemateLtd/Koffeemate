@@ -7,7 +7,10 @@ import android.view.View
 import android.widget.FrameLayout
 import com.codemate.koffeemate.R
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.onClick
+import org.jetbrains.anko.onTouch
+import org.jetbrains.anko.padding
 
 class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, attrs) {
     init {
@@ -16,10 +19,6 @@ class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, a
 
         inflate(ctx, R.layout.view_coffee_progress, this)
         initializeTouchListener()
-
-        userSetterButton.onClick {
-            ctx.toast("JORMA")
-        }
     }
 
     fun setOnCoffeePotClickListener(listener: (View?) -> Unit) {
