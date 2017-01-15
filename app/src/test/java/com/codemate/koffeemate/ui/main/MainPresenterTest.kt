@@ -2,23 +2,12 @@ package com.codemate.koffeemate.ui.main
 
 import android.content.SharedPreferences
 import android.os.Handler
-import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.SlackService
 import com.nhaarman.mockito_kotlin.*
-import okhttp3.Dispatcher
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.core.IsEqual.equalTo
-import org.junit.After
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -42,9 +31,12 @@ class MainPresenterTest {
     @Mock
     lateinit var mockScreenSaver: ScreenSaver
 
-    lateinit var updater: BrewingProgressUpdater
-    lateinit var mockServer: MockWebServer
-    lateinit var slackApi: SlackApi
+    @Mock
+    lateinit var mockSendCoffeeAnnouncementUseCase: SendCoffeeAnnouncementUseCase
+
+    @Mock
+    lateinit var mockUpdater: BrewingProgressUpdater
+
     lateinit var presenter: MainPresenter
 
     @Before
@@ -55,22 +47,22 @@ class MainPresenterTest {
         whenever(coffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
-        updater = BrewingProgressUpdater(9, 3)
-        updater.updateHandler = mockHandler
+        mockUpdater.updateHandler = mockHandler
+        whenever(mockHandler.removeCallbacks(any())).then {
+            // No-op
+        }
+        whenever(mockUpdater.reset()).then {
+            // No-op
+        }
 
-        mockServer = MockWebServer()
-        mockServer.start()
-
-        slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
-
-        presenter = MainPresenter(coffeePreferences, mockCoffeeEventRepository, updater, slackApi)
+        presenter = MainPresenter(
+                coffeePreferences,
+                mockCoffeeEventRepository,
+                mockUpdater,
+                mockSendCoffeeAnnouncementUseCase
+        )
         presenter.attachView(view)
         presenter.setScreenSaver(mockScreenSaver)
-    }
-
-    @After
-    fun tearDown() {
-        mockServer.shutdown()
     }
 
     @Test
@@ -105,7 +97,6 @@ class MainPresenterTest {
     @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn("")
-        updater.isUpdating = false
 
         presenter.startDelayedCoffeeAnnouncement("")
 
@@ -119,7 +110,6 @@ class MainPresenterTest {
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view).showNewCoffeeIsComing()
-        verify(view).updateCoffeeProgress(10)
 
         verifyNoMoreInteractions(view)
         verifyZeroInteractions(mockCoffeeEventRepository)
@@ -127,39 +117,11 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenUpdaterAlreadyUpdating_ShowsCancelCoffeeProgressPrompt() {
-        updater.isUpdating = true
+        mockUpdater.isUpdating = true
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
         verifyZeroInteractions(mockCoffeeEventRepository)
-    }
-
-    @Test
-    fun startDelayedCoffeeAnnouncement_WhenRunToEnd_UpdatesCoffeeProgressAndPostsToSlack() {
-        mockServer.enqueue(MockResponse().setBody(""))
-        presenter.startDelayedCoffeeAnnouncement("A happy message about coffee status")
-
-        updater.run()
-        updater.run()
-        updater.run()
-
-        inOrder(view, mockCoffeeEventRepository) {
-            verify(view).updateCoffeeProgress(10)
-            verify(view).updateCoffeeProgress(33)
-            verify(view).updateCoffeeProgress(67)
-            verify(view).updateCoffeeProgress(0)
-            verify(view).resetCoffeeViewStatus()
-            verify(mockCoffeeEventRepository).recordBrewingEvent()
-        }
-
-        val apiRequest = mockServer.takeRequest()
-        assertThat(apiRequest.path, equalTo("/chat.postMessage"))
-
-        val requestBody = apiRequest.body.readUtf8()
-        assertThat(requestBody, containsString("token=${BuildConfig.SLACK_AUTH_TOKEN}"))
-        assertThat(requestBody, containsString("channel=$CHANNEL_NAME"))
-        assertThat(requestBody, containsString("text=A%20happy%20message%20about%20coffee%20status"))
-        assertThat(requestBody, containsString("as_user=false"))
     }
 
     @Test
@@ -187,7 +149,7 @@ class MainPresenterTest {
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
 
-        verify(mockHandler).removeCallbacks(updater)
+        verify(mockHandler).removeCallbacks(mockUpdater)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
 }

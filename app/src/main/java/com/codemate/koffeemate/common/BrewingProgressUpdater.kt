@@ -27,22 +27,17 @@ import android.os.Handler
  *
  * See MainPresenter & BrewingProgressUpdateTest for usage.
  */
-class BrewingProgressUpdater(
+open class BrewingProgressUpdater(
         brewingTimeMillis: Long,
         private val totalSteps: Int) : Runnable {
-    var updateHandler: Handler
-    val updateInterval: Long
+    var updateHandler: Handler = Handler()
+    val updateInterval: Long = brewingTimeMillis / totalSteps
 
     var isUpdating = false
     var currentStep = 0
 
     var updateListener: ((Int) -> Unit)? = null
     var completeListener: (() -> Unit)? = null
-
-    init {
-        updateHandler = Handler()
-        updateInterval = brewingTimeMillis / totalSteps
-    }
 
     fun startUpdating(updateListener: (Int) -> Unit, completeListener: () -> Unit) {
         if (!isUpdating) {
