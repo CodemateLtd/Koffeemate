@@ -36,9 +36,9 @@ Of course you do. Here's the steps to get it working:
 ## Make it work with Koffeemate
 1. Change to a folder of your liking and do a ```git clone https://github.com/CodemateLtd/Koffeemate.git```
 2. **Don't open the project yet.**
-3. Create an empty ```gradle.properties``` file in the **project root** with the following contents:
+3. Create an empty ```koffeemate.properties``` file in your **app module** with the following contents:
 
-**Koffeemate/gradle.properties:**
+**Koffeemate/app/koffeemate.properties:**
 ```groovy
 SLACK_AUTH_TOKEN = "YOUR_SLACK_BOT_API_TOKEN" // Replace with the actual token
 ```

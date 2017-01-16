@@ -1,0 +1,42 @@
+/**
+ * Beautiful Gradle script taken from:
+ * https://github.com/futurice/freesound-android/blob/master/app/app-config.gradle
+ */
+ext {
+    SLACK_AUTH_TOKEN = getSlackAuthToken()
+}
+
+def String getSlackAuthToken() {
+    String slackAuthToken = isCiBuild() ? getApiKeyFromEnv() : getApiKeyFromFile();
+    if (slackAuthToken == null || slackAuthToken.isEmpty()) {
+        throw new IllegalStateException(
+                "Could not find Slack API key value in environment or property file")
+    }
+    return "$slackAuthToken"
+}
+
+private boolean isCiBuild() {
+    System.getenv("TRAVIS") == "true"
+}
+
+private String getApiKeyFromFile() {
+    Properties apiProperties = loadFileProperties("$projectDir/koffeemate.properties")
+    return apiProperties.getProperty("SLACK_AUTH_TOKEN")
+}
+
+private String getApiKeyFromEnv() {
+    System.getenv("SLACK_AUTH_TOKEN")
+}
+
+def Properties loadFileProperties(String fileLocation) {
+    def Properties properties = new Properties()
+    try {
+        properties.load(new FileInputStream(fileLocation))
+    } catch (FileNotFoundException fnf) {
+        logger.log(LogLevel.ERROR,
+                String.format("Missing Koffeemate properties file: %s", fileLocation),
+                fnf)
+        throw fnf
+    }
+    return properties
+}

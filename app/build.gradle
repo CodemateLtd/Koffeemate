@@ -5,6 +5,7 @@ apply plugin: 'realm-android'
 apply plugin: 'com.github.kt3k.coveralls'
 
 apply from: 'dependencies.gradle'
+apply from: 'app-config.gradle'
 
 android {
     compileSdkVersion 25
@@ -17,10 +18,7 @@ android {
         versionName "0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        // Empty auth token for Travis CI so that it builds properly
-        buildConfigField "String", "SLACK_AUTH_TOKEN",
-                hasProperty('SLACK_AUTH_TOKEN')? SLACK_AUTH_TOKEN
-                        : System.getenv("SLACK_AUTH_TOKEN") != null? System.getenv("SLACK_AUTH_TOKEN") : '""'
+        buildConfigField "String", "SLACK_AUTH_TOKEN", SLACK_AUTH_TOKEN
     }
     buildTypes {
         debug {
