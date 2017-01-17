@@ -12,7 +12,7 @@ def String getSlackAuthToken() {
         throw new IllegalStateException(
                 "Could not find Slack API key value in environment or property file")
     }
-    return "$slackAuthToken"
+    return "\"$slackAuthToken\""
 }
 
 private boolean isCiBuild() {
