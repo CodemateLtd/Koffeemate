@@ -1,7 +1,7 @@
 # ![Koffeemate Logo](https://raw.githubusercontent.com/CodemateLtd/Koffeemate/master/art/koffeemate_logo.png)
 
 [![Build Status](https://travis-ci.org/CodemateLtd/Koffeemate.svg?branch=master)](https://travis-ci.org/CodemateLtd/Koffeemate)
- 
+
 ![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot-coffee-incoming.png)
 
 # What?
