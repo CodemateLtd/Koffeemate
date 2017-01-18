@@ -88,9 +88,7 @@ class MainPresenterTest {
 
     @Test
     fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
-        whenever(coffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
-        whenever(coffeePreferences.useDifferentChannelForAccidents()).thenReturn(false)
-
+        whenever(coffeePreferences.isAccidentChannelSet()).thenReturn(true)
         presenter.launchUserSelector()
 
         verify(view).launchAccidentReportingScreen()
@@ -100,7 +98,6 @@ class MainPresenterTest {
     @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
         whenever(coffeePreferences.getCoffeeAnnouncementChannel()).thenReturn("")
-
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showNoAnnouncementChannelSetError()
@@ -110,10 +107,10 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
+        whenever(coffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view).showNewCoffeeIsComing()
-
         verifyNoMoreInteractions(view)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
