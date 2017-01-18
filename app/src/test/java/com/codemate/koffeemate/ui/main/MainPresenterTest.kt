@@ -88,6 +88,9 @@ class MainPresenterTest {
 
     @Test
     fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
+        whenever(coffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
+        whenever(coffeePreferences.useDifferentChannelForAccidents()).thenReturn(false)
+
         presenter.launchUserSelector()
 
         verify(view).launchAccidentReportingScreen()

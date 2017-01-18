@@ -10,5 +10,5 @@ interface UserSelectorView : MvpView {
     fun showUsers(users: List<User>)
 
     fun showAccidentPostedSuccessfullyMessage()
-    fun showErrorMessage()
+    fun showErrorPostingAccidentMessage()
 }

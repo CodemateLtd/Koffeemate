@@ -20,6 +20,7 @@ ext {
 
         compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
         compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+        compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
 
         compile "com.google.dagger:dagger:$daggerVersion"
         kapt "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -28,6 +29,9 @@ ext {
         compile "com.github.bumptech.glide:glide:3.7.0"
         compile "com.mikhaellopez:circularfillableloaders:1.2.0"
         compile "de.hdodenhof:circleimageview:2.1.0"
+
+        compile "io.reactivex:rxjava:1.1.6"
+        compile "io.reactivex:rxandroid:1.2.1"
 
         androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
         androidTestCompile "com.android.support.test.espresso:espresso-intents:$espressoVersion"
