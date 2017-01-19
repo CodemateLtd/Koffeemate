@@ -16,51 +16,36 @@
 
 package com.codemate.koffeemate.ui.main
 
-import android.content.SharedPreferences
-import android.os.Handler
-import com.codemate.koffeemate.common.BrewingProgressUpdater
-import com.codemate.koffeemate.data.local.CoffeeEventRepository
-import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.testutils.SynchronousExecutorService
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.Dispatcher
+import okhttp3.ResponseBody
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.hamcrest.core.IsEqual.equalTo
+import org.hamcrest.core.StringContains.containsString
+import org.junit.After
+import org.junit.Assert.assertThat
 import org.junit.Before
-import org.mockito.Mock
+import org.junit.Test
 import org.mockito.MockitoAnnotations
+import retrofit2.Response
+import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
 
 class SendCoffeeAnnouncementUseCaseTest {
     val CHANNEL_NAME = "fake-channel"
 
-    lateinit var updater: BrewingProgressUpdater
-
-    @Mock
-    lateinit var mockCoffeePreferences: CoffeePreferences
-
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
-
-    @Mock
-    lateinit var mockCoffeeEventRepository: CoffeeEventRepository
-
     lateinit var useCase: SendCoffeeAnnouncementUseCase
-
-    lateinit var mockUpdateListener: (Int) -> Unit
-    lateinit var mockCompleteListener: () -> Unit
+    lateinit var testSubscriber: TestSubscriber<Response<ResponseBody>>
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-
-        updater = BrewingProgressUpdater(9, 3)
-        updater.updateHandler = mock<Handler>()
-
-        mockCoffeePreferences.preferences = mock<SharedPreferences>()
-        whenever(mockCoffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
         mockServer = MockWebServer()
         mockServer.start()
@@ -76,27 +61,18 @@ class SendCoffeeAnnouncementUseCaseTest {
                 Schedulers.immediate()
         )
 
-        mockUpdateListener = mock<(Int) -> Unit>()
-        mockCompleteListener = mock<() -> Unit>()
+        testSubscriber = TestSubscriber()
     }
 
-    /*@Test
-    fun execute_WhenResponseSuccessful_UpdatesCoffeeProgressAndPostsToSlack() {
+    @After
+    fun tearDown() {
+        mockServer.shutdown()
+    }
+
+    @Test
+    fun execute_MakesCorrectRequest() {
         mockServer.enqueue(MockResponse().setBody(""))
-        useCase.execute(CHANNEL_NAME, "A happy message about coffee", mockCompleteListener)
-
-        updater.run()
-        updater.run()
-        updater.run()
-
-        inOrder(mockUpdateListener, mockCompleteListener, mockCoffeeEventRepository) {
-            verify(mockUpdateListener).invoke(10)
-            verify(mockUpdateListener).invoke(33)
-            verify(mockUpdateListener).invoke(67)
-
-            verify(mockCoffeeEventRepository).recordBrewingEvent()
-            verify(mockCompleteListener).invoke()
-        }
+        useCase.execute(CHANNEL_NAME, "A happy message about coffee").subscribe(testSubscriber)
 
         val apiRequest = mockServer.takeRequest()
         assertThat(apiRequest.path, equalTo("/chat.postMessage"))
@@ -106,5 +82,8 @@ class SendCoffeeAnnouncementUseCaseTest {
         assertThat(requestBody, containsString("channel=$CHANNEL_NAME"))
         assertThat(requestBody, containsString("text=A%20happy%20message%20about%20coffee"))
         assertThat(requestBody, containsString("as_user=false"))
-    }*/
+
+        testSubscriber.assertCompleted()
+        testSubscriber.assertNoErrors()
+    }
 }
