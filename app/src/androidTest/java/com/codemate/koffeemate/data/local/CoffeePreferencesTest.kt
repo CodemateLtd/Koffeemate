@@ -20,6 +20,8 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import org.hamcrest.core.IsEqual.equalTo
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,6 +34,20 @@ class CoffeePreferencesTest {
     fun setUp() {
         coffeePreferences = CoffeePreferences(InstrumentationRegistry.getTargetContext())
         coffeePreferences.preferences.edit().clear().apply()
+    }
+
+    @Test
+    fun getCoffeeBrewingTime_DefaultsToSevenMinutes() {
+        assertThat(coffeePreferences.getCoffeeBrewingTime(), equalTo(7L))
+    }
+
+    @Test
+    fun getCoffeeBrewingTime_ReturnsProperLongValue() {
+        coffeePreferences.preferences.edit()
+                .putString(coffeePreferences.coffeeBrewingTimeKey, "4")
+                .apply()
+
+        assertThat(coffeePreferences.getCoffeeBrewingTime(), equalTo(4L))
     }
 
     @Test
