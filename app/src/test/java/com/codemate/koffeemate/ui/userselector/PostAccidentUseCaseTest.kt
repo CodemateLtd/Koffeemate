@@ -30,6 +30,7 @@ import com.codemate.koffeemate.testutils.RegexMatcher
 import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.ui.main.PostAccidentUseCase
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -105,7 +106,7 @@ class PostAccidentUseCaseTest {
     @Test
     fun announceCoffeeBrewingAccident_ShouldMakeCorrectRequest() {
         val user = fakeUser()
-        useCase.execute("Test comment", user, mockBitmap).subscribe(testSubscriber)
+        useCase.execute("Test comment", user.id, user.profile.first_name, mockBitmap).subscribe(testSubscriber)
 
         // TODO: There has to be a better way to verify these multipart post params, right? :S
         val requestBody = mockServer.takeRequest().body.readUtf8()
@@ -118,7 +119,7 @@ class PostAccidentUseCaseTest {
     @Test
     fun announceCoffeeBrewingAccident_WhenSuccessful_NotifiesUIAndStoresEvent() {
         val user = fakeUser()
-        useCase.execute("", user, mockBitmap).subscribe(testSubscriber)
+        useCase.execute("", user.id, user.profile.first_name, mockBitmap).subscribe(testSubscriber)
 
         testSubscriber.assertValueCount(1)
         testSubscriber.assertCompleted()

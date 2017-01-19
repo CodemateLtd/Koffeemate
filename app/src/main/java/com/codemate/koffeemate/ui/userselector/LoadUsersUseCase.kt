@@ -47,6 +47,5 @@ open class LoadUsersUseCase(
                             && !it.profile.first_name.startsWith("Ext-")
                             && it.real_name != "slackbot"
                 }
-
     }
 }

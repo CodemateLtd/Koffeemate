@@ -15,4 +15,6 @@ interface MainView : MvpView {
     fun showNoAccidentChannelSetError()
 
     fun launchAccidentReportingScreen()
+    fun showAccidentPostedSuccessfullyMessage()
+    fun showErrorPostingAccidentMessage()
 }

@@ -10,6 +10,7 @@ import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.data.network.models.UserListResponse
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.ui.main.PostAccidentUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -60,20 +61,7 @@ class UserSelectorPresenterTest {
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(any(), any()))
                 .thenReturn(getResourceFile("images/empty.png"))
 
-        val postAccidentUseCase = PostAccidentUseCase(
-                mockSlackApi,
-                mock<CoffeeEventRepository>(),
-                mockCoffeePreferences,
-                mockAwardBadgeCreator,
-                Schedulers.immediate(),
-                Schedulers.immediate()
-        )
-
-        presenter = UserSelectorPresenter(
-                loadUsersUseCase,
-                postAccidentUseCase
-        )
-
+        presenter = UserSelectorPresenter(loadUsersUseCase)
         presenter.attachView(view)
     }
 
@@ -108,7 +96,7 @@ class UserSelectorPresenterTest {
 
         verifyNoMoreInteractions(view)
     }
-
+/*
     @Test
     fun announceCoffeeBrewingAccident_OnSuccess_ShowsMessageOnUI() {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
@@ -130,5 +118,5 @@ class UserSelectorPresenterTest {
         presenter.announceCoffeeBrewingAccident("", fakeUser(), mockBitmap)
 
         verify(view).showErrorPostingAccidentMessage()
-    }
+    }*/
 }
