@@ -67,7 +67,7 @@ class MainPresenter @Inject constructor(
         screensaver?.defer()
 
         if (coffeePreferences.isAccidentChannelSet()) {
-            getView()?.launchAccidentReportingScreen()
+            getView()?.launchUserSelector()
         } else {
             getView()?.showNoAccidentChannelSetError()
         }

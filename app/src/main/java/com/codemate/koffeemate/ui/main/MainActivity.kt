@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     // Shaming users for coffee brewing failures -->
-    override fun launchAccidentReportingScreen() {
+    override fun launchUserSelector() {
         startActivityForResult(intentFor<UserSelectorActivity>(), REQUEST_CODE_PICK_USER)
     }
 

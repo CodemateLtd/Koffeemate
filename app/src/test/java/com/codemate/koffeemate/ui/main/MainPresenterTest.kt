@@ -148,7 +148,7 @@ class MainPresenterTest {
         whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
         presenter.launchAccidentReportingScreen()
 
-        verify(view).launchAccidentReportingScreen()
+        verify(view).launchUserSelector()
         verifyNoMoreInteractions(view)
     }
 
