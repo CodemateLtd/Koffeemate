@@ -30,8 +30,7 @@ class MainPresenter @Inject constructor(
         ensureViewIsAttached()
         screensaver?.defer()
 
-        if (!brewingProgressUpdater.isUpdating
-                && !coffeePreferences.isCoffeeAnnouncementChannelSet()) {
+        if (shouldAskForAnnouncementChannel()) {
             getView()?.showNoAnnouncementChannelSetError()
             return
         }
@@ -71,6 +70,11 @@ class MainPresenter @Inject constructor(
         } else {
             getView()?.showCancelCoffeeProgressPrompt()
         }
+    }
+
+    private fun shouldAskForAnnouncementChannel(): Boolean {
+        return !brewingProgressUpdater.isUpdating
+                && !coffeePreferences.isCoffeeAnnouncementChannelSet()
     }
 
     fun updateLastBrewingEventTime() {
