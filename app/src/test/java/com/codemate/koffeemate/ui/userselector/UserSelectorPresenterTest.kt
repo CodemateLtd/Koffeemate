@@ -8,6 +8,7 @@ import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.Profile
 import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.data.network.models.UserListResponse
+import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
@@ -22,17 +23,10 @@ import rx.schedulers.Schedulers
 
 class UserSelectorPresenterTest {
     val FAKE_USERS = listOf(
-            getFakeUser(),
-            getFakeUser(),
-            getFakeUser()
+            fakeUser(),
+            fakeUser(),
+            fakeUser()
     )
-
-    private fun getFakeUser() = User().apply {
-        id = "abc123"
-        profile = Profile()
-        profile.first_name = "Jorma"
-        profile.real_name = "Jorma"
-    }
 
     @Mock
     lateinit var mockSlackApi: SlackApi
@@ -122,7 +116,7 @@ class UserSelectorPresenterTest {
                         ResponseBody.create(MediaType.parse("text/plain"), ""))
                 ))
 
-        presenter.announceCoffeeBrewingAccident("", getFakeUser(), mockBitmap)
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mockBitmap)
 
         verify(view).showAccidentPostedSuccessfullyMessage()
         verifyNoMoreInteractions(view)
@@ -133,7 +127,7 @@ class UserSelectorPresenterTest {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(Observable.error(Throwable()))
 
-        presenter.announceCoffeeBrewingAccident("", getFakeUser(), mockBitmap)
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mockBitmap)
 
         verify(view).showErrorPostingAccidentMessage()
     }

@@ -27,11 +27,14 @@ import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.data.network.models.Profile
 import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.testutils.RegexMatcher
+import com.codemate.koffeemate.testutils.SynchronousExecutorService
+import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import okhttp3.Dispatcher
 import okhttp3.ResponseBody
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -41,6 +44,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import retrofit2.Response
 import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
@@ -67,6 +71,12 @@ class PostAccidentUseCaseTest {
 
     @Before
     fun setUp() {
+        MockitoAnnotations.initMocks(this)
+
+        mockServer = MockWebServer()
+        mockServer.start()
+        mockServer.enqueue(MockResponse().setBody(""))
+
         mockCoffeePreferences.preferences = mock<SharedPreferences>()
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("test-channel")
         whenever(mockCoffeeEventRepository.getAccidentCountForUser(TEST_USER_ID)).thenReturn(1)
@@ -74,10 +84,7 @@ class PostAccidentUseCaseTest {
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(mockBitmap, 1))
                 .thenReturn(getResourceFile("images/empty.png"))
 
-        mockServer = MockWebServer()
-        mockServer.start()
-
-        slackApi = SlackService.getApi(mockServer.url("/"))
+        slackApi = SlackService.getApi(Dispatcher(SynchronousExecutorService()), mockServer.url("/"))
         useCase = PostAccidentUseCase(
                 slackApi,
                 mockCoffeeEventRepository,
@@ -95,13 +102,10 @@ class PostAccidentUseCaseTest {
         mockServer.shutdown()
     }
 
-
     @Test
     fun announceCoffeeBrewingAccident_ShouldMakeCorrectRequest() {
-        val user = getFakeUser()
-
-        mockServer.enqueue(MockResponse().setBody(""))
-        useCase.execute("Test comment", user, mockBitmap)
+        val user = fakeUser()
+        useCase.execute("Test comment", user, mockBitmap).subscribe(testSubscriber)
 
         // TODO: There has to be a better way to verify these multipart post params, right? :S
         val requestBody = mockServer.takeRequest().body.readUtf8()
@@ -113,7 +117,7 @@ class PostAccidentUseCaseTest {
 
     @Test
     fun announceCoffeeBrewingAccident_WhenSuccessful_NotifiesUIAndStoresEvent() {
-        val user = getFakeUser()
+        val user = fakeUser()
         useCase.execute("", user, mockBitmap).subscribe(testSubscriber)
 
         testSubscriber.assertValueCount(1)
@@ -122,14 +126,5 @@ class PostAccidentUseCaseTest {
         verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
         verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
         verifyNoMoreInteractions(mockCoffeeEventRepository)
-    }
-
-    private fun getFakeUser(): User {
-        val user = User()
-        user.id = TEST_USER_ID
-        user.profile = Profile()
-        user.profile.first_name = "Jorma"
-
-        return user
     }
 }

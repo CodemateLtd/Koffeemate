@@ -16,8 +16,17 @@
 
 package com.codemate.koffeemate.testutils
 
+import com.codemate.koffeemate.data.network.models.Profile
+import com.codemate.koffeemate.data.network.models.User
 import java.io.File
 
 fun Any.getResourceFile(path: String): File {
     return File(javaClass.classLoader.getResource(path).file)
+}
+
+fun fakeUser() = User().apply {
+    id = "abc123"
+    profile = Profile()
+    profile.first_name = "Jorma"
+    profile.real_name = "Jorma"
 }
