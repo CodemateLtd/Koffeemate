@@ -58,7 +58,7 @@ class MainPresenter @Inject constructor(
         brewingProgressUpdater.reset()
     }
 
-    fun launchUserSelector() {
+    fun launchAccidentReportingScreen() {
         screensaver?.defer()
 
         if (coffeePreferences.isAccidentChannelSet()) {

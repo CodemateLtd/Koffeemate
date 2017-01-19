@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), MainView {
             startActivity(intentFor<SettingsActivity>())
         }
 
-        logAccidentButton.onClick { presenter.launchUserSelector() }
+        logAccidentButton.onClick { presenter.launchAccidentReportingScreen() }
     }
 
     override fun onStart() {
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(), MainView {
         presenter.detachView()
     }
 
+    // MainView methods -->
     override fun showNewCoffeeIsComing() {
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)

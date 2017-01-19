@@ -73,14 +73,14 @@ class MainPresenterTest {
 
     @Test
     fun launchUserSelector_DefersScreenSaver() {
-        presenter.launchUserSelector()
+        presenter.launchAccidentReportingScreen()
         verify(mockScreenSaver).defer()
     }
 
     @Test
     fun launchUserSelector_WhenNoAccidentChannelSet_InformsView() {
         whenever(coffeePreferences.getAccidentChannel()).thenReturn("")
-        presenter.launchUserSelector()
+        presenter.launchAccidentReportingScreen()
 
         verify(view).showNoAccidentChannelSetError()
         verifyNoMoreInteractions(view)
@@ -89,7 +89,7 @@ class MainPresenterTest {
     @Test
     fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
         whenever(coffeePreferences.isAccidentChannelSet()).thenReturn(true)
-        presenter.launchUserSelector()
+        presenter.launchAccidentReportingScreen()
 
         verify(view).launchAccidentReportingScreen()
         verifyNoMoreInteractions(view)
