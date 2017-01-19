@@ -104,6 +104,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)
         coffeeProgressView.setCoffeeIncoming()
+
+        logAccidentButton.hide()
     }
 
     override fun showCancelCoffeeProgressPrompt() {
@@ -130,6 +132,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
         coffeeProgressView.reset()
+
+        logAccidentButton.show()
     }
 
     override fun showNoAnnouncementChannelSetError() {
