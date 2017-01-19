@@ -176,6 +176,25 @@ class MainPresenterTest {
     }
 
     @Test
+    fun handlePersonChange_WhenPersonNotSet_ShowsPersonSelectionDialog() {
+        presenter.handlePersonChange()
+
+        verify(view).selectCoffeeBrewingPerson()
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun handlePersonChange_WhenPersonIsSet_ClearsPerson() {
+        presenter.personBrewingCoffee = fakeUser()
+        presenter.handlePersonChange()
+
+        assertThat(presenter.personBrewingCoffee, nullValue())
+
+        verify(view).clearCoffeeBrewingPerson()
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
     fun launchAccidentReportingScreen_DefersScreenSaver() {
         presenter.launchAccidentReportingScreen()
         verify(mockScreenSaver).defer()

@@ -77,6 +77,15 @@ class MainPresenter @Inject constructor(
                 && !coffeePreferences.isCoffeeAnnouncementChannelSet()
     }
 
+    fun handlePersonChange() {
+        if (personBrewingCoffee == null) {
+            getView()?.selectCoffeeBrewingPerson()
+        } else {
+            personBrewingCoffee = null
+            getView()?.clearCoffeeBrewingPerson()
+        }
+    }
+
     fun updateLastBrewingEventTime() {
         coffeeEventRepository.getLastBrewingEvent()?.let {
             getView()?.updateLastBrewingEvent(it)

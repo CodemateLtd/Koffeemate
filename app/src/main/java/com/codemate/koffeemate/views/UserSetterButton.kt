@@ -61,7 +61,24 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
                 .start()
     }
 
-    private fun reset() {
+    fun clearUser() {
+        animate().alpha(0.1f)
+                .scaleX(0.1f)
+                .scaleY(0.1f)
+                .rotation(180f)
+                .withEndAction {
+                    imageResource = EMPTY_IMAGE_RESOURCE
+                    rotation = -180f
+                    animate().alpha(1f)
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .rotation(0f)
+                            .setInterpolator(OvershootInterpolator(2f))
+                            .start()
+                }
+    }
+
+    fun reset() {
         imageResource = EMPTY_IMAGE_RESOURCE
         visibility = View.GONE
         isClickable = false

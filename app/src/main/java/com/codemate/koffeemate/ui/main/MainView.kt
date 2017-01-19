@@ -14,6 +14,9 @@ interface MainView : MvpView {
     fun showNoAnnouncementChannelSetError()
     fun showNoAccidentChannelSetError()
 
+    fun selectCoffeeBrewingPerson()
+    fun clearCoffeeBrewingPerson()
+
     fun launchUserSelector()
     fun showPostAccidentAnnouncementPrompt(
             userId: String,

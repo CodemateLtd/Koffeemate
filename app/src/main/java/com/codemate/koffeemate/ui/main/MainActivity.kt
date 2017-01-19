@@ -57,9 +57,7 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         }
 
         coffeeProgressView.setOnUserSetterClickListener {
-            UserSelectorFragment
-                    .newInstance()
-                    .show(supportFragmentManager, "asd")
+            presenter.handlePersonChange()
         }
 
         settingsButton.onClick {
@@ -91,7 +89,17 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         accidentProgress?.dismiss()
     }
 
-    // UserSelectListener method, for identifying who brews the coffee
+    // Functions for identifying who brews the coffee
+    override fun selectCoffeeBrewingPerson() {
+        UserSelectorFragment
+                .newInstance()
+                .show(supportFragmentManager, "user_selector")
+    }
+
+    override fun clearCoffeeBrewingPerson() {
+        coffeeProgressView.userSetterButton.clearUser()
+    }
+
     override fun onUserSelected(user: User) {
         Glide.with(this)
                 .load(user.profile.smallestAvailableImage)
