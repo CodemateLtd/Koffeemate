@@ -25,12 +25,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SharedCoffeePreferencesTest {
-    lateinit var coffeePreferences: SharedCoffeePreferences
+class CoffeePreferencesTest {
+    lateinit var coffeePreferences: CoffeePreferences
 
     @Before
     fun setUp() {
-        coffeePreferences = SharedCoffeePreferences(InstrumentationRegistry.getTargetContext())
+        coffeePreferences = CoffeePreferences(InstrumentationRegistry.getTargetContext())
         coffeePreferences.preferences.edit().clear().apply()
     }
 
