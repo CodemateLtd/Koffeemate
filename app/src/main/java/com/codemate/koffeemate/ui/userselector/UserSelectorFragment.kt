@@ -43,7 +43,10 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
 
     companion object {
         fun newInstance(): UserSelectorFragment {
-            return UserSelectorFragment()
+            val fragment = UserSelectorFragment()
+            fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.TitledDialog)
+
+            return fragment
         }
     }
 
@@ -84,6 +87,7 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setTitle(R.string.prompt_select_person_below)
+
         return dialog
     }
 
