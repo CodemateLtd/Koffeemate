@@ -1,14 +1,16 @@
 package com.codemate.koffeemate.views
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import com.codemate.koffeemate.R
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.onClick
+import org.jetbrains.anko.onTouch
+import org.jetbrains.anko.padding
 
 class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, attrs) {
     init {
@@ -34,7 +36,7 @@ class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, a
 
     fun reset() {
         animate().alpha(0.2f).start()
-        userSetterButton.reset()
+        userSetterButton.hide()
     }
 
     fun setProgress(newProgress: Int) {

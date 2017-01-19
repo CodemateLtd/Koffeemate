@@ -20,6 +20,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.animation.OvershootInterpolator
 import com.codemate.koffeemate.R
 import de.hdodenhof.circleimageview.CircleImageView
@@ -29,20 +30,22 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
     private val EMPTY_IMAGE_RESOURCE = R.drawable.ic_add_user
 
     init {
-        imageResource = EMPTY_IMAGE_RESOURCE
         alpha = 0f
         scaleX = 0f
         scaleY = 0f
+        reset()
     }
 
     fun show() {
+        visibility = View.VISIBLE
+        isClickable = true
         animateVisibility(1f)
     }
 
-    fun reset() {
+    fun hide() {
         animateVisibility(0f, object : AnimatorListenerAdapter(){
             override fun onAnimationEnd(animation: Animator?) {
-                imageResource = EMPTY_IMAGE_RESOURCE
+                reset()
             }
         })
     }
@@ -56,5 +59,11 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
                 .setDuration(300)
                 .setListener(listener)
                 .start()
+    }
+
+    private fun reset() {
+        imageResource = EMPTY_IMAGE_RESOURCE
+        visibility = View.GONE
+        isClickable = false
     }
 }
