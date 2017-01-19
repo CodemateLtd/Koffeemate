@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         Glide.with(this)
                 .load(user.profile.smallestAvailableImage)
                 .into(coffeeProgressView.userSetterButton)
-        presenter.setPersonBrewingCoffee(user.id)
+        presenter.setPersonBrewingCoffee(user)
     }
 
     // MainView methods -->
@@ -158,21 +158,25 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
             val firstName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FIRST_NAME)
             val largestProfilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_LARGEST_PIC_URL)
 
-            alert {
-                title(R.string.prompt_reset_the_counter)
-                message(getString(R.string.message_posting_to_slack_fmt, fullName))
-
-                negativeButton(R.string.action_cancel)
-                positiveButton(R.string.action_announce_coffee_accident) {
-                    accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-                    val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
-
-                    Glide.with(this@MainActivity).loadBitmap(largestProfilePicUrl) { profilePic ->
-                        presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
-                    }
-                }
-            }.show()
+            showPostAccidentAnnouncementPrompt(userId, fullName, firstName, largestProfilePicUrl)
         }
+    }
+
+    override fun showPostAccidentAnnouncementPrompt(userId: String, fullName: String, firstName: String, largestProfilePicUrl: String) {
+        alert {
+            title(R.string.prompt_reset_the_counter)
+            message(getString(R.string.message_posting_to_slack_fmt, fullName))
+
+            negativeButton(R.string.action_cancel)
+            positiveButton(R.string.action_announce_coffee_accident) {
+                accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
+                val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
+
+                Glide.with(this@MainActivity).loadBitmap(largestProfilePicUrl) { profilePic ->
+                    presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
+                }
+            }
+        }.show()
     }
 
     override fun showAccidentPostedSuccessfullyMessage() {

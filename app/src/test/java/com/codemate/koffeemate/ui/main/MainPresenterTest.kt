@@ -10,6 +10,7 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.data.network.SlackApi
+import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
@@ -112,7 +113,7 @@ class MainPresenterTest {
                 .thenReturn(emptySuccessResponse)
 
         presenter.startDelayedCoffeeAnnouncement("")
-        presenter.setPersonBrewingCoffee("abc123")
+        presenter.setPersonBrewingCoffee(fakeUser())
 
         updater.run()
         updater.run()
@@ -136,7 +137,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
-        presenter.setPersonBrewingCoffee("abc123")
+        presenter.setPersonBrewingCoffee(fakeUser())
         presenter.startDelayedCoffeeAnnouncement("")
 
         updater.run()
@@ -172,13 +173,13 @@ class MainPresenterTest {
     }
 
     @Test
-    fun launchUserSelector_DefersScreenSaver() {
+    fun launchAccidentReportingScreen_DefersScreenSaver() {
         presenter.launchAccidentReportingScreen()
         verify(mockScreenSaver).defer()
     }
 
     @Test
-    fun launchUserSelector_WhenNoAccidentChannelSet_InformsView() {
+    fun launchAccidentReportingScreen_WhenNoAccidentChannelSet_InformsView() {
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("")
         presenter.launchAccidentReportingScreen()
 
@@ -187,11 +188,28 @@ class MainPresenterTest {
     }
 
     @Test
-    fun launchUserSelector_WhenAccidentChannelSet_LaunchesUserSelector() {
+    fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeNotKnown_ShowsUserSelector() {
         whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
         presenter.launchAccidentReportingScreen()
 
         verify(view).launchUserSelector()
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeIsKnown_SkipsUserSelector() {
+        whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
+
+        val user = fakeUser()
+        presenter.setPersonBrewingCoffee(user)
+        presenter.launchAccidentReportingScreen()
+
+        verify(view).showPostAccidentAnnouncementPrompt(
+                user.id,
+                user.profile.real_name,
+                user.profile.first_name,
+                user.profile.largestAvailableImage
+        )
         verifyNoMoreInteractions(view)
     }
 

@@ -5,6 +5,7 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -19,14 +20,14 @@ class MainPresenter @Inject constructor(
         val postAccidentUseCase: PostAccidentUseCase
 ) : BasePresenter<MainView>() {
     private var screensaver: ScreenSaver? = null
-    private var personBrewingCoffee: String? = null
+    private var personBrewingCoffee: User? = null
 
     fun setScreenSaver(screensaver: ScreenSaver) {
         this.screensaver = screensaver
     }
 
-    fun setPersonBrewingCoffee(userId: String?) {
-        this.personBrewingCoffee = userId
+    fun setPersonBrewingCoffee(user: User?) {
+        this.personBrewingCoffee = user
     }
 
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
@@ -62,7 +63,7 @@ class MainPresenter @Inject constructor(
                                         getView()?.updateCoffeeProgress(0)
                                         getView()?.resetCoffeeViewStatus()
 
-                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
+                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee?.id)
                                         updateLastBrewingEventTime()
                                     }
 
@@ -95,7 +96,18 @@ class MainPresenter @Inject constructor(
         screensaver?.defer()
 
         if (coffeePreferences.isAccidentChannelSet()) {
-            getView()?.launchUserSelector()
+            if (personBrewingCoffee != null) {
+                personBrewingCoffee?.let {
+                    getView()?.showPostAccidentAnnouncementPrompt(
+                            it.id,
+                            it.profile.real_name,
+                            it.profile.first_name,
+                            it.profile.largestAvailableImage
+                    )
+                }
+            } else {
+                getView()?.launchUserSelector()
+            }
         } else {
             getView()?.showNoAccidentChannelSetError()
         }
