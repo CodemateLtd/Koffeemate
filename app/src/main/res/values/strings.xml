@@ -58,11 +58,11 @@
     <!-- Prompts (asking the user to do something) -->
     <string name="prompt_reset_the_counter">Reset the counter?</string>
     <string name="prompt_who_is_guilty">Who is guilty of this coffee brewing accident?</string>
-    <string name="prompt_select_person_below">Select a person</string>
+    <string name="prompt_select_person_below">Who is brewing?</string>
     <string name="prompt_select_guilty_person">Select a guilty person</string>
 
     <string name="prompt_cancel_coffee_progress_title">Cancel Coffee Progress</string>
-    <string name="prompt_cancel_coffee_progress_message">Are you sure you don\'t want to inform others about freshly brewed coffee?</string>
+    <string name="prompt_cancel_coffee_progress_message">Are you sure you want to stop the coffee progress counter?</string>
 
     <string name="prompt_no_announcement_channel_set">No Slack channel set for coffee announcements. Please set it in the preferences.</string>
     <string name="prompt_no_accident_channel_set">No Slack channel set for brewing failures. Please set it in the preferences.</string>

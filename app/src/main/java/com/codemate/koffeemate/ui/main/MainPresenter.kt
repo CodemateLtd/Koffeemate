@@ -93,18 +93,18 @@ class MainPresenter @Inject constructor(
         screensaver?.defer()
 
         if (coffeePreferences.isAccidentChannelSet()) {
-            if (personBrewingCoffee != null) {
-                personBrewingCoffee?.let {
-                    getView()?.showPostAccidentAnnouncementPrompt(
-                            it.id,
-                            it.profile.real_name,
-                            it.profile.first_name,
-                            it.profile.largestAvailableImage
-                    )
-                }
-            } else {
-                getView()?.launchUserSelector()
+            personBrewingCoffee?.let {
+                getView()?.showPostAccidentAnnouncementPrompt(
+                        it.id,
+                        it.profile.real_name,
+                        it.profile.first_name,
+                        it.profile.largestAvailableImage
+                )
+
+                return
             }
+
+            getView()?.launchUserSelector()
         } else {
             getView()?.showNoAccidentChannelSetError()
         }
