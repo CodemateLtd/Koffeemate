@@ -50,6 +50,13 @@ class RealmCoffeeEventRepositoryTest {
     }
 
     @Test
+    fun recordBrewingEvent_WithUserId_SavesUserId() {
+        coffeeEventRepository.recordBrewingEvent("abc123")
+
+        assertThat(coffeeEventRepository.getLastBrewingEvent()!!.userId, equalTo("abc123"))
+    }
+
+    @Test
     fun getLastBrewingEvent_ReturnsLastBrewingEvent() {
         coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()

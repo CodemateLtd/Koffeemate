@@ -23,4 +23,19 @@ class Profile {
 
             return imageUrl ?: ""
         }
+
+    val smallestAvailableImage: String
+        get() {
+            var imageUrl: String? = image_72
+
+            if (imageUrl.isNullOrBlank()) {
+                imageUrl = image_192
+            }
+
+            if (imageUrl.isNullOrBlank()) {
+                imageUrl = image_512
+            }
+
+            return imageUrl ?: ""
+        }
 }

@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.main
+package com.codemate.koffeemate.testutils
 
-import com.codemate.koffeemate.data.network.SlackApi
-import okhttp3.ResponseBody
-import retrofit2.Response
-import rx.Observable
-import rx.Scheduler
+import com.codemate.koffeemate.data.network.models.Profile
+import com.codemate.koffeemate.data.network.models.User
+import java.io.File
 
-open class SendCoffeeAnnouncementUseCase(
-        var slackApi: SlackApi,
-        var subscriber: Scheduler,
-        var observer: Scheduler
-) {
-    fun execute(channel: String, newCoffeeMessage: String): Observable<Response<ResponseBody>> {
-        return slackApi.postMessage(channel, newCoffeeMessage)
-                .subscribeOn(subscriber)
-                .observeOn(observer)
-    }
+fun Any.getResourceFile(path: String): File {
+    return File(javaClass.classLoader.getResource(path).file)
+}
+
+fun fakeUser() = User().apply {
+    id = "abc123"
+    profile = Profile()
+    profile.first_name = "Jorma"
+    profile.real_name = "Jorma"
 }

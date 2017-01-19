@@ -1,77 +1,42 @@
 package com.codemate.koffeemate.ui.userselector
 
-import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
-import android.view.View
-import com.bumptech.glide.Glide
-import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.common.BasicListItemAnimator
-import com.codemate.koffeemate.extensions.loadBitmap
-import kotlinx.android.synthetic.main.activity_user_selector.*
-import kotlinx.android.synthetic.main.activity_user_selector.view.*
-import org.jetbrains.anko.*
-import javax.inject.Inject
 
-class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
-    private lateinit var userSelectorAdapter: UserSelectorAdapter
-
-    @Inject
-    lateinit var presenter: UserSelectorPresenter
-
-    var accidentProgress: ProgressDialog? = null
+class UserSelectorActivity : AppCompatActivity(), UserSelectorFragment.UserSelectListener {
+    companion object {
+        val RESULT_USER_ID = "user_id"
+        val RESULT_USER_FULL_NAME = "user_full_name"
+        val RESULT_USER_FIRST_NAME = "user_first_name"
+        val RESULT_USER_PROFILE_LARGEST_PIC_URL = "user_profile_largest_pic_url"
+        val RESULT_USER_PROFILE_SMALLEST_PIC_URL = "user_profile_smallest_pic_url"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_selector)
-        KoffeemateApp.appComponent.inject(this)
 
-        setUpUserRecycler()
-
-        presenter.attachView(this)
-        presenter.loadUsers()
-
-        errorLayout.tryAgain.onClick {
-            presenter.loadUsers()
-        }
+        supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, UserSelectorFragment.newInstance())
+                .commit()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle(R.string.prompt_select_person_below)
+        supportActionBar?.setTitle(R.string.prompt_select_guilty_person)
     }
 
-    private fun setUpUserRecycler() {
-        userSelectorAdapter = UserSelectorAdapter { user ->
-            confirmUser(user)
-        }
+    override fun onUserSelected(user: User) {
+        val intent = Intent()
+        intent.putExtra(RESULT_USER_ID, user.id)
+        intent.putExtra(RESULT_USER_FULL_NAME, user.profile.real_name)
+        intent.putExtra(RESULT_USER_FIRST_NAME, user.profile.first_name)
+        intent.putExtra(RESULT_USER_PROFILE_LARGEST_PIC_URL, user.profile.largestAvailableImage)
+        intent.putExtra(RESULT_USER_PROFILE_SMALLEST_PIC_URL, user.profile.smallestAvailableImage)
 
-        userRecycler.adapter = userSelectorAdapter
-        userRecycler.layoutManager = LinearLayoutManager(this)
-        userRecycler.itemAnimator = BasicListItemAnimator(this)
-    }
-
-    private fun confirmUser(user: User) {
-        alert {
-            title(R.string.prompt_reset_the_counter)
-            message(getString(R.string.message_posting_to_slack_fmt, user.profile.real_name))
-
-            negativeButton(R.string.action_cancel)
-            positiveButton(R.string.action_announce_coffee_accident) {
-                accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-                applyStickerToProfilePicAndAnnounce(user)
-            }
-        }.show()
-    }
-
-    private fun applyStickerToProfilePicAndAnnounce(user: User) {
-        val comment = getString(R.string.message_congratulations_to_user_fmt, user.profile.first_name)
-
-        Glide.with(this).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
-            presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
-        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -80,42 +45,5 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachView()
-        accidentProgress?.dismiss()
-    }
-
-    override fun showProgress() {
-        progress.visibility = View.VISIBLE
-        errorLayout.visibility = View.GONE
-    }
-
-    override fun hideProgress() {
-        progress.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-    }
-
-    override fun showError() {
-        progress.visibility = View.GONE
-        errorLayout.visibility = View.VISIBLE
-    }
-
-    override fun showUsers(users: List<User>) {
-        userSelectorAdapter.setItems(users)
-    }
-
-    override fun showAccidentPostedSuccessfullyMessage() {
-        accidentProgress?.dismiss()
-
-        toast(R.string.message_posted_successfully)
-        finish()
-    }
-
-    override fun showErrorMessage() {
-        accidentProgress?.dismiss()
-        toast(R.string.error_could_not_post_message)
     }
 }

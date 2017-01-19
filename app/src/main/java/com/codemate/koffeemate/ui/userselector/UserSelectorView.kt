@@ -8,7 +8,4 @@ interface UserSelectorView : MvpView {
     fun hideProgress()
     fun showError()
     fun showUsers(users: List<User>)
-
-    fun showAccidentPostedSuccessfullyMessage()
-    fun showErrorMessage()
 }

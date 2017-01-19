@@ -8,12 +8,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
+import rx.Observable
 
 interface SlackApi {
 
     @GET("users.list")
-    fun getUsers(@Query("token") token: String): Call<UserListResponse>
+    fun getUsers(@Query("token") token: String): Observable<UserListResponse>
 
     @FormUrlEncoded
     @POST("chat.postMessage")
@@ -24,7 +26,7 @@ interface SlackApi {
             @Field("as_user") asUser: Boolean = false,
             @Field("username") username: String = "Koffeemate",
             @Field("icon_emoji") icon: String = ":coffee:"
-    ): Call<ResponseBody>
+    ): Observable<Response<ResponseBody>>
 
     @Multipart
     @POST("files.upload")
@@ -34,7 +36,7 @@ interface SlackApi {
             @Part("channels") channels: RequestBody,
             @Part("initial_comment") comment: RequestBody,
             @Part("token") token: RequestBody = BuildConfig.SLACK_AUTH_TOKEN.toRequestBody()
-    ): Call<ResponseBody>
+    ): Observable<Response<ResponseBody>>
 
     companion object {
         val BASE_URL = HttpUrl.parse("https://slack.com/api/")!!

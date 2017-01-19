@@ -1,19 +1,30 @@
 package com.codemate.koffeemate.ui.main
 
+import android.graphics.Bitmap
 import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import okhttp3.ResponseBody
+import retrofit2.Response
+import rx.Subscriber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
         val coffeePreferences: CoffeePreferences,
         val coffeeEventRepository: CoffeeEventRepository,
         val brewingProgressUpdater: BrewingProgressUpdater,
-        val sendCoffeeAnnouncementUseCase: SendCoffeeAnnouncementUseCase
+        val sendCoffeeAnnouncementUseCase: SendCoffeeAnnouncementUseCase,
+        val postAccidentUseCase: PostAccidentUseCase
 ) : BasePresenter<MainView>() {
     private var screensaver: ScreenSaver? = null
+    var personBrewingCoffee: User? = null
+
+    fun setScreenSaver(screensaver: ScreenSaver) {
+        this.screensaver = screensaver
+    }
 
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
         ensureViewIsAttached()
@@ -26,16 +37,35 @@ class MainPresenter @Inject constructor(
         }
 
         if (!brewingProgressUpdater.isUpdating) {
+            personBrewingCoffee = null
             getView()?.showNewCoffeeIsComing()
 
-            sendCoffeeAnnouncementUseCase.execute(
-                    newCoffeeMessage,
-                    updateListener = { getView()?.updateCoffeeProgress(it) },
+            brewingProgressUpdater.startUpdating(
+                    updateListener = { progress ->
+                        // For UX: this way the user gets instant feedback, as the waves
+                        // can't be below 10%
+                        val adjustedProgress = Math.max(10, progress)
+                        getView()?.updateCoffeeProgress(adjustedProgress)
+                    },
                     completeListener = {
-                        getView()?.updateCoffeeProgress(0)
-                        getView()?.resetCoffeeViewStatus()
+                        sendCoffeeAnnouncementUseCase
+                                .execute(coffeePreferences.getCoffeeAnnouncementChannel(), newCoffeeMessage)
+                                .subscribe(object : Subscriber<Response<ResponseBody>>() {
+                                    override fun onError(e: Throwable?) {
+                                        e?.printStackTrace()
+                                    }
 
-                        updateLastBrewingEventTime()
+                                    override fun onCompleted() {
+                                        getView()?.updateCoffeeProgress(0)
+                                        getView()?.resetCoffeeViewStatus()
+
+                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee?.id)
+                                        updateLastBrewingEventTime()
+                                    }
+
+                                    override fun onNext(t: Response<ResponseBody>?) {
+                                    }
+                                })
                     }
             )
         } else {
@@ -56,19 +86,45 @@ class MainPresenter @Inject constructor(
         getView()?.resetCoffeeViewStatus()
 
         brewingProgressUpdater.reset()
+        personBrewingCoffee = null
     }
 
-    fun launchUserSelector() {
+    fun launchAccidentReportingScreen() {
         screensaver?.defer()
 
-        if (!coffeePreferences.isAccidentChannelSet()) {
-            getView()?.showNoAccidentChannelSetError()
+        if (coffeePreferences.isAccidentChannelSet()) {
+            personBrewingCoffee?.let {
+                getView()?.showPostAccidentAnnouncementPrompt(
+                        it.id,
+                        it.profile.real_name,
+                        it.profile.first_name,
+                        it.profile.largestAvailableImage
+                )
+
+                return
+            }
+
+            getView()?.launchUserSelector()
         } else {
-            getView()?.launchAccidentReportingScreen()
+            getView()?.showNoAccidentChannelSetError()
         }
     }
 
-    fun setScreenSaver(screensaver: ScreenSaver) {
-        this.screensaver = screensaver
+    fun announceCoffeeBrewingAccident(comment: String, userId: String, userName: String, profilePic: Bitmap) {
+        ensureViewIsAttached()
+
+        postAccidentUseCase.execute(comment, userId, userName, profilePic).subscribe(
+                object : Subscriber<Response<ResponseBody>>() {
+                    override fun onNext(response: Response<ResponseBody>) {
+                        getView()?.showAccidentPostedSuccessfullyMessage()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        getView()?.showErrorPostingAccidentMessage()
+                    }
+
+                    override fun onCompleted() {
+                    }
+                })
     }
 }
