@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSelectListener {
     private val REQUEST_CODE_SHAME_USER = 1
-    private val REQUEST_CODE_IDENTIFY_COFFEE_BREWER = 2
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -58,9 +57,7 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         }
 
         coffeeProgressView.setOnUserSetterClickListener {
-            UserSelectorFragment
-                    .newInstance()
-                    .show(supportFragmentManager, "asd")
+            presenter.handlePersonChange()
         }
 
         settingsButton.onClick {
@@ -92,7 +89,17 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         accidentProgress?.dismiss()
     }
 
-    // UserSelectListener method, for identifying who brews the coffee
+    // Functions for identifying who brews the coffee
+    override fun selectCoffeeBrewingPerson() {
+        UserSelectorFragment
+                .newInstance()
+                .show(supportFragmentManager, "user_selector")
+    }
+
+    override fun clearCoffeeBrewingPerson() {
+        coffeeProgressView.userSetterButton.clearUser()
+    }
+
     override fun onUserSelected(user: User) {
         Glide.with(this)
                 .load(user.profile.smallestAvailableImage)
@@ -105,6 +112,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_brewing)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_brewing)
         coffeeProgressView.setCoffeeIncoming()
+
+        logAccidentButton.hide()
     }
 
     override fun showCancelCoffeeProgressPrompt() {
@@ -131,6 +140,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
         coffeeProgressView.reset()
+
+        logAccidentButton.show()
     }
 
     override fun showNoAnnouncementChannelSetError() {

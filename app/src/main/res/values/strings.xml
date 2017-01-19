@@ -19,6 +19,12 @@
     <!-- Preferences -->
     <string name="preference_category_general">General</string>
 
+    <string name="preference_coffee_brewing_time_key">coffee_brewing_time</string>
+    <string name="preference_coffee_brewing_time_title">Coffee brewing time in minutes</string>
+    <string name="preference_coffee_brewing_time_summary">How long does your coffee maker take to brew coffee?</string>
+
+    <string name="preference_category_slack_channels">Slack channels</string>
+
     <string name="preference_coffee_announcement_slack_channel_key">coffee_announcement_slack_channel</string>
     <string name="preference_coffee_announcement_slack_channel_title">Coffee announcement channel</string>
     <string name="preference_coffee_announcement_slack_channel_summary">Slack channel name for announcing when new coffee is ready.</string>
