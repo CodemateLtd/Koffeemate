@@ -19,7 +19,6 @@ package com.codemate.koffeemate.ui.main
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.SlackService
-import com.codemate.koffeemate.testutils.SynchronousExecutorService
 import okhttp3.Dispatcher
 import okhttp3.ResponseBody
 import okhttp3.mockwebserver.MockResponse
@@ -50,11 +49,7 @@ class SendCoffeeAnnouncementUseCaseTest {
         mockServer = MockWebServer()
         mockServer.start()
 
-        slackApi = SlackService.getApi(
-                Dispatcher(SynchronousExecutorService()),
-                mockServer.url("/")
-        )
-
+        slackApi = SlackService.getApi(mockServer.url("/"))
         useCase = SendCoffeeAnnouncementUseCase(
                 slackApi,
                 Schedulers.immediate(),
