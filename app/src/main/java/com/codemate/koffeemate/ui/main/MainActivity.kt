@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         Glide.with(this)
                 .load(user.profile.smallestAvailableImage)
                 .into(coffeeProgressView.userSetterButton)
-        presenter.setPersonBrewingCoffee(user)
+        presenter.personBrewingCoffee = user
     }
 
     // MainView methods -->

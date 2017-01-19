@@ -20,14 +20,10 @@ class MainPresenter @Inject constructor(
         val postAccidentUseCase: PostAccidentUseCase
 ) : BasePresenter<MainView>() {
     private var screensaver: ScreenSaver? = null
-    private var personBrewingCoffee: User? = null
+    var personBrewingCoffee: User? = null
 
     fun setScreenSaver(screensaver: ScreenSaver) {
         this.screensaver = screensaver
-    }
-
-    fun setPersonBrewingCoffee(user: User?) {
-        this.personBrewingCoffee = user
     }
 
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
@@ -90,6 +86,7 @@ class MainPresenter @Inject constructor(
         getView()?.resetCoffeeViewStatus()
 
         brewingProgressUpdater.reset()
+        personBrewingCoffee = null
     }
 
     fun launchAccidentReportingScreen() {

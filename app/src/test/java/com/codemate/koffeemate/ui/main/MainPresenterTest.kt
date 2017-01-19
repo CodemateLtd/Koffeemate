@@ -15,6 +15,9 @@ import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
+import org.hamcrest.core.IsNull
+import org.hamcrest.core.IsNull.nullValue
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -112,8 +115,9 @@ class MainPresenterTest {
         whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
+        val user = fakeUser()
         presenter.startDelayedCoffeeAnnouncement("")
-        presenter.setPersonBrewingCoffee(fakeUser())
+        presenter.personBrewingCoffee = user
 
         updater.run()
         updater.run()
@@ -128,7 +132,7 @@ class MainPresenterTest {
 
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
-        verify(mockCoffeeEventRepository).recordBrewingEvent("abc123")
+        verify(mockCoffeeEventRepository).recordBrewingEvent(user.id)
     }
 
     @Test
@@ -137,7 +141,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
-        presenter.setPersonBrewingCoffee(fakeUser())
+        presenter.personBrewingCoffee = fakeUser()
         presenter.startDelayedCoffeeAnnouncement("")
 
         updater.run()
@@ -201,7 +205,7 @@ class MainPresenterTest {
         whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
 
         val user = fakeUser()
-        presenter.setPersonBrewingCoffee(user)
+        presenter.personBrewingCoffee = user
         presenter.launchAccidentReportingScreen()
 
         verify(view).showPostAccidentAnnouncementPrompt(
@@ -233,13 +237,16 @@ class MainPresenterTest {
 
     @Test
     fun cancelCoffeeCountDown_ResetsUpdaterAndUpdatesView() {
+        presenter.startDelayedCoffeeAnnouncement("")
+        presenter.personBrewingCoffee = fakeUser()
         presenter.cancelCoffeeCountDown()
 
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
-
         verify(mockHandler).removeCallbacks(updater)
         verifyZeroInteractions(mockCoffeeEventRepository)
+
+        assertThat(presenter.personBrewingCoffee, nullValue())
     }
 
     @Test
