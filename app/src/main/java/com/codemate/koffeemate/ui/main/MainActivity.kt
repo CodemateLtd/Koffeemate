@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSelectListener {
     private val REQUEST_CODE_SHAME_USER = 1
-    private val REQUEST_CODE_IDENTIFY_COFFEE_BREWER = 2
 
     @Inject
     lateinit var presenter: MainPresenter

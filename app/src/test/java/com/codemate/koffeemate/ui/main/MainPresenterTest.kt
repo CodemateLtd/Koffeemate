@@ -15,7 +15,6 @@ import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
-import org.hamcrest.core.IsNull
 import org.hamcrest.core.IsNull.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -28,7 +27,7 @@ import rx.schedulers.Schedulers
 
 class MainPresenterTest {
     val CHANNEL_NAME = "fake-channel"
-    val emptySuccessResponse =
+    val emptySuccessResponse: Observable<Response<ResponseBody>> =
             Observable.just(
                     Response.success(
                             ResponseBody.create(
