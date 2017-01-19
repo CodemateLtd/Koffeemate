@@ -19,6 +19,15 @@ class MainPresenter @Inject constructor(
         val postAccidentUseCase: PostAccidentUseCase
 ) : BasePresenter<MainView>() {
     private var screensaver: ScreenSaver? = null
+    private var personBrewingCoffee: String? = null
+
+    fun setScreenSaver(screensaver: ScreenSaver) {
+        this.screensaver = screensaver
+    }
+
+    fun setPersonBrewingCoffee(userId: String?) {
+        this.personBrewingCoffee = userId
+    }
 
     fun startDelayedCoffeeAnnouncement(newCoffeeMessage: String) {
         ensureViewIsAttached()
@@ -31,16 +40,35 @@ class MainPresenter @Inject constructor(
         }
 
         if (!brewingProgressUpdater.isUpdating) {
+            personBrewingCoffee = null
             getView()?.showNewCoffeeIsComing()
 
-            sendCoffeeAnnouncementUseCase.execute(
-                    newCoffeeMessage,
-                    updateListener = { getView()?.updateCoffeeProgress(it) },
+            brewingProgressUpdater.startUpdating(
+                    updateListener = { progress ->
+                        // For UX: this way the user gets instant feedback, as the waves
+                        // can't be below 10%
+                        val adjustedProgress = Math.max(10, progress)
+                        getView()?.updateCoffeeProgress(adjustedProgress)
+                    },
                     completeListener = {
-                        getView()?.updateCoffeeProgress(0)
-                        getView()?.resetCoffeeViewStatus()
+                        sendCoffeeAnnouncementUseCase
+                                .execute(coffeePreferences.getCoffeeAnnouncementChannel(), newCoffeeMessage)
+                                .subscribe(object : Subscriber<Response<ResponseBody>>() {
+                                    override fun onError(e: Throwable?) {
+                                        e?.printStackTrace()
+                                    }
 
-                        updateLastBrewingEventTime()
+                                    override fun onCompleted() {
+                                        getView()?.updateCoffeeProgress(0)
+                                        getView()?.resetCoffeeViewStatus()
+
+                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
+                                        updateLastBrewingEventTime()
+                                    }
+
+                                    override fun onNext(t: Response<ResponseBody>?) {
+                                    }
+                                })
                     }
             )
         } else {
@@ -89,9 +117,5 @@ class MainPresenter @Inject constructor(
                     override fun onCompleted() {
                     }
                 })
-    }
-
-    fun setScreenSaver(screensaver: ScreenSaver) {
-        this.screensaver = screensaver
     }
 }

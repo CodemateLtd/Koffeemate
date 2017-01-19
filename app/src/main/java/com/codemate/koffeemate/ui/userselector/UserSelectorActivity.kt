@@ -21,7 +21,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
         val RESULT_USER_ID = "user_id"
         val RESULT_USER_FULL_NAME = "user_full_name"
         val RESULT_USER_FIRST_NAME = "user_first_name"
-        val RESULT_USER_PROFILE_PIC_URL = "user_profile_pic_url"
+        val RESULT_USER_PROFILE_LARGEST_PIC_URL = "user_profile_largest_pic_url"
+        val RESULT_USER_PROFILE_SMALLEST_PIC_URL = "user_profile_smallest_pic_url"
     }
 
     private lateinit var userSelectorAdapter: UserSelectorAdapter
@@ -53,7 +54,8 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorView {
             intent.putExtra(RESULT_USER_ID, user.id)
             intent.putExtra(RESULT_USER_FULL_NAME, user.profile.real_name)
             intent.putExtra(RESULT_USER_FIRST_NAME, user.profile.first_name)
-            intent.putExtra(RESULT_USER_PROFILE_PIC_URL, user.profile.largestAvailableImage)
+            intent.putExtra(RESULT_USER_PROFILE_LARGEST_PIC_URL, user.profile.largestAvailableImage)
+            intent.putExtra(RESULT_USER_PROFILE_SMALLEST_PIC_URL, user.profile.smallestAvailableImage)
 
             setResult(Activity.RESULT_OK, intent)
             finish()

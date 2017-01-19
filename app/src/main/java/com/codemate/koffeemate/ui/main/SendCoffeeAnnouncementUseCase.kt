@@ -16,47 +16,20 @@
 
 package com.codemate.koffeemate.ui.main
 
-import com.codemate.koffeemate.common.BrewingProgressUpdater
-import com.codemate.koffeemate.data.local.CoffeeEventRepository
-import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
 import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
+import rx.Observable
+import rx.Scheduler
 
-open class SendCoffeeAnnouncementUseCase @Inject constructor(
-        val brewingProgressUpdater: BrewingProgressUpdater?,
-        val coffeePreferences: CoffeePreferences,
-        val slackApi: SlackApi,
-        val coffeeEventRepository: CoffeeEventRepository
+open class SendCoffeeAnnouncementUseCase(
+        var slackApi: SlackApi,
+        var subscriber: Scheduler,
+        var observer: Scheduler
 ) {
-    fun execute(newCoffeeMessage: String, updateListener: (Int) -> Unit, completeListener: () -> Unit) {
-        brewingProgressUpdater?.startUpdating(
-                updateListener = { progress ->
-                    // For UX: this way the user gets instant feedback, as the waves
-                    // can't be below 10%
-                    val adjustedProgress = Math.max(10, progress)
-                    updateListener(adjustedProgress)
-                },
-                completeListener = {
-                    val channel = coffeePreferences.getCoffeeAnnouncementChannel()
-
-                    slackApi.postMessage(channel, newCoffeeMessage)
-                            .enqueue(object : Callback<ResponseBody> {
-                                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                                    // TODO: Something. Do nothing for now.
-                                }
-
-                                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                                    t?.printStackTrace()
-                                }
-                            })
-
-                    coffeeEventRepository.recordBrewingEvent()
-                    completeListener()
-                }
-        )
+    fun execute(channel: String, newCoffeeMessage: String): Observable<Response<ResponseBody>> {
+        return slackApi.postMessage(channel, newCoffeeMessage)
+                .subscribeOn(subscriber)
+                .observeOn(observer)
     }
 }

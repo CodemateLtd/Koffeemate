@@ -16,6 +16,8 @@
 
 package com.codemate.koffeemate.views
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.OvershootInterpolator
@@ -38,16 +40,21 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
     }
 
     fun reset() {
-        animateVisibility(0f)
+        animateVisibility(0f, object : AnimatorListenerAdapter(){
+            override fun onAnimationEnd(animation: Animator?) {
+                imageResource = EMPTY_IMAGE_RESOURCE
+            }
+        })
     }
 
-    fun animateVisibility(value: Float) {
+    fun animateVisibility(value: Float, listener: Animator.AnimatorListener? = null) {
         animate().alpha(value)
                 .scaleX(value)
                 .scaleY(value)
                 .setInterpolator(OvershootInterpolator(3f))
                 .setStartDelay(100)
                 .setDuration(300)
+                .setListener(listener)
                 .start()
     }
 }

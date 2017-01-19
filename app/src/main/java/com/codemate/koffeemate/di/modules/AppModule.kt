@@ -26,6 +26,7 @@ import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.ui.userselector.LoadUsersUseCase
 import com.codemate.koffeemate.ui.main.PostAccidentUseCase
+import com.codemate.koffeemate.ui.main.SendCoffeeAnnouncementUseCase
 import dagger.Module
 import dagger.Provides
 import rx.android.schedulers.AndroidSchedulers
@@ -54,6 +55,15 @@ class AppModule(val app: KoffeemateApp) {
     /**
      * Move these to a better place once you actually understand Dagger ¯\_(ツ)_/¯
      */
+    @Provides
+    @Singleton
+    fun provideSendCoffeeAnnouncementUseCase(slackApi: SlackApi) =
+            SendCoffeeAnnouncementUseCase(
+                    slackApi,
+                    Schedulers.newThread(),
+                    AndroidSchedulers.mainThread()
+            )
+
     @Provides
     @Singleton
     fun provideLoadUsersUseCase(slackApi: SlackApi) =

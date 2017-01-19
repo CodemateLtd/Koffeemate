@@ -16,11 +16,13 @@ import com.codemate.koffeemate.extensions.loadBitmap
 import com.codemate.koffeemate.ui.settings.SettingsActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.view_coffee_progress.view.*
 import org.jetbrains.anko.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView {
-    private val REQUEST_CODE_PICK_USER = 1
+    private val REQUEST_CODE_SHAME_USER = 1
+    private val REQUEST_CODE_IDENTIFY_COFFEE_BREWER = 2
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -51,6 +53,13 @@ class MainActivity : AppCompatActivity(), MainView {
         coffeeProgressView.setOnCoffeePotClickListener {
             val newCoffeeMessage = getString(R.string.message_new_coffee_available)
             presenter.startDelayedCoffeeAnnouncement(newCoffeeMessage)
+        }
+
+        coffeeProgressView.setOnUserSetterClickListener {
+            startActivityForResult(
+                    intentFor<UserSelectorActivity>(),
+                    REQUEST_CODE_IDENTIFY_COFFEE_BREWER
+            )
         }
 
         settingsButton.onClick {
@@ -127,31 +136,43 @@ class MainActivity : AppCompatActivity(), MainView {
 
     // Shaming users for coffee brewing failures -->
     override fun launchUserSelector() {
-        startActivityForResult(intentFor<UserSelectorActivity>(), REQUEST_CODE_PICK_USER)
+        startActivityForResult(
+                intentFor<UserSelectorActivity>(),
+                REQUEST_CODE_SHAME_USER
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_PICK_USER
-                && resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK && data != null) {
             val userId = data.getStringExtra(UserSelectorActivity.RESULT_USER_ID)
             val fullName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FULL_NAME)
             val firstName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FIRST_NAME)
-            val profilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_PIC_URL)
+            val largestProfilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_LARGEST_PIC_URL)
+            val smallestProfilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_SMALLEST_PIC_URL)
 
-            alert {
-                title(R.string.prompt_reset_the_counter)
-                message(getString(R.string.message_posting_to_slack_fmt, fullName))
+            when (requestCode) {
+                REQUEST_CODE_SHAME_USER ->
+                    alert {
+                        title(R.string.prompt_reset_the_counter)
+                        message(getString(R.string.message_posting_to_slack_fmt, fullName))
 
-                negativeButton(R.string.action_cancel)
-                positiveButton(R.string.action_announce_coffee_accident) {
-                    accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-                    val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
+                        negativeButton(R.string.action_cancel)
+                        positiveButton(R.string.action_announce_coffee_accident) {
+                            accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
+                            val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
 
-                    Glide.with(this@MainActivity).loadBitmap(profilePicUrl) { profilePic ->
-                        presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
-                    }
+                            Glide.with(this@MainActivity).loadBitmap(largestProfilePicUrl) { profilePic ->
+                                presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
+                            }
+                        }
+                    }.show()
+                REQUEST_CODE_IDENTIFY_COFFEE_BREWER -> {
+                    Glide.with(this)
+                            .load(smallestProfilePicUrl)
+                            .into(coffeeProgressView.userSetterButton)
+                    presenter.setPersonBrewingCoffee(userId)
                 }
-            }.show()
+            }
         }
     }
 

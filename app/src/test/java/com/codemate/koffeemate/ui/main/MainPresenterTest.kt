@@ -24,6 +24,13 @@ import rx.schedulers.Schedulers
 
 class MainPresenterTest {
     val CHANNEL_NAME = "fake-channel"
+    val emptySuccessResponse =
+            Observable.just(
+                    Response.success(
+                            ResponseBody.create(
+                                    MediaType.parse("text/plain"), "")
+                    )
+            )
 
     @Mock
     lateinit var mockCoffeePreferences: CoffeePreferences
@@ -44,7 +51,7 @@ class MainPresenterTest {
     lateinit var mockSendCoffeeAnnouncementUseCase: SendCoffeeAnnouncementUseCase
 
     @Mock
-    lateinit var mockUpdater: BrewingProgressUpdater
+    lateinit var updater: BrewingProgressUpdater
 
     @Mock
     lateinit var mockSlackApi: SlackApi
@@ -62,16 +69,21 @@ class MainPresenterTest {
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(mockCoffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
 
-        mockUpdater.updateHandler = mockHandler
         whenever(mockHandler.removeCallbacks(any())).then {
             // No-op
         }
-        whenever(mockUpdater.reset()).then {
-            // No-op
-        }
+
+        updater = BrewingProgressUpdater(9, 3)
+        updater.updateHandler = mockHandler
 
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(any(), any()))
                 .thenReturn(getResourceFile("images/empty.png"))
+
+        val sendCoffeeAnnouncementUseCase = SendCoffeeAnnouncementUseCase(
+                mockSlackApi,
+                Schedulers.immediate(),
+                Schedulers.immediate()
+        )
 
         val postAccidentUseCase = PostAccidentUseCase(
                 mockSlackApi,
@@ -85,12 +97,53 @@ class MainPresenterTest {
         presenter = MainPresenter(
                 mockCoffeePreferences,
                 mockCoffeeEventRepository,
-                mockUpdater,
-                mockSendCoffeeAnnouncementUseCase,
+                updater,
+                sendCoffeeAnnouncementUseCase,
                 postAccidentUseCase
         )
         presenter.attachView(view)
         presenter.setScreenSaver(mockScreenSaver)
+    }
+
+    @Test
+    fun startDelayedCoffeeAnnouncement_HappyPathRunsToEnd() {
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.startDelayedCoffeeAnnouncement("")
+        presenter.setPersonBrewingCoffee("abc123")
+
+        updater.run()
+        updater.run()
+        updater.run()
+
+        inOrder(view, mockCoffeeEventRepository) {
+            verify(view).showNewCoffeeIsComing()
+            verify(view).updateCoffeeProgress(10)
+            verify(view).updateCoffeeProgress(33)
+            verify(view).updateCoffeeProgress(67)
+        }
+
+        verify(view).updateCoffeeProgress(0)
+        verify(view).resetCoffeeViewStatus()
+        verify(mockCoffeeEventRepository).recordBrewingEvent("abc123")
+    }
+
+    @Test
+    fun startDelayedCoffeeAnnouncement_ClearsPreviousPersonBrewingCoffee() {
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.setPersonBrewingCoffee("abc123")
+        presenter.startDelayedCoffeeAnnouncement("")
+
+        updater.run()
+        updater.run()
+        updater.run()
+
+        verify(mockCoffeeEventRepository).recordBrewingEvent(null)
     }
 
     @Test
@@ -110,18 +163,8 @@ class MainPresenterTest {
     }
 
     @Test
-    fun startDelayedCoffeeAnnouncement_WhenUpdaterNotUpdating_TellsViewNewCoffeeIsComing() {
-        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
-        presenter.startDelayedCoffeeAnnouncement("")
-
-        verify(view).showNewCoffeeIsComing()
-        verifyNoMoreInteractions(view)
-        verifyZeroInteractions(mockCoffeeEventRepository)
-    }
-
-    @Test
     fun startDelayedCoffeeAnnouncement_WhenUpdaterAlreadyUpdating_ShowsCancelCoffeeProgressPrompt() {
-        mockUpdater.isUpdating = true
+        updater.isUpdating = true
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
@@ -177,16 +220,14 @@ class MainPresenterTest {
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
 
-        verify(mockHandler).removeCallbacks(mockUpdater)
+        verify(mockHandler).removeCallbacks(updater)
         verifyZeroInteractions(mockCoffeeEventRepository)
     }
 
     @Test
     fun announceCoffeeBrewingAccident_OnSuccess_ShowsMessageOnUI() {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(Observable.just(Response.success(
-                        ResponseBody.create(MediaType.parse("text/plain"), ""))
-                ))
+                .thenReturn(emptySuccessResponse)
 
         presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
 

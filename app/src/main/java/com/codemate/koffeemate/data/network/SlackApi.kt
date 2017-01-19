@@ -26,7 +26,7 @@ interface SlackApi {
             @Field("as_user") asUser: Boolean = false,
             @Field("username") username: String = "Koffeemate",
             @Field("icon_emoji") icon: String = ":coffee:"
-    ): Call<ResponseBody>
+    ): Observable<Response<ResponseBody>>
 
     @Multipart
     @POST("files.upload")

@@ -20,12 +20,13 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
         return@with event!!
     }
 
-    override fun recordBrewingEvent() = with(Realm.getDefaultInstance()) {
+    override fun recordBrewingEvent(userId: String?) = with(Realm.getDefaultInstance()) {
         var event: CoffeeBrewingEvent? = null
         executeTransaction {
             event = newEvent(it).apply {
                 time = System.currentTimeMillis()
                 isSuccessful = true
+                this.userId = userId ?: ""
             }
         }
 
