@@ -11,4 +11,5 @@ class User {
 
     var real_name: String? = null
     var is_bot: Boolean = false
+    var deleted: Boolean = false
 }

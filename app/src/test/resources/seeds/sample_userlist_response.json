@@ -27,6 +27,16 @@
       "last_name": "Bot",
       "real_name": "Slackbot"
     }
+  }, {
+    "id": "c3b2a1",
+    "name": "kevin",
+    "is_bot": false,
+    "deleted": true,
+    "profile": {
+      "first_name": "Kevin",
+      "last_name": "Smith",
+      "real_name": "Kevin Smith"
+    }
   }],
   "cache_ts": 123456789
 }

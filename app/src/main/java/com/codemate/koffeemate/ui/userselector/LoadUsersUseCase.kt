@@ -44,8 +44,9 @@ open class LoadUsersUseCase(
                     !it.is_bot
                             // At Codemate, profiles starting with "Ext-" aren't employees,
                             // but customers instead: they don't hang out in the office.
-                            && !it.profile.first_name.startsWith("Ext-")
+                            && !it.profile.first_name.toLowerCase().startsWith("ext-")
                             && it.real_name != "slackbot"
+                            && it.deleted == false
                 }
     }
 }
