@@ -130,6 +130,7 @@ class MainPresenter @Inject constructor(
                 object : Subscriber<Response<ResponseBody>>() {
                     override fun onNext(response: Response<ResponseBody>) {
                         getView()?.showAccidentPostedSuccessfullyMessage()
+                        personBrewingCoffee = null
                     }
 
                     override fun onError(e: Throwable?) {

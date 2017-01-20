@@ -268,6 +268,17 @@ class MainPresenterTest {
     }
 
     @Test
+    fun announceCoffeeBrewingAccident_OnSuccess_ClearCoffeeBrewingPsrson() {
+        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.personBrewingCoffee = fakeUser()
+        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+
+        assertThat(presenter.personBrewingCoffee, nullValue())
+    }
+
+    @Test
     fun announceCoffeeBrewingAccident_OnSuccess_ShowsMessageOnUI() {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
