@@ -32,7 +32,6 @@ import javax.inject.Singleton
         NetModule::class)
 )
 interface AppComponent {
-    fun inject(userSelectorActivity: UserSelectorActivity)
     fun inject(userSelectorFragment: UserSelectorFragment)
 
     fun plus(activityModule: ActivityModule): ActivityComponent
