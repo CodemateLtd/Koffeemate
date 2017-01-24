@@ -5,7 +5,7 @@
 ![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot_coffee_incoming.png)
 
 # What?
-We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
+We at [Codemate](http://www.codemate.com/) **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
 
 # Okay, but still, what?
 Koffeemate was made for three purposes:
