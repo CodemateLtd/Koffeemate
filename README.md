@@ -40,7 +40,7 @@ Of course you do. Here's the steps to get it working:
 
 **Koffeemate/app/koffeemate.properties:**
 ```groovy
-SLACK_AUTH_TOKEN = your_api_token // Replace with the actual token
+SLACK_AUTH_TOKEN = your_api_token // Replace with the actual token, without quotation ("") marks
 ```
 
 Now you can open the project in Android Studio. Make sure you have the Kotlin plugin installed.
