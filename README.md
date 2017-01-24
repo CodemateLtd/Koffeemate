@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/CodemateLtd/Koffeemate.svg?branch=master)](https://travis-ci.org/CodemateLtd/Koffeemate)
 
-![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot-coffee-incoming.png)
+![Koffeemate Screenshot](https://github.com/CodemateLtd/Koffeemate/blob/master/art/screenshot_coffee_incoming.png)
 
 # What?
 We at Codemate **love** coffee. Numerous cups of that sweet black nectar are brewed every day at our office. Coffee is what keeps us productive, creative and especially on Mondays, awake. Simply put, we just couldn't function without it.
@@ -19,7 +19,7 @@ This project is also a great opportunity to practice some Android testing and ar
 # How does it work?
 The system is very elegant: we have a cheap Android phone glued to the wall next to our coffee machine. Running this app is the only thing that phone can do. We made this extra secure by taping some cardboard over the physical buttons.
 
-![Animation of incoming coffee](https://github.com/CodemateLtd/Koffeemate/blob/master/art/coffee-incoming-animation.gif?raw=true)
+![Animation of incoming coffee](https://github.com/CodemateLtd/Koffeemate/blob/master/art/coffee_incoming_animation.gif?raw=true)
 
 Everytime someone starts the coffee machine, they also press the coffee pot button on the center of the screen. After exactly 7 minutes, which is the most appropriate delay we've found, everyone in the special Slack channel gets notified. 
 
