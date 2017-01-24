@@ -19,9 +19,7 @@ This project is also a great opportunity to practice some Android testing and ar
 # How does it work?
 The system is very elegant: we have a cheap Android phone glued to the wall next to our coffee machine. Running this app is the only thing that phone can do. We made this extra secure by taping some cardboard over the physical buttons.
 
-![Animation of incoming coffee](https://github.com/CodemateLtd/Koffeemate/blob/master/art/coffee_incoming_animation.gif?raw=true)
-
-Everytime someone starts the coffee machine, they also press the coffee pot button on the center of the screen. After exactly 7 minutes, which is the most appropriate delay we've found, everyone in the special Slack channel gets notified. 
+Every time someone starts the coffee machine, they also press the coffee pot button on the center of the screen. After exactly 7 minutes, which is the most appropriate delay we've found, everyone in the special Slack channel gets notified.
 
 However, if someone fails the coffee brewing process, they can be publicly shamed by using the "Log an accident" button.
 
