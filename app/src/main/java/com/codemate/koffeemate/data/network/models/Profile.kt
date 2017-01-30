@@ -1,14 +1,16 @@
 package com.codemate.koffeemate.data.network.models
 
-class Profile {
-    lateinit var first_name: String
-    lateinit var last_name: String
-    lateinit var real_name: String
+import io.realm.RealmObject
 
-    var image_72: String? = null
-    var image_192: String? = null
-    var image_512: String? = null
+open class Profile(
+        open var first_name: String = "",
+        open var last_name: String = "",
+        open var real_name: String = "",
 
+        open var image_72: String? = null,
+        open var image_192: String? = null,
+        open var image_512: String? = null
+) : RealmObject() {
     val largestAvailableImage: String
         get() {
             var imageUrl: String? = image_512
