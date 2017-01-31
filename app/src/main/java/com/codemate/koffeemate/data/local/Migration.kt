@@ -17,8 +17,10 @@
 package com.codemate.koffeemate.data.local
 
 import io.realm.DynamicRealm
+import io.realm.DynamicRealmObject
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import io.realm.exceptions.RealmPrimaryKeyConstraintException
 
 class Migration : RealmMigration {
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
@@ -60,7 +62,7 @@ class Migration : RealmMigration {
                     image_192:      String
                     image_512:      String
          *************************************************************/
-        if (oldVersion < 0L) {
+        if (oldVersion == 0L) {
             val profileSchema = schema.create("Profile")
                     .addField("first_name", String::class.java)
                     .addField("last_name", String::class.java)
@@ -79,10 +81,26 @@ class Migration : RealmMigration {
 
             schema.get("CoffeeBrewingEvent")
                     .addRealmObjectField("user", userSchema)
-                    .transform {
-                        it.getString("userId")?.let { previousUserId ->
+                    .transform { brewingEvent ->
+                        brewingEvent.getString("userId")?.let { previousUserId ->
                             if (previousUserId.isNotBlank()) {
-                                realm.createObject("User", previousUserId)
+                                var user: DynamicRealmObject?
+
+                                // DynamicRealm doesn't allow us create duplicate User objects,
+                                // since the id field is a primary key. insertOrUpdate() and similar
+                                // methods are unavailable when using DynamicRealms.
+                                //
+                                // Try-catch is the only way to handle the migration of userIds to
+                                // users in this case.
+                                try {
+                                    user = realm.createObject("User", previousUserId)
+                                } catch (e: RealmPrimaryKeyConstraintException) {
+                                    user = realm.where("User")
+                                            .equalTo("id", previousUserId)
+                                            .findFirst()
+                                }
+
+                                brewingEvent.setObject("user", user!!)
                             }
                         }
                     }
