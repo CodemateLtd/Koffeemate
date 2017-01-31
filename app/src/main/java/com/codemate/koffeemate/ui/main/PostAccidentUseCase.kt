@@ -21,6 +21,7 @@ import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
+import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -40,17 +41,16 @@ open class PostAccidentUseCase(
 ) {
     fun execute(
             comment: String,
-            userId: String,
-            userName: String,
+            user: User,
             profilePic: Bitmap
     ): Observable<Response<ResponseBody>> {
-        coffeeEventRepository.recordBrewingAccident(userId)
+        coffeeEventRepository.recordBrewingAccident(user)
 
-        val awardCount = coffeeEventRepository.getAccidentCountForUser(userId)
+        val awardCount = coffeeEventRepository.getAccidentCountForUser(user)
         val profilePicWithAward = awardBadgeCreator.createBitmapFileWithAward(profilePic, awardCount)
 
         // Evaluates to "johns-certificate.png" etc
-        val fileName = "${userName.toLowerCase()}s-certificate.png"
+        val fileName = "${user.profile.first_name.toLowerCase()}s-certificate.png"
         val channel = coffeePreferences.getAccidentChannel()
 
         return slackApi.postImage(

@@ -24,17 +24,11 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.SlackService
-import com.codemate.koffeemate.data.network.models.Profile
-import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.testutils.RegexMatcher
+import com.codemate.koffeemate.testutils.RegexMatcher.Companion.matchesPattern
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
 import com.codemate.koffeemate.ui.main.PostAccidentUseCase
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.whenever
-import okhttp3.Dispatcher
+import com.nhaarman.mockito_kotlin.*
 import okhttp3.ResponseBody
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -50,8 +44,6 @@ import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
 
 class PostAccidentUseCaseTest {
-    val TEST_USER_ID = "abc123"
-
     @Mock
     lateinit var mockCoffeePreferences: CoffeePreferences
 
@@ -79,7 +71,7 @@ class PostAccidentUseCaseTest {
 
         mockCoffeePreferences.preferences = mock<SharedPreferences>()
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("test-channel")
-        whenever(mockCoffeeEventRepository.getAccidentCountForUser(TEST_USER_ID)).thenReturn(1)
+        whenever(mockCoffeeEventRepository.getAccidentCountForUser(any())).thenReturn(1)
 
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(mockBitmap, 1))
                 .thenReturn(getResourceFile("images/empty.png"))
@@ -105,26 +97,26 @@ class PostAccidentUseCaseTest {
     @Test
     fun announceCoffeeBrewingAccident_ShouldMakeCorrectRequest() {
         val user = fakeUser()
-        useCase.execute("Test comment", user.id, user.profile.first_name, mockBitmap).subscribe(testSubscriber)
+        useCase.execute("Test comment", user, mockBitmap).subscribe(testSubscriber)
 
         // TODO: There has to be a better way to verify these multipart post params, right? :S
         val requestBody = mockServer.takeRequest().body.readUtf8()
         assertThat(requestBody, StringContains.containsString("filename=\"jormas-certificate.png\""))
-        assertThat(requestBody, RegexMatcher.matchesPattern(".*channels.*test-channel.*"))
-        assertThat(requestBody, RegexMatcher.matchesPattern(".*initial_comment.*Test comment.*"))
-        assertThat(requestBody, RegexMatcher.matchesPattern(".*token.*${BuildConfig.SLACK_AUTH_TOKEN}.*"))
+        assertThat(requestBody, matchesPattern(".*channels.*test-channel.*"))
+        assertThat(requestBody, matchesPattern(".*initial_comment.*Test comment.*"))
+        assertThat(requestBody, matchesPattern(".*token.*${BuildConfig.SLACK_AUTH_TOKEN}.*"))
     }
 
     @Test
     fun announceCoffeeBrewingAccident_WhenSuccessful_NotifiesUIAndStoresEvent() {
         val user = fakeUser()
-        useCase.execute("", user.id, user.profile.first_name, mockBitmap).subscribe(testSubscriber)
+        useCase.execute("", user, mockBitmap).subscribe(testSubscriber)
 
         testSubscriber.assertValueCount(1)
         testSubscriber.assertCompleted()
 
-        verify(mockCoffeeEventRepository).recordBrewingAccident(user.id)
-        verify(mockCoffeeEventRepository).getAccidentCountForUser(TEST_USER_ID)
+        verify(mockCoffeeEventRepository).recordBrewingAccident(user)
+        verify(mockCoffeeEventRepository).getAccidentCountForUser(user)
         verifyNoMoreInteractions(mockCoffeeEventRepository)
     }
 }

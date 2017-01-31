@@ -1,40 +1,28 @@
 package com.codemate.koffeemate.data.local
 
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.network.models.User
 import io.realm.Realm
 import io.realm.Sort
 import java.util.*
 
 interface CoffeeEventRepository {
-    fun recordBrewingEvent(userId: String? = ""): CoffeeBrewingEvent
-    fun recordBrewingAccident(userId: String): CoffeeBrewingEvent
-    fun getAccidentCountForUser(userId: String): Long
+    fun recordBrewingEvent(user: User? = null): CoffeeBrewingEvent
+    fun recordBrewingAccident(user: User): CoffeeBrewingEvent
+    fun getAccidentCountForUser(user: User): Long
+
     fun getLastBrewingEvent(): CoffeeBrewingEvent?
     fun getLastBrewingAccident(): CoffeeBrewingEvent?
 }
 
 class RealmCoffeeEventRepository : CoffeeEventRepository {
-    override fun recordBrewingAccident(userId: String) = with(Realm.getDefaultInstance()) {
-        var event: CoffeeBrewingEvent? = null
-        executeTransaction {
-            event = newEvent(it).apply {
-                time = System.currentTimeMillis()
-                isSuccessful = false
-                this.userId = userId
-            }
-        }
-
-        close()
-        return@with event!!
-    }
-
-    override fun recordBrewingEvent(userId: String?) = with(Realm.getDefaultInstance()) {
+    override fun recordBrewingEvent(user: User?) = with(Realm.getDefaultInstance()) {
         var event: CoffeeBrewingEvent? = null
         executeTransaction {
             event = newEvent(it).apply {
                 time = System.currentTimeMillis()
                 isSuccessful = true
-                this.userId = userId ?: ""
+                this.user = if (user != null) copyToRealmOrUpdate(user) else null
             }
         }
 
@@ -42,11 +30,25 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
         return@with event!!
     }
 
-    override fun getAccidentCountForUser(userId: String) =
+    override fun recordBrewingAccident(user: User) = with(Realm.getDefaultInstance()) {
+        var event: CoffeeBrewingEvent? = null
+        executeTransaction {
+            event = newEvent(it).apply {
+                time = System.currentTimeMillis()
+                isSuccessful = false
+                this.user = copyToRealmOrUpdate(user)
+            }
+        }
+
+        close()
+        return@with event!!
+    }
+
+    override fun getAccidentCountForUser(user: User) =
             Realm.getDefaultInstance()
                     .where(CoffeeBrewingEvent::class.java)
                     .equalTo("isSuccessful", false)
-                    .equalTo("userId", userId)
+                    .equalTo("user.id", user.id)
                     .count()
 
     override fun getLastBrewingEvent(): CoffeeBrewingEvent? {

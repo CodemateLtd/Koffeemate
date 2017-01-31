@@ -58,7 +58,7 @@ class MainPresenter @Inject constructor(
                                         getView()?.updateCoffeeProgress(0)
                                         getView()?.resetCoffeeViewStatus()
 
-                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee?.id)
+                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
                                         updateLastBrewingEventTime()
                                     }
 
@@ -107,13 +107,7 @@ class MainPresenter @Inject constructor(
 
         if (coffeePreferences.isAccidentChannelSet()) {
             personBrewingCoffee?.let {
-                getView()?.showPostAccidentAnnouncementPrompt(
-                        it.id,
-                        it.profile.real_name,
-                        it.profile.first_name,
-                        it.profile.largestAvailableImage
-                )
-
+                getView()?.showPostAccidentAnnouncementPrompt(it)
                 return
             }
 
@@ -123,10 +117,10 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun announceCoffeeBrewingAccident(comment: String, userId: String, userName: String, profilePic: Bitmap) {
+    fun announceCoffeeBrewingAccident(comment: String, user: User, profilePic: Bitmap) {
         ensureViewIsAttached()
 
-        postAccidentUseCase.execute(comment, userId, userName, profilePic).subscribe(
+        postAccidentUseCase.execute(comment, user, profilePic).subscribe(
                 object : Subscriber<Response<ResponseBody>>() {
                     override fun onNext(response: Response<ResponseBody>) {
                         getView()?.showAccidentPostedSuccessfullyMessage()

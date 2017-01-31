@@ -131,7 +131,7 @@ class MainPresenterTest {
 
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
-        verify(mockCoffeeEventRepository).recordBrewingEvent(user.id)
+        verify(mockCoffeeEventRepository).recordBrewingEvent(user)
     }
 
     @Test
@@ -226,12 +226,7 @@ class MainPresenterTest {
         presenter.personBrewingCoffee = user
         presenter.launchAccidentReportingScreen()
 
-        verify(view).showPostAccidentAnnouncementPrompt(
-                user.id,
-                user.profile.real_name,
-                user.profile.first_name,
-                user.profile.largestAvailableImage
-        )
+        verify(view).showPostAccidentAnnouncementPrompt(user)
         verifyNoMoreInteractions(view)
     }
 
@@ -273,7 +268,7 @@ class MainPresenterTest {
                 .thenReturn(emptySuccessResponse)
 
         presenter.personBrewingCoffee = fakeUser()
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         assertThat(presenter.personBrewingCoffee, nullValue())
     }
@@ -283,7 +278,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showAccidentPostedSuccessfullyMessage()
         verifyNoMoreInteractions(view)
@@ -294,7 +289,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(Observable.error(Throwable()))
 
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showErrorPostingAccidentMessage()
     }

@@ -9,11 +9,7 @@ import com.codemate.koffeemate.data.network.models.User
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorFragment.UserSelectListener {
     companion object {
-        val RESULT_USER_ID = "user_id"
-        val RESULT_USER_FULL_NAME = "user_full_name"
-        val RESULT_USER_FIRST_NAME = "user_first_name"
-        val RESULT_USER_PROFILE_LARGEST_PIC_URL = "user_profile_largest_pic_url"
-        val RESULT_USER_PROFILE_SMALLEST_PIC_URL = "user_profile_smallest_pic_url"
+        val RESULT_USER = "user"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,12 +25,7 @@ class UserSelectorActivity : AppCompatActivity(), UserSelectorFragment.UserSelec
 
     override fun onUserSelected(user: User) {
         val intent = Intent()
-        intent.putExtra(RESULT_USER_ID, user.id)
-        intent.putExtra(RESULT_USER_FULL_NAME, user.profile.real_name)
-        intent.putExtra(RESULT_USER_FIRST_NAME, user.profile.first_name)
-        intent.putExtra(RESULT_USER_PROFILE_LARGEST_PIC_URL, user.profile.largestAvailableImage)
-        intent.putExtra(RESULT_USER_PROFILE_SMALLEST_PIC_URL, user.profile.smallestAvailableImage)
-
+        intent.putExtra(RESULT_USER, user)
         setResult(RESULT_OK, intent)
         finish()
     }

@@ -164,27 +164,23 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_SHAME_USER && resultCode == RESULT_OK && data != null) {
-            val userId = data.getStringExtra(UserSelectorActivity.RESULT_USER_ID)
-            val fullName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FULL_NAME)
-            val firstName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FIRST_NAME)
-            val largestProfilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_LARGEST_PIC_URL)
-
-            showPostAccidentAnnouncementPrompt(userId, fullName, firstName, largestProfilePicUrl)
+            val user = data.getParcelableExtra<User>(UserSelectorActivity.RESULT_USER)
+            showPostAccidentAnnouncementPrompt(user)
         }
     }
 
-    override fun showPostAccidentAnnouncementPrompt(userId: String, fullName: String, firstName: String, largestProfilePicUrl: String) {
+    override fun showPostAccidentAnnouncementPrompt(user: User) {
         alert {
             title(R.string.prompt_reset_the_counter)
-            message(getString(R.string.message_posting_to_slack_fmt, fullName))
+            message(getString(R.string.message_posting_to_slack_fmt, user.profile.real_name))
 
             negativeButton(R.string.action_cancel)
             positiveButton(R.string.action_announce_coffee_accident) {
                 accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-                val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
+                val comment = getString(R.string.message_congratulations_to_user_fmt, user.profile.first_name)
 
-                Glide.with(this@MainActivity).loadBitmap(largestProfilePicUrl) { profilePic ->
-                    presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
+                Glide.with(this@MainActivity).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
+                    presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
                 }
             }
         }.show()

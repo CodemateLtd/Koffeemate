@@ -24,7 +24,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class RealmUserRepositoryTest {
+class UserRepositoryTest {
     val TEST_USERS_UNIQUE = listOf(User(id = "abc123"), User(id = "123abc"), User(id = "a1b2c3"))
     val TEST_USERS_DUPLICATE = listOf(User(id = "abc123"), User(id = "abc123"), User(id = "abc123"))
 
