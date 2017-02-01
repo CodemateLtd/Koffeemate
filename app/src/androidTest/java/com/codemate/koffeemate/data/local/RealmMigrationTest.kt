@@ -20,19 +20,19 @@ import android.content.Context
 import android.support.test.InstrumentationRegistry
 import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
 import io.realm.Realm
-import io.realm.rule.TestRealmConfigurationFactory
+import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
 import org.hamcrest.core.IsNull.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 class RealmMigrationTest {
     lateinit var context: Context
-
-    @Rule @JvmField
-    val configFactory = TestRealmConfigurationFactory()
 
     @Before
     fun setUp() {
@@ -44,15 +44,16 @@ class RealmMigrationTest {
      *************************************************************/
     @Test
     fun testMigrationFromVersionZeroToOne() {
-        val schemaName = "schema-v0.realm"
-        val config = configFactory.createConfigurationBuilder()
-                .name(schemaName)
+        val config = RealmConfiguration.Builder()
+                .name("test.realm")
                 .schemaVersion(1)
                 .migration(Migration())
                 .build()
 
-        configFactory.copyRealmFromAssets(context, schemaName, schemaName)
-
+        // The "sample-db-schema-v0.realm" contains three sample records,
+        // in the old database schema, which used userIds instead of User
+        // objects.
+        copyRealmFromAssets(context, "sample-db-schema-v0.realm", config)
         val realm = Realm.getInstance(config)
 
         val all = realm.where(CoffeeBrewingEvent::class.java).findAll()
@@ -75,5 +76,39 @@ class RealmMigrationTest {
         assertThat(third.time, equalTo(1485872637118L))
         assertThat(third.isSuccessful, equalTo(false))
         assertThat(third.user!!.id, equalTo("abc-123"))
+    }
+
+    @Throws(IOException::class)
+    fun copyRealmFromAssets(context: Context, realmPath: String, config: RealmConfiguration) {
+        Realm.deleteRealm(config)
+
+        val outFile = File(config.realmDirectory, config.realmFileName)
+        var inputStream: InputStream? = null
+        var os: FileOutputStream? = null
+
+        try {
+            inputStream = context.assets.open(realmPath)
+            os = FileOutputStream(outFile)
+
+            val buf = ByteArray(1024)
+            var bytesRead: Int = 0
+            while (bytesRead > -1) {
+                os.write(buf, 0, bytesRead)
+                bytesRead = inputStream!!.read(buf)
+            }
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close()
+                } catch (ignore: IOException) {
+                }
+            }
+            if (os != null) {
+                try {
+                    os.close()
+                } catch (ignore: IOException) {
+                }
+            }
+        }
     }
 }
