@@ -30,7 +30,7 @@ import org.junit.Test
 import java.io.File
 import java.io.IOException
 
-class RealmMigrationTest {
+class MigrationTest {
     lateinit var context: Context
 
     @Before
