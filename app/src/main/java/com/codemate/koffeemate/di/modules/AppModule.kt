@@ -25,9 +25,9 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.ui.userselector.LoadUsersUseCase
-import com.codemate.koffeemate.ui.main.PostAccidentUseCase
-import com.codemate.koffeemate.ui.main.SendCoffeeAnnouncementUseCase
+import com.codemate.koffeemate.usecases.LoadUsersUseCase
+import com.codemate.koffeemate.usecases.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import dagger.Module
 import dagger.Provides
 import rx.android.schedulers.AndroidSchedulers

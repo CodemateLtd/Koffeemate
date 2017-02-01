@@ -12,6 +12,8 @@ import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.usecases.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody

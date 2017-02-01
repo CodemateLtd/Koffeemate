@@ -8,6 +8,7 @@ import com.codemate.koffeemate.data.models.UserListResponse
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.usecases.LoadUsersUseCase
 import com.nhaarman.mockito_kotlin.*
 import org.junit.Before
 import org.junit.Test

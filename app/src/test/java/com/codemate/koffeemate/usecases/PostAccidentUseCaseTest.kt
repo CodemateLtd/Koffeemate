@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.userselector
+package com.codemate.koffeemate.usecases
 
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -27,7 +27,6 @@ import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.testutils.RegexMatcher.Companion.matchesPattern
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
-import com.codemate.koffeemate.ui.main.PostAccidentUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.ResponseBody
 import okhttp3.mockwebserver.MockResponse

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.userselector
+package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.local.UserRepository

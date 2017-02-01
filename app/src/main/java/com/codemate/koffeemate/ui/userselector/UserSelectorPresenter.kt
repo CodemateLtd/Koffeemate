@@ -2,6 +2,7 @@ package com.codemate.koffeemate.ui.userselector
 
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import com.codemate.koffeemate.usecases.LoadUsersUseCase
 import rx.Subscriber
 import javax.inject.Inject
 

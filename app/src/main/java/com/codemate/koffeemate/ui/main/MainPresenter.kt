@@ -7,6 +7,8 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import com.codemate.koffeemate.usecases.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import okhttp3.ResponseBody
 import retrofit2.Response
 import rx.Subscriber

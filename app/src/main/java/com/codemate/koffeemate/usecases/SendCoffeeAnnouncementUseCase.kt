@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.main
+package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.data.network.SlackApi
 import okhttp3.ResponseBody

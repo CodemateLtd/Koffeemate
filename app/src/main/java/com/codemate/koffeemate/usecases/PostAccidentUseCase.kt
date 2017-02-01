@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.main
+package com.codemate.koffeemate.usecases
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.common.AwardBadgeCreator
