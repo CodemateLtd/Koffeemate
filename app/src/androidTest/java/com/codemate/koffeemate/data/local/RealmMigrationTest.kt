@@ -27,9 +27,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 class RealmMigrationTest {
     lateinit var context: Context
@@ -45,7 +43,7 @@ class RealmMigrationTest {
     @Test
     fun testMigrationFromVersionZeroToOne() {
         val config = RealmConfiguration.Builder()
-                .name("test.realm")
+                .name("migration-test.realm")
                 .schemaVersion(1)
                 .migration(Migration())
                 .build()
@@ -82,32 +80,11 @@ class RealmMigrationTest {
     fun copyRealmFromAssets(context: Context, realmPath: String, config: RealmConfiguration) {
         Realm.deleteRealm(config)
 
-        val outFile = File(config.realmDirectory, config.realmFileName)
-        var inputStream: InputStream? = null
-        var os: FileOutputStream? = null
+        context.assets.open(realmPath).use { inputStream ->
+            val outFile = File(config.realmDirectory, config.realmFileName)
 
-        try {
-            inputStream = context.assets.open(realmPath)
-            os = FileOutputStream(outFile)
-
-            val buf = ByteArray(1024)
-            var bytesRead: Int = 0
-            while (bytesRead > -1) {
-                os.write(buf, 0, bytesRead)
-                bytesRead = inputStream!!.read(buf)
-            }
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close()
-                } catch (ignore: IOException) {
-                }
-            }
-            if (os != null) {
-                try {
-                    os.close()
-                } catch (ignore: IOException) {
-                }
+            outFile.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
             }
         }
     }
