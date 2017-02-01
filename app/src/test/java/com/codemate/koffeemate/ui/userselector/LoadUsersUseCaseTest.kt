@@ -22,6 +22,7 @@ import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -74,6 +75,17 @@ class LoadUsersUseCaseTest {
 
         val request = mockServer.takeRequest()
         assertThat(request.path, equalTo("/users.list?token=${BuildConfig.SLACK_AUTH_TOKEN}"))
+    }
+
+    @Test
+    fun execute_WhenLoadingUsersFromApi_CachesThem() {
+        enqueUserJsonResponseFromServer()
+
+        useCase.execute().subscribe(testSubscriber)
+        testSubscriber.assertValueCount(1)
+
+        val userList = testSubscriber.onNextEvents[0]
+        verify(mockUserRepository).addAll(userList)
     }
 
     @Test
