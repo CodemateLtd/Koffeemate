@@ -20,8 +20,10 @@ import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.network.models.isFreshEnough
 import rx.Observable
 import rx.Scheduler
+import java.util.concurrent.TimeUnit
 
 open class LoadUsersUseCase(
         var userRepository: UserRepository,
@@ -29,10 +31,20 @@ open class LoadUsersUseCase(
         var subscriber: Scheduler,
         var observer: Scheduler
 ) {
+    val MAX_CACHE_STALENESS = TimeUnit.HOURS.toMillis(12)
+
     fun execute(): Observable<List<User>> {
+        val currentTime = System.currentTimeMillis()
         val cachedUsers = Observable.just(userRepository.getAll())
         val networkUsers = slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN)
-                .flatMap { Observable.just(it.members) }
+                .flatMap { userResponse ->
+                    val usersWithTimestamp = userResponse.members.toMutableList()
+                    usersWithTimestamp.forEach {
+                        it.last_updated = currentTime
+                    }
+
+                    Observable.just(usersWithTimestamp)
+                }
                 .subscribeOn(subscriber)
                 .observeOn(observer)
                 .map {
@@ -44,8 +56,9 @@ open class LoadUsersUseCase(
 
         return Observable
                 .concat(cachedUsers, networkUsers)
-                // TODO: only take the first (which is cached users) if it's fresh enough.
-                .first { it.isNotEmpty() }
+                .first {
+                    it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
+                }
     }
 
     private fun filterNonCompanyUsers(response: List<User>): List<User> {

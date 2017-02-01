@@ -53,6 +53,7 @@ class Migration : RealmMigration {
                     real_name:      String
                     is_bot:         Boolean
                     deleted:        Boolean
+                    last_updated:       Long
 
                 class Profile
                     first_name:     String
@@ -78,7 +79,9 @@ class Migration : RealmMigration {
                     .addField("real_name", String::class.java)
                     .addField("is_bot", Boolean::class.java)
                     .addField("deleted", Boolean::class.java)
+                    .addField("last_updated", Long::class.java)
 
+            val timestamp = System.currentTimeMillis()
             schema.get("CoffeeBrewingEvent")
                     .addRealmObjectField("user", userSchema)
                     .transform { brewingEvent ->
@@ -100,7 +103,8 @@ class Migration : RealmMigration {
                                             .findFirst()
                                 }
 
-                                brewingEvent.setObject("user", user!!)
+                                user!!.setLong("last_updated", timestamp)
+                                brewingEvent.setObject("user", user)
                             }
                         }
                     }

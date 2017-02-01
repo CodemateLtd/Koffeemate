@@ -9,6 +9,14 @@ class UserListResponse {
     var members = listOf<User>()
 }
 
+fun List<User>.isFreshEnough(maxStaleness: Long): Boolean {
+    val oldestAcceptedTimestamp = System.currentTimeMillis() - maxStaleness
+    val sorted = sortedByDescending(User::last_updated)
+    val freshestUser = sorted.first()
+
+    return freshestUser.last_updated > oldestAcceptedTimestamp
+}
+
 open class User(
         @PrimaryKey
         open var id: String = "",
@@ -16,7 +24,8 @@ open class User(
         open var profile: Profile = Profile(),
         open var real_name: String? = null,
         open var is_bot: Boolean = false,
-        open var deleted: Boolean = false
+        open var deleted: Boolean = false,
+        open var last_updated: Long = 0
 ) : RealmObject(), Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<User> = object : Parcelable.Creator<User> {
@@ -31,7 +40,8 @@ open class User(
             source.readParcelable(ClassLoader.getSystemClassLoader()),
             source.readString(),
             1 == source.readInt(),
-            1 == source.readInt()
+            1 == source.readInt(),
+            source.readLong()
     )
 
     override fun describeContents() = 0
@@ -43,5 +53,6 @@ open class User(
         dest?.writeString(real_name)
         dest?.writeInt((if (is_bot) 1 else 0))
         dest?.writeInt((if (deleted) 1 else 0))
+        dest?.writeLong(last_updated)
     }
 }
