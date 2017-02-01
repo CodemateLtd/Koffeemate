@@ -74,6 +74,8 @@ class RealmMigrationTest {
         assertThat(third.time, equalTo(1485872637118L))
         assertThat(third.isSuccessful, equalTo(false))
         assertThat(third.user!!.id, equalTo("abc-123"))
+
+        realm.close()
     }
 
     @Throws(IOException::class)
