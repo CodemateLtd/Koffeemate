@@ -17,19 +17,23 @@
 package com.codemate.koffeemate.ui.userselector
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.RealmUserRepository
+import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.data.network.models.UserListResponse
 import rx.Observable
 import rx.Scheduler
 
 open class LoadUsersUseCase(
+        var userRepository: UserRepository,
         var slackApi: SlackApi,
         var subscriber: Scheduler,
         var observer: Scheduler
 ) {
     fun execute(): Observable<List<User>> {
-        return slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN)
+        val cachedUsers = Observable.just(userRepository.getAll())
+        val networkUsers = slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN)
+                .flatMap { Observable.just(it.members) }
                 .subscribeOn(subscriber)
                 .observeOn(observer)
                 .map {
@@ -37,10 +41,16 @@ open class LoadUsersUseCase(
                         it.profile.real_name
                     }
                 }
+                .doOnNext { userRepository.addAll(it) }
+
+        return Observable
+                .concat(cachedUsers, networkUsers)
+                // TODO: only take the first (which is cached users) if it's fresh enough.
+                .first()
     }
 
-    private fun filterNonCompanyUsers(response: UserListResponse): List<User> {
-        return response.members.filter {
+    private fun filterNonCompanyUsers(response: List<User>): List<User> {
+        return response.filter {
                     !it.is_bot
                             // At Codemate, profiles starting with "Ext-" aren't employees,
                             // but customers instead: they don't hang out in the office.

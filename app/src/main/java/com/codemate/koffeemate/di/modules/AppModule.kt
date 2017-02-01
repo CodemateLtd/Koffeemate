@@ -23,6 +23,7 @@ import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.ui.userselector.LoadUsersUseCase
 import com.codemate.koffeemate.ui.main.PostAccidentUseCase
@@ -66,8 +67,9 @@ class AppModule(val app: KoffeemateApp) {
 
     @Provides
     @Singleton
-    fun provideLoadUsersUseCase(slackApi: SlackApi) =
+    fun provideLoadUsersUseCase(userRepository: UserRepository, slackApi: SlackApi) =
             LoadUsersUseCase(
+                    userRepository,
                     slackApi,
                     Schedulers.newThread(),
                     AndroidSchedulers.mainThread()

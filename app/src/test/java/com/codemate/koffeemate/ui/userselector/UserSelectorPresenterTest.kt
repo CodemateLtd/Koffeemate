@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.Profile
 import com.codemate.koffeemate.data.network.models.User
@@ -51,6 +52,7 @@ class UserSelectorPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val loadUsersUseCase = LoadUsersUseCase(
+                mock<UserRepository>(),
                 mockSlackApi,
                 Schedulers.immediate(),
                 Schedulers.immediate()

@@ -32,7 +32,7 @@ class RealmUserRepository : UserRepository {
         }
     }
 
-    override fun getAll() = Realm.getDefaultInstance()
+    override fun getAll(): List<User> = Realm.getDefaultInstance()
             .where(User::class.java)
             .findAll()
 }
