@@ -17,7 +17,6 @@
 package com.codemate.koffeemate.ui.userselector
 
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.data.local.RealmUserRepository
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.data.network.models.User
@@ -46,7 +45,7 @@ open class LoadUsersUseCase(
         return Observable
                 .concat(cachedUsers, networkUsers)
                 // TODO: only take the first (which is cached users) if it's fresh enough.
-                .first()
+                .first { it.isNotEmpty() }
     }
 
     private fun filterNonCompanyUsers(response: List<User>): List<User> {
