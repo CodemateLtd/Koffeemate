@@ -28,7 +28,7 @@ import android.view.ViewGroup
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.common.BasicListItemAnimator
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.User
 import kotlinx.android.synthetic.main.fragment_user_selector.*
 import kotlinx.android.synthetic.main.fragment_user_selector.view.*
 import org.jetbrains.anko.onClick

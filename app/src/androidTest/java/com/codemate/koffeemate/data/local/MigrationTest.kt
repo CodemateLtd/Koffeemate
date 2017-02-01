@@ -18,7 +18,7 @@ package com.codemate.koffeemate.data.local
 
 import android.content.Context
 import android.support.test.InstrumentationRegistry
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo

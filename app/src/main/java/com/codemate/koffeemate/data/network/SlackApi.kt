@@ -1,13 +1,12 @@
 package com.codemate.koffeemate.data.network
 
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.data.network.models.UserListResponse
+import com.codemate.koffeemate.data.models.UserListResponse
 import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 import rx.Observable

@@ -18,9 +18,9 @@ package com.codemate.koffeemate.ui.userselector
 
 import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.local.UserRepository
+import com.codemate.koffeemate.data.models.User
+import com.codemate.koffeemate.data.models.isFreshEnough
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.data.network.models.isFreshEnough
 import rx.Observable
 import rx.Scheduler
 import java.util.concurrent.TimeUnit

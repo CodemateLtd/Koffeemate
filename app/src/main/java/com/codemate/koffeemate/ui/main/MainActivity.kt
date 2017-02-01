@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.common.ScreenSaver
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.extensions.loadBitmap
 import com.codemate.koffeemate.ui.settings.SettingsActivity

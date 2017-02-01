@@ -8,7 +8,7 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile

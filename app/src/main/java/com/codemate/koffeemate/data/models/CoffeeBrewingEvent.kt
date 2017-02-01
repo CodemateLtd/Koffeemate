@@ -1,6 +1,5 @@
-package com.codemate.koffeemate.data.local.models
+package com.codemate.koffeemate.data.models
 
-import com.codemate.koffeemate.data.network.models.User
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 

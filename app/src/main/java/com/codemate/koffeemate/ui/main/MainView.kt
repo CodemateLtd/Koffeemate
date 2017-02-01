@@ -1,7 +1,7 @@
 package com.codemate.koffeemate.ui.main
 
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.MvpView
 
 interface MainView : MvpView {

@@ -16,8 +16,8 @@
 
 package com.codemate.koffeemate.testutils
 
-import com.codemate.koffeemate.data.network.models.Profile
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.Profile
+import com.codemate.koffeemate.data.models.User
 import java.io.File
 
 fun Any.getResourceFile(path: String): File {

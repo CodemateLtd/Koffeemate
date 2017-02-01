@@ -16,7 +16,7 @@
 
 package com.codemate.koffeemate.data.local
 
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 
 interface UserRepository {

@@ -1,7 +1,7 @@
 package com.codemate.koffeemate.data.local
 
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 import io.realm.Sort
 import java.util.*

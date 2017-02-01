@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.User
 
 class UserSelectorActivity : AppCompatActivity(), UserSelectorFragment.UserSelectListener {
     companion object {
