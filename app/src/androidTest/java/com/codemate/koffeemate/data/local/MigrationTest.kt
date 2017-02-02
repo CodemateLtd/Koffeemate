@@ -22,7 +22,6 @@ import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
-import org.hamcrest.core.IsNot.not
 import org.hamcrest.core.IsNull.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -69,14 +68,14 @@ class MigrationTest {
         assertThat(brewingEventWithUserId.time, equalTo(1485872637117L))
         assertThat(brewingEventWithUserId.isSuccessful, equalTo(true))
         assertThat(brewingEventWithUserId.user!!.id, equalTo("abc-123"))
-        assertThat(brewingEventWithUserId.user!!.last_updated, not(equalTo(0L)))
+        assertThat(brewingEventWithUserId.user!!.last_updated, equalTo(0L))
 
         val brewingAccident = all[2]
         assertThat(brewingAccident.id, equalTo("480bb3b9-a01f-45cb-87cd-113465d4038a"))
         assertThat(brewingAccident.time, equalTo(1485872637118L))
         assertThat(brewingAccident.isSuccessful, equalTo(false))
         assertThat(brewingAccident.user!!.id, equalTo("abc-123"))
-        assertThat(brewingEventWithUserId.user!!.last_updated, not(equalTo(0L)))
+        assertThat(brewingEventWithUserId.user!!.last_updated, equalTo(0L))
 
         // Make sure we don't generate different timestamps for the users in
         // this new schema.

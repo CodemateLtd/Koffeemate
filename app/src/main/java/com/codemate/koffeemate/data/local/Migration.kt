@@ -81,7 +81,6 @@ class Migration : RealmMigration {
                     .addField("deleted", Boolean::class.java)
                     .addField("last_updated", Long::class.java)
 
-            val timestamp = System.currentTimeMillis()
             schema.get("CoffeeBrewingEvent")
                     .addRealmObjectField("user", userSchema)
                     .transform { brewingEvent ->
@@ -103,7 +102,6 @@ class Migration : RealmMigration {
                                             .findFirst()
                                 }
 
-                                user!!.setLong("last_updated", timestamp)
                                 brewingEvent.setObject("user", user)
                             }
                         }
