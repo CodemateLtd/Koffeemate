@@ -37,7 +37,7 @@ class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: User) = with(itemView) {
             Glide.with(context)
-                    .load(user.profile.image_72)
+                    .load(user.profile.smallestAvailableImage)
                     .into(profileImage)
             userName.text = user.profile.real_name
 
