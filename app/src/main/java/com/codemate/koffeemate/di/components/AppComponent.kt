@@ -17,7 +17,6 @@
 package com.codemate.koffeemate.di.components
 
 import com.codemate.koffeemate.di.modules.*
-import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorFragment
 import dagger.Component
 import javax.inject.Singleton

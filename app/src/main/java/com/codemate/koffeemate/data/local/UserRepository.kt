@@ -34,8 +34,9 @@ class RealmUserRepository : UserRepository {
 
     override fun getAll(): List<User> = with(Realm.getDefaultInstance()) {
         val all = where(User::class.java).findAll()
-        close()
+        val copy = copyFromRealm(all)
 
-        return@with all
+        close()
+        return@with copy
     }
 }
