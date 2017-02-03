@@ -44,27 +44,34 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
         return@with event!!
     }
 
-    override fun getAccidentCountForUser(user: User) =
-            Realm.getDefaultInstance()
-                    .where(CoffeeBrewingEvent::class.java)
-                    .equalTo("isSuccessful", false)
-                    .equalTo("user.id", user.id)
-                    .count()
+    override fun getAccidentCountForUser(user: User) = with(Realm.getDefaultInstance()) {
+        val count = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", false)
+                .equalTo("user.id", user.id)
+                .count()
 
-    override fun getLastBrewingEvent(): CoffeeBrewingEvent? {
-        return Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
+        close()
+        return@with count
+    }
+
+    override fun getLastBrewingEvent() = with(Realm.getDefaultInstance()) {
+        val lastEvent = where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", true)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+
+        close()
+        return@with lastEvent
     }
 
-    override fun getLastBrewingAccident(): CoffeeBrewingEvent? {
-        return Realm.getDefaultInstance()
-                .where(CoffeeBrewingEvent::class.java)
+    override fun getLastBrewingAccident() = with(Realm.getDefaultInstance()) {
+        val lastAccident = where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", false)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+
+        close()
+        return@with lastAccident
     }
 
     private fun newEvent(realm: Realm) =

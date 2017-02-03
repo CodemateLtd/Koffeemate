@@ -24,12 +24,14 @@ import com.codemate.koffeemate.data.network.SlackApi
 import rx.Observable
 import rx.Scheduler
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
-open class LoadUsersUseCase(
+open class LoadUsersUseCase @Inject constructor(
         var userRepository: UserRepository,
         var slackApi: SlackApi,
-        var subscriber: Scheduler,
-        var observer: Scheduler
+        @Named("subscriber") var subscriber: Scheduler,
+        @Named("observer") var observer: Scheduler
 ) {
     val MAX_CACHE_STALENESS = TimeUnit.HOURS.toMillis(12)
 

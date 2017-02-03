@@ -21,11 +21,13 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import rx.Observable
 import rx.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-open class SendCoffeeAnnouncementUseCase(
+open class SendCoffeeAnnouncementUseCase @Inject constructor(
         var slackApi: SlackApi,
-        var subscriber: Scheduler,
-        var observer: Scheduler
+        @Named("subscriber") var subscriber: Scheduler,
+        @Named("observer") var observer: Scheduler
 ) {
     fun execute(channel: String, newCoffeeMessage: String): Observable<Response<ResponseBody>> {
         return slackApi.postMessage(channel, newCoffeeMessage)

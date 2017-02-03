@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Codemate Ltd
+ * Copyright 2017 Codemate Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,20 @@
 
 package com.codemate.koffeemate.di.modules
 
-import com.codemate.koffeemate.data.network.SlackApi
 import dagger.Module
 import dagger.Provides
-import okhttp3.HttpUrl
-import javax.inject.Singleton
+import rx.Scheduler
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import javax.inject.Named
 
 @Module
-class NetModule(val baseUrl: HttpUrl) {
+class ThreadingModule {
     @Provides
-    @Singleton
-    fun provideApi() = SlackApi.create(baseUrl)
+    @Named("subscriber")
+    fun provideSubscriber(): Scheduler = Schedulers.newThread()
+
+    @Provides
+    @Named("observer")
+    fun provideObserver(): Scheduler = AndroidSchedulers.mainThread()
 }
