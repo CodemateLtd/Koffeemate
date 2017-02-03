@@ -29,34 +29,10 @@ open class Profile(
         open var image_512: String? = null
 ) : RealmObject(), Parcelable {
     val largestAvailableImage: String
-        get() {
-            var imageUrl: String? = image_512
-
-            if (imageUrl.isNullOrBlank()) {
-                imageUrl = image_192
-            }
-
-            if (imageUrl.isNullOrBlank()) {
-                imageUrl = image_72
-            }
-
-            return imageUrl ?: ""
-        }
+        get() = image_512 ?: image_192 ?: image_72 ?: ""
 
     val smallestAvailableImage: String
-        get() {
-            var imageUrl: String? = image_72
-
-            if (imageUrl.isNullOrBlank()) {
-                imageUrl = image_192
-            }
-
-            if (imageUrl.isNullOrBlank()) {
-                imageUrl = image_512
-            }
-
-            return imageUrl ?: ""
-        }
+        get() = image_72 ?: image_192 ?: image_512 ?: ""
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Profile> = object : Parcelable.Creator<Profile> {
