@@ -16,8 +16,6 @@
 
 package com.codemate.koffeemate.data.models
 
-import android.os.Parcel
-import android.os.Parcelable
 import io.realm.RealmObject
 
 open class Profile(
@@ -27,31 +25,10 @@ open class Profile(
         open var image_72: String? = null,
         open var image_192: String? = null,
         open var image_512: String? = null
-) : RealmObject(), Parcelable {
+) : RealmObject() {
     val largestAvailableImage: String
         get() = image_512 ?: image_192 ?: image_72 ?: ""
 
     val smallestAvailableImage: String
         get() = image_72 ?: image_192 ?: image_512 ?: ""
-
-    companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Profile> = object : Parcelable.Creator<Profile> {
-            override fun createFromParcel(source: Parcel): Profile = Profile(source)
-            override fun newArray(size: Int): Array<Profile?> = arrayOfNulls(size)
-        }
-    }
-
-    constructor(source: Parcel) : this(
-            source.readString(),
-            source.readString(),
-            source.readString()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(first_name)
-        dest?.writeString(last_name)
-        dest?.writeString(real_name)
-    }
 }
