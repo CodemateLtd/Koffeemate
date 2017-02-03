@@ -16,7 +16,7 @@
 
 package com.codemate.koffeemate.di.modules
 
-import com.codemate.koffeemate.data.network.SlackService
+import com.codemate.koffeemate.data.network.SlackApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.HttpUrl
@@ -26,5 +26,5 @@ import javax.inject.Singleton
 class NetModule(val baseUrl: HttpUrl) {
     @Provides
     @Singleton
-    fun provideApi() = SlackService.getApi(baseUrl)
+    fun provideApi() = SlackApi.create(baseUrl)
 }

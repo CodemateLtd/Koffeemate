@@ -20,7 +20,6 @@ import com.codemate.koffeemate.BuildConfig
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.testutils.getResourceFile
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -52,7 +51,7 @@ class LoadUsersUseCaseTest {
         mockServer = MockWebServer()
         mockServer.start()
 
-        slackApi = SlackService.getApi(mockServer.url("/"))
+        slackApi = SlackApi.create(mockServer.url("/"))
         useCase = LoadUsersUseCase(
                 mockUserRepository,
                 slackApi,

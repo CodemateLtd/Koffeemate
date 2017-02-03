@@ -23,7 +23,6 @@ import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.SlackService
 import com.codemate.koffeemate.testutils.RegexMatcher.Companion.matchesPattern
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
@@ -75,7 +74,7 @@ class PostAccidentUseCaseTest {
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(mockBitmap, 1))
                 .thenReturn(getResourceFile("images/empty.png"))
 
-        slackApi = SlackService.getApi(mockServer.url("/"))
+        slackApi = SlackApi.create(mockServer.url("/"))
         useCase = PostAccidentUseCase(
                 slackApi,
                 mockCoffeeEventRepository,
