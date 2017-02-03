@@ -20,7 +20,6 @@ import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.di.modules.AppModule
 import com.codemate.koffeemate.di.modules.NetModule
 import com.codemate.koffeemate.di.modules.PersistenceModule
-import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorFragment
 import dagger.Component
 import javax.inject.Singleton

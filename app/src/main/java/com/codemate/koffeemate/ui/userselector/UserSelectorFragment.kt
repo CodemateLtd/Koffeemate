@@ -38,12 +38,22 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
     private lateinit var userSelectorAdapter: UserSelectorAdapter
     private lateinit var userSelectListener: UserSelectListener
 
+    private var requestCode: Int = 0
+
     @Inject
     lateinit var presenter: UserSelectorPresenter
 
     companion object {
-        fun newInstance(): UserSelectorFragment {
+        private val ARG_TITLE = "title"
+        private val ARG_REQUEST_CODE = "request_code"
+
+        fun newInstance(title: String, requestCode: Int): UserSelectorFragment {
+            val args = Bundle()
+            args.putString(ARG_TITLE, title)
+            args.putInt(ARG_REQUEST_CODE, requestCode)
+
             val fragment = UserSelectorFragment()
+            fragment.arguments = args
             fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.TitledDialog)
 
             return fragment
@@ -51,7 +61,7 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
     }
 
     interface UserSelectListener {
-        fun onUserSelected(user: User)
+        fun onUserSelected(user: User, requestCode: Int)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -72,8 +82,9 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         KoffeemateApp.appComponent.inject(this)
+
+        requestCode = arguments.getInt(ARG_REQUEST_CODE)
         setUpUserRecycler()
 
         presenter.attachView(this)
@@ -86,14 +97,15 @@ class UserSelectorFragment : DialogFragment(), UserSelectorView {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setTitle(R.string.prompt_select_person_below)
+        val title = arguments.getString(ARG_TITLE)
+        dialog.setTitle(title)
 
         return dialog
     }
 
     private fun setUpUserRecycler() {
         userSelectorAdapter = UserSelectorAdapter { user ->
-            userSelectListener.onUserSelected(user)
+            userSelectListener.onUserSelected(user, requestCode)
             dismiss()
         }
 

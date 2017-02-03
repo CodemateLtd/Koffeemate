@@ -63,7 +63,7 @@
 
     <!-- Prompts (asking the user to do something) -->
     <string name="prompt_reset_the_counter">Reset the counter?</string>
-    <string name="prompt_who_is_guilty">Who is guilty of this coffee brewing accident?</string>
+    <string name="prompt_who_is_guilty">Who failed coffee brewing?</string>
     <string name="prompt_select_person_below">Who is brewing?</string>
     <string name="prompt_select_guilty_person">Select a guilty person</string>
 
