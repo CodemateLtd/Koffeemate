@@ -30,14 +30,16 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import rx.Observable
 import rx.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-open class PostAccidentUseCase(
+open class PostAccidentUseCase @Inject constructor(
         var slackApi: SlackApi,
         val coffeeEventRepository: CoffeeEventRepository,
         val coffeePreferences: CoffeePreferences,
         val awardBadgeCreator: AwardBadgeCreator,
-        var subscriber: Scheduler,
-        var observer: Scheduler
+        @Named("subscriber") var subscriber: Scheduler,
+        @Named("observer") var observer: Scheduler
 ) {
     fun execute(
             comment: String,

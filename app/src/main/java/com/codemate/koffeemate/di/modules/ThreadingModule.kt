@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.usecases
+package com.codemate.koffeemate.di.modules
 
-import com.codemate.koffeemate.data.network.SlackApi
-import okhttp3.ResponseBody
-import retrofit2.Response
-import rx.Observable
+import dagger.Module
+import dagger.Provides
 import rx.Scheduler
-import javax.inject.Inject
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Named
 
-open class SendCoffeeAnnouncementUseCase @Inject constructor(
-        var slackApi: SlackApi,
-        @Named("subscriber") var subscriber: Scheduler,
-        @Named("observer") var observer: Scheduler
-) {
-    fun execute(channel: String, newCoffeeMessage: String): Observable<Response<ResponseBody>> {
-        return slackApi.postMessage(channel, newCoffeeMessage)
-                .subscribeOn(subscriber)
-                .observeOn(observer)
-    }
+@Module
+class ThreadingModule {
+    @Provides
+    @Named("subscriber")
+    fun provideSubscriber(): Scheduler = Schedulers.newThread()
+
+    @Provides
+    @Named("observer")
+    fun provideObserver(): Scheduler = AndroidSchedulers.mainThread()
 }
