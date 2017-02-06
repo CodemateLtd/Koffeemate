@@ -59,9 +59,10 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .equalTo("isSuccessful", true)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+        val copy = copyFromRealm(lastEvent)
 
         close()
-        return@with lastEvent
+        return@with copy
     }
 
     override fun getLastBrewingAccident() = with(Realm.getDefaultInstance()) {
@@ -69,9 +70,10 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .equalTo("isSuccessful", false)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
+        val copy = copyFromRealm(lastAccident)
 
         close()
-        return@with lastAccident
+        return@with copy
     }
 
     private fun newEvent(realm: Realm) =
