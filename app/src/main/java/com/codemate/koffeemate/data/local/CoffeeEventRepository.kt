@@ -44,37 +44,26 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
         return@with event!!
     }
 
-    override fun getAccidentCountForUser(user: User) = with(Realm.getDefaultInstance()) {
-        val count = where(CoffeeBrewingEvent::class.java)
-                .equalTo("isSuccessful", false)
-                .equalTo("user.id", user.id)
-                .count()
+    override fun getAccidentCountForUser(user: User) =
+            Realm.getDefaultInstance()
+                    .where(CoffeeBrewingEvent::class.java)
+                    .equalTo("isSuccessful", false)
+                    .equalTo("user.id", user.id)
+                    .count()
 
-        close()
-        return@with count
-    }
+    override fun getLastBrewingEvent() =
+            Realm.getDefaultInstance()
+                    .where(CoffeeBrewingEvent::class.java)
+                    .equalTo("isSuccessful", true)
+                    .findAllSorted("time", Sort.ASCENDING)
+                    .lastOrNull()
 
-    override fun getLastBrewingEvent() = with(Realm.getDefaultInstance()) {
-        val lastEvent = where(CoffeeBrewingEvent::class.java)
-                .equalTo("isSuccessful", true)
-                .findAllSorted("time", Sort.ASCENDING)
-                .lastOrNull()
-        val copy = copyFromRealm(lastEvent)
-
-        close()
-        return@with copy
-    }
-
-    override fun getLastBrewingAccident() = with(Realm.getDefaultInstance()) {
-        val lastAccident = where(CoffeeBrewingEvent::class.java)
-                .equalTo("isSuccessful", false)
-                .findAllSorted("time", Sort.ASCENDING)
-                .lastOrNull()
-        val copy = copyFromRealm(lastAccident)
-
-        close()
-        return@with copy
-    }
+    override fun getLastBrewingAccident() =
+            Realm.getDefaultInstance()
+                    .where(CoffeeBrewingEvent::class.java)
+                    .equalTo("isSuccessful", false)
+                    .findAllSorted("time", Sort.ASCENDING)
+                    .lastOrNull()
 
     private fun newEvent(realm: Realm) =
             realm.createObject(
