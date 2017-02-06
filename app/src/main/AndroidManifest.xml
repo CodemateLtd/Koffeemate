@@ -22,10 +22,6 @@
         </activity>
 
         <activity
-            android:name="com.codemate.koffeemate.ui.userselector.UserSelectorActivity"
-            android:screenOrientation="sensorLandscape"/>
-
-        <activity
             android:name="com.codemate.koffeemate.ui.settings.SettingsActivity"
             android:theme="@style/AppTheme.Settings"/>
     </application>

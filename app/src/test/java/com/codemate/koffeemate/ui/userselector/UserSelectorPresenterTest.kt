@@ -2,23 +2,18 @@ package com.codemate.koffeemate.ui.userselector
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.common.AwardBadgeCreator
-import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.local.UserRepository
+import com.codemate.koffeemate.data.models.UserListResponse
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.models.Profile
-import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.data.network.models.UserListResponse
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
-import com.codemate.koffeemate.ui.main.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.LoadUsersUseCase
 import com.nhaarman.mockito_kotlin.*
-import okhttp3.MediaType
-import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import retrofit2.Response
 import rx.Observable
 import rx.schedulers.Schedulers
 
@@ -51,6 +46,7 @@ class UserSelectorPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val loadUsersUseCase = LoadUsersUseCase(
+                mock<UserRepository>(),
                 mockSlackApi,
                 Schedulers.immediate(),
                 Schedulers.immediate()

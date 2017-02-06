@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.main
+package com.codemate.koffeemate.data.models
 
-import com.codemate.koffeemate.data.network.SlackApi
-import okhttp3.ResponseBody
-import retrofit2.Response
-import rx.Observable
-import rx.Scheduler
+import io.realm.RealmObject
 
-open class SendCoffeeAnnouncementUseCase(
-        var slackApi: SlackApi,
-        var subscriber: Scheduler,
-        var observer: Scheduler
-) {
-    fun execute(channel: String, newCoffeeMessage: String): Observable<Response<ResponseBody>> {
-        return slackApi.postMessage(channel, newCoffeeMessage)
-                .subscribeOn(subscriber)
-                .observeOn(observer)
-    }
+open class Profile(
+        open var first_name: String = "",
+        open var last_name: String = "",
+        open var real_name: String = "",
+        open var image_72: String? = null,
+        open var image_192: String? = null,
+        open var image_512: String? = null
+) : RealmObject() {
+    val largestAvailableImage: String
+        get() = image_512 ?: image_192 ?: image_72 ?: ""
+
+    val smallestAvailableImage: String
+        get() = image_72 ?: image_192 ?: image_512 ?: ""
 }

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.User
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 import org.jetbrains.anko.onClick
 import java.util.*
@@ -37,7 +37,7 @@ class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: User) = with(itemView) {
             Glide.with(context)
-                    .load(user.profile.image_72)
+                    .load(user.profile.smallestAvailableImage)
                     .into(profileImage)
             userName.text = user.profile.real_name
 

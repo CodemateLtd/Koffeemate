@@ -16,7 +16,8 @@
 
 package com.codemate.koffeemate.data.local
 
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
@@ -24,7 +25,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class RealmCoffeeEventRepositoryTest {
+class CoffeeEventRepositoryTest {
     lateinit var coffeeEventRepository: RealmCoffeeEventRepository
 
     @Before
@@ -51,9 +52,9 @@ class RealmCoffeeEventRepositoryTest {
 
     @Test
     fun recordBrewingEvent_WithUserId_SavesUserId() {
-        coffeeEventRepository.recordBrewingEvent("abc123")
+        coffeeEventRepository.recordBrewingEvent(User(id = "abc123"))
 
-        assertThat(coffeeEventRepository.getLastBrewingEvent()!!.userId, equalTo("abc123"))
+        assertThat(coffeeEventRepository.getLastBrewingEvent()!!.user!!.id, equalTo("abc123"))
     }
 
     @Test
@@ -68,35 +69,35 @@ class RealmCoffeeEventRepositoryTest {
     @Test
     fun getLastBrewingEvent_WhenHavingAccidentsAndSuccessfulEvents_ReturnsOnlyLastBrewingEvent() {
         val lastSuccessfulEvent = coffeeEventRepository.recordBrewingEvent()
-        coffeeEventRepository.recordBrewingAccident("test")
+        coffeeEventRepository.recordBrewingAccident(User())
 
         assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(lastSuccessfulEvent))
     }
 
     @Test
     fun getLastBrewingAccident_ReturnsLastBrewingAccident() {
-        val userId = "abc123"
-        coffeeEventRepository.recordBrewingAccident(userId)
-        coffeeEventRepository.recordBrewingAccident(userId)
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
 
-        val lastAccident = coffeeEventRepository.recordBrewingAccident(userId)
+        val lastAccident = coffeeEventRepository.recordBrewingAccident(user)
         assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(lastAccident))
     }
 
     @Test
     fun getAccidentCountForUser_ReturnsAccidentCountForThatSpecificUser() {
-        val userId = "abc123"
-        assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(0L))
+        val user = User(id = "abc123")
+        assertThat(coffeeEventRepository.getAccidentCountForUser(user), equalTo(0L))
 
-        coffeeEventRepository.recordBrewingAccident(userId)
-        coffeeEventRepository.recordBrewingAccident(userId)
-        coffeeEventRepository.recordBrewingAccident(userId)
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
 
-        val otherUserId = "someotherid"
-        coffeeEventRepository.recordBrewingAccident(otherUserId)
-        coffeeEventRepository.recordBrewingAccident(otherUserId)
+        val otherUser = User(id = "someotherid")
+        coffeeEventRepository.recordBrewingAccident(otherUser)
+        coffeeEventRepository.recordBrewingAccident(otherUser)
 
-        assertThat(coffeeEventRepository.getAccidentCountForUser(userId), equalTo(3L))
+        assertThat(coffeeEventRepository.getAccidentCountForUser(user), equalTo(3L))
     }
 
     private fun coffeeEventCount() =

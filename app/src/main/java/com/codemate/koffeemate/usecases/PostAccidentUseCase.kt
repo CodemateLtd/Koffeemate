@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.main
+package com.codemate.koffeemate.usecases
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.MediaType
@@ -29,28 +30,29 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import rx.Observable
 import rx.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-open class PostAccidentUseCase(
+open class PostAccidentUseCase @Inject constructor(
         var slackApi: SlackApi,
         val coffeeEventRepository: CoffeeEventRepository,
         val coffeePreferences: CoffeePreferences,
         val awardBadgeCreator: AwardBadgeCreator,
-        var subscriber: Scheduler,
-        var observer: Scheduler
+        @Named("subscriber") var subscriber: Scheduler,
+        @Named("observer") var observer: Scheduler
 ) {
     fun execute(
             comment: String,
-            userId: String,
-            userName: String,
+            user: User,
             profilePic: Bitmap
     ): Observable<Response<ResponseBody>> {
-        coffeeEventRepository.recordBrewingAccident(userId)
+        coffeeEventRepository.recordBrewingAccident(user)
 
-        val awardCount = coffeeEventRepository.getAccidentCountForUser(userId)
+        val awardCount = coffeeEventRepository.getAccidentCountForUser(user)
         val profilePicWithAward = awardBadgeCreator.createBitmapFileWithAward(profilePic, awardCount)
 
         // Evaluates to "johns-certificate.png" etc
-        val fileName = "${userName.toLowerCase()}s-certificate.png"
+        val fileName = "${user.profile.first_name.toLowerCase()}s-certificate.png"
         val channel = coffeePreferences.getAccidentChannel()
 
         return slackApi.postImage(

@@ -1,14 +1,16 @@
 package com.codemate.koffeemate.data.network
 
 import com.codemate.koffeemate.BuildConfig
-import com.codemate.koffeemate.data.network.models.UserListResponse
+import com.codemate.koffeemate.data.models.UserListResponse
 import com.codemate.koffeemate.extensions.toRequestBody
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import rx.Observable
 
@@ -40,5 +42,15 @@ interface SlackApi {
 
     companion object {
         val BASE_URL = HttpUrl.parse("https://slack.com/api/")!!
+
+        fun create(baseUrl: HttpUrl): SlackApi {
+            val retrofit = Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build()
+
+            return retrofit.create(SlackApi::class.java)
+        }
     }
 }

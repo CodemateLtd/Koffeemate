@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.userselector
+package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.UserRepository
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.SlackService
-import com.codemate.koffeemate.data.network.models.User
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.core.IsEqual.equalTo
@@ -28,10 +30,15 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import rx.observers.TestSubscriber
 import rx.schedulers.Schedulers
 
 class LoadUsersUseCaseTest {
+    @Mock
+    lateinit var mockUserRepository: UserRepository
+
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var useCase: LoadUsersUseCase
@@ -39,11 +46,14 @@ class LoadUsersUseCaseTest {
 
     @Before
     fun setUp() {
+        MockitoAnnotations.initMocks(this)
+
         mockServer = MockWebServer()
         mockServer.start()
 
-        slackApi = SlackService.getApi(mockServer.url("/"))
+        slackApi = SlackApi.create(mockServer.url("/"))
         useCase = LoadUsersUseCase(
+                mockUserRepository,
                 slackApi,
                 Schedulers.immediate(),
                 Schedulers.immediate()
@@ -67,14 +77,73 @@ class LoadUsersUseCaseTest {
     }
 
     @Test
-    fun execute_WithValidData_CallsOnNextWithUsersAndCompletes() {
-        val userListJson = getResourceFile("seeds/sample_userlist_response.json").readText()
-        mockServer.enqueue(MockResponse().setBody(userListJson))
+    fun execute_WhenLoadingUsersFromApi_CachesThem() {
+        enqueUserJsonResponseFromServer()
 
         useCase.execute().subscribe(testSubscriber)
         testSubscriber.assertValueCount(1)
 
         val userList = testSubscriber.onNextEvents[0]
+        verify(mockUserRepository).addAll(userList)
+    }
+
+    @Test
+    fun execute_WhenHasNoCachedUsers_LoadsThemFromApi() {
+        enqueUserJsonResponseFromServer()
+
+        useCase.execute().subscribe(testSubscriber)
+        testSubscriber.assertValueCount(1)
+
+        val userList = testSubscriber.onNextEvents[0]
+        verifyUsersFromApi(userList)
+    }
+
+    @Test
+    fun execute_WhenHasFreshEnoughCachedUsers_LoadsThemFromCache() {
+        val currentTime = System.currentTimeMillis()
+        val cachedUsers = listOf(
+                User(last_updated = currentTime),
+                User(last_updated = currentTime),
+                User(last_updated = currentTime)
+        )
+
+        whenever(mockUserRepository.getAll()).thenReturn(cachedUsers)
+        enqueUserJsonResponseFromServer()
+
+        useCase.execute().subscribe(testSubscriber)
+        testSubscriber.assertValueCount(1)
+
+        val userList = testSubscriber.onNextEvents[0]
+        assertThat(userList.size, equalTo(3))
+        assertThat(userList, equalTo(cachedUsers))
+    }
+
+    @Test
+    fun execute_WhenHasTooOldCachedUsers_LoadsThemFromApi() {
+        val currentTime = System.currentTimeMillis() - useCase.MAX_CACHE_STALENESS
+        val cachedUsers = listOf(
+                User(last_updated = currentTime),
+                User(last_updated = currentTime),
+                User(last_updated = currentTime)
+        )
+
+        whenever(mockUserRepository.getAll()).thenReturn(cachedUsers)
+        enqueUserJsonResponseFromServer()
+
+        useCase.execute().subscribe(testSubscriber)
+        testSubscriber.assertValueCount(1)
+
+        val userList = testSubscriber.onNextEvents[0]
+        verifyUsersFromApi(userList)
+    }
+
+    // Utility functions -->
+    private fun enqueUserJsonResponseFromServer() {
+        val userListJson = getResourceFile("seeds/sample_userlist_response.json").readText()
+        mockServer.enqueue(MockResponse().setBody(userListJson))
+    }
+
+    private fun verifyUsersFromApi(userList: List<User>) {
         assertThat(userList.size, equalTo(2))
 
         with(userList[0]) {

@@ -5,8 +5,10 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import com.codemate.koffeemate.usecases.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import okhttp3.ResponseBody
 import retrofit2.Response
 import rx.Subscriber
@@ -58,7 +60,7 @@ class MainPresenter @Inject constructor(
                                         getView()?.updateCoffeeProgress(0)
                                         getView()?.resetCoffeeViewStatus()
 
-                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee?.id)
+                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
                                         updateLastBrewingEventTime()
                                     }
 
@@ -107,13 +109,7 @@ class MainPresenter @Inject constructor(
 
         if (coffeePreferences.isAccidentChannelSet()) {
             personBrewingCoffee?.let {
-                getView()?.showPostAccidentAnnouncementPrompt(
-                        it.id,
-                        it.profile.real_name,
-                        it.profile.first_name,
-                        it.profile.largestAvailableImage
-                )
-
+                getView()?.showPostAccidentAnnouncementPrompt(it)
                 return
             }
 
@@ -123,10 +119,10 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun announceCoffeeBrewingAccident(comment: String, userId: String, userName: String, profilePic: Bitmap) {
+    fun announceCoffeeBrewingAccident(comment: String, user: User, profilePic: Bitmap) {
         ensureViewIsAttached()
 
-        postAccidentUseCase.execute(comment, userId, userName, profilePic).subscribe(
+        postAccidentUseCase.execute(comment, user, profilePic).subscribe(
                 object : Subscriber<Response<ResponseBody>>() {
                     override fun onNext(response: Response<ResponseBody>) {
                         getView()?.showAccidentPostedSuccessfullyMessage()

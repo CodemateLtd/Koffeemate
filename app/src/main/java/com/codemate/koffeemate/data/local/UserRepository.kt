@@ -14,19 +14,29 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.testutils
+package com.codemate.koffeemate.data.local
 
-import com.codemate.koffeemate.data.models.Profile
 import com.codemate.koffeemate.data.models.User
-import java.io.File
+import io.realm.Realm
 
-fun Any.getResourceFile(path: String): File {
-    return File(javaClass.classLoader.getResource(path).file)
+interface UserRepository {
+    fun addAll(users: List<User>)
+    fun getAll(): List<User>
 }
 
-fun fakeUser() = User().apply {
-    id = "abc123"
-    profile = Profile()
-    profile.first_name = "Jorma"
-    profile.real_name = "Jorma"
+class RealmUserRepository : UserRepository {
+    override fun addAll(users: List<User>) {
+        with(Realm.getDefaultInstance()) {
+            executeTransaction { copyToRealmOrUpdate(users) }
+            close()
+        }
+    }
+
+    override fun getAll(): List<User> = with(Realm.getDefaultInstance()) {
+        val all = where(User::class.java).findAll()
+        val copy = copyFromRealm(all)
+
+        close()
+        return@with copy
+    }
 }

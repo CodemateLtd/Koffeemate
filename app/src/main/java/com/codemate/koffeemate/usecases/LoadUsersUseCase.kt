@@ -14,22 +14,39 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.userselector
+package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.UserRepository
+import com.codemate.koffeemate.data.models.User
+import com.codemate.koffeemate.data.models.isFreshEnough
 import com.codemate.koffeemate.data.network.SlackApi
-import com.codemate.koffeemate.data.network.models.User
-import com.codemate.koffeemate.data.network.models.UserListResponse
 import rx.Observable
 import rx.Scheduler
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
-open class LoadUsersUseCase(
+open class LoadUsersUseCase @Inject constructor(
+        var userRepository: UserRepository,
         var slackApi: SlackApi,
-        var subscriber: Scheduler,
-        var observer: Scheduler
+        @Named("subscriber") var subscriber: Scheduler,
+        @Named("observer") var observer: Scheduler
 ) {
+    val MAX_CACHE_STALENESS = TimeUnit.HOURS.toMillis(12)
+
     fun execute(): Observable<List<User>> {
-        return slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN)
+        val currentTime = System.currentTimeMillis()
+        val cachedUsers = Observable.just(userRepository.getAll())
+        val networkUsers = slackApi.getUsers(BuildConfig.SLACK_AUTH_TOKEN)
+                .flatMap { userResponse ->
+                    val usersWithTimestamp = userResponse.members.toMutableList()
+                    usersWithTimestamp.forEach {
+                        it.last_updated = currentTime
+                    }
+
+                    Observable.just(usersWithTimestamp)
+                }
                 .subscribeOn(subscriber)
                 .observeOn(observer)
                 .map {
@@ -37,10 +54,17 @@ open class LoadUsersUseCase(
                         it.profile.real_name
                     }
                 }
+                .doOnNext { userRepository.addAll(it) }
+
+        return Observable
+                .concat(cachedUsers, networkUsers)
+                .first {
+                    it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
+                }
     }
 
-    private fun filterNonCompanyUsers(response: UserListResponse): List<User> {
-        return response.members.filter {
+    private fun filterNonCompanyUsers(response: List<User>): List<User> {
+        return response.filter {
                     !it.is_bot
                             // At Codemate, profiles starting with "Ext-" aren't employees,
                             // but customers instead: they don't hang out in the office.

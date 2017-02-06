@@ -17,9 +17,7 @@
 package com.codemate.koffeemate.di.modules
 
 import android.content.Context
-import com.codemate.koffeemate.data.local.CoffeeEventRepository
-import com.codemate.koffeemate.data.local.CoffeePreferences
-import com.codemate.koffeemate.data.local.RealmCoffeeEventRepository
+import com.codemate.koffeemate.data.local.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -33,4 +31,8 @@ class PersistenceModule {
     @Provides
     @Singleton
     fun provideCoffeeEventRepository(): CoffeeEventRepository = RealmCoffeeEventRepository()
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository = RealmUserRepository()
 }

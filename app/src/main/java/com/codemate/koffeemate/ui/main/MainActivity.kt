@@ -1,7 +1,6 @@
 package com.codemate.koffeemate.ui.main
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -10,12 +9,11 @@ import com.bumptech.glide.Glide
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.common.ScreenSaver
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
-import com.codemate.koffeemate.data.network.models.User
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.extensions.loadBitmap
 import com.codemate.koffeemate.ui.settings.SettingsActivity
-import com.codemate.koffeemate.ui.userselector.UserSelectorActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectorFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
@@ -23,7 +21,8 @@ import org.jetbrains.anko.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSelectListener {
-    private val REQUEST_CODE_SHAME_USER = 1
+    private val REQUEST_WHOS_BREWING = 1
+    private val REQUEST_WHO_FAILED_BREWING = 2
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -91,20 +90,28 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
 
     // Functions for identifying who brews the coffee
     override fun selectCoffeeBrewingPerson() {
-        UserSelectorFragment
-                .newInstance()
-                .show(supportFragmentManager, "user_selector")
+        UserSelectorFragment.newInstance(
+                title = getString(R.string.prompt_select_person_below),
+                requestCode = REQUEST_WHOS_BREWING
+        ).show(supportFragmentManager, "user_selector")
     }
 
     override fun clearCoffeeBrewingPerson() {
         coffeeProgressView.userSetterButton.clearUser()
     }
 
-    override fun onUserSelected(user: User) {
-        Glide.with(this)
-                .load(user.profile.smallestAvailableImage)
-                .into(coffeeProgressView.userSetterButton)
-        presenter.personBrewingCoffee = user
+    override fun onUserSelected(user: User, requestCode: Int) {
+        when (requestCode) {
+            REQUEST_WHOS_BREWING -> {
+                Glide.with(this)
+                        .load(user.profile.smallestAvailableImage)
+                        .into(coffeeProgressView.userSetterButton)
+                presenter.personBrewingCoffee = user
+            }
+            REQUEST_WHO_FAILED_BREWING -> {
+                showPostAccidentAnnouncementPrompt(user)
+            }
+        }
     }
 
     // MainView methods -->
@@ -156,35 +163,24 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
 
     // Shaming users for coffee brewing failures -->
     override fun launchUserSelector() {
-        startActivityForResult(
-                intentFor<UserSelectorActivity>(),
-                REQUEST_CODE_SHAME_USER
-        )
+        UserSelectorFragment.newInstance(
+                title = getString(R.string.prompt_who_is_guilty),
+                requestCode = REQUEST_WHO_FAILED_BREWING
+        ).show(supportFragmentManager, "user_selector")
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_SHAME_USER && resultCode == RESULT_OK && data != null) {
-            val userId = data.getStringExtra(UserSelectorActivity.RESULT_USER_ID)
-            val fullName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FULL_NAME)
-            val firstName = data.getStringExtra(UserSelectorActivity.RESULT_USER_FIRST_NAME)
-            val largestProfilePicUrl = data.getStringExtra(UserSelectorActivity.RESULT_USER_PROFILE_LARGEST_PIC_URL)
-
-            showPostAccidentAnnouncementPrompt(userId, fullName, firstName, largestProfilePicUrl)
-        }
-    }
-
-    override fun showPostAccidentAnnouncementPrompt(userId: String, fullName: String, firstName: String, largestProfilePicUrl: String) {
+    override fun showPostAccidentAnnouncementPrompt(user: User) {
         alert {
             title(R.string.prompt_reset_the_counter)
-            message(getString(R.string.message_posting_to_slack_fmt, fullName))
+            message(getString(R.string.message_posting_to_slack_fmt, user.profile.real_name))
 
             negativeButton(R.string.action_cancel)
             positiveButton(R.string.action_announce_coffee_accident) {
                 accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
-                val comment = getString(R.string.message_congratulations_to_user_fmt, firstName)
+                val comment = getString(R.string.message_congratulations_to_user_fmt, user.profile.first_name)
 
-                Glide.with(this@MainActivity).loadBitmap(largestProfilePicUrl) { profilePic ->
-                    presenter.announceCoffeeBrewingAccident(comment, userId, firstName, profilePic)
+                Glide.with(this@MainActivity).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
+                    presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
                 }
             }
         }.show()

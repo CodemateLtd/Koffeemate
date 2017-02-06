@@ -8,10 +8,12 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
-import com.codemate.koffeemate.data.local.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.usecases.PostAccidentUseCase
+import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -131,7 +133,7 @@ class MainPresenterTest {
 
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
-        verify(mockCoffeeEventRepository).recordBrewingEvent(user.id)
+        verify(mockCoffeeEventRepository).recordBrewingEvent(user)
     }
 
     @Test
@@ -226,12 +228,7 @@ class MainPresenterTest {
         presenter.personBrewingCoffee = user
         presenter.launchAccidentReportingScreen()
 
-        verify(view).showPostAccidentAnnouncementPrompt(
-                user.id,
-                user.profile.real_name,
-                user.profile.first_name,
-                user.profile.largestAvailableImage
-        )
+        verify(view).showPostAccidentAnnouncementPrompt(user)
         verifyNoMoreInteractions(view)
     }
 
@@ -273,7 +270,7 @@ class MainPresenterTest {
                 .thenReturn(emptySuccessResponse)
 
         presenter.personBrewingCoffee = fakeUser()
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         assertThat(presenter.personBrewingCoffee, nullValue())
     }
@@ -283,7 +280,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showAccidentPostedSuccessfullyMessage()
         verifyNoMoreInteractions(view)
@@ -294,7 +291,7 @@ class MainPresenterTest {
         whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
                 .thenReturn(Observable.error(Throwable()))
 
-        presenter.announceCoffeeBrewingAccident("", "", "", mock<Bitmap>())
+        presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showErrorPostingAccidentMessage()
     }
