@@ -16,7 +16,7 @@ def String getSlackAuthToken() {
 }
 
 private boolean isCiBuild() {
-    System.getenv("TRAVIS") == "true"
+    System.getenv("CI") == "true"
 }
 
 private String getApiKeyFromFile() {
