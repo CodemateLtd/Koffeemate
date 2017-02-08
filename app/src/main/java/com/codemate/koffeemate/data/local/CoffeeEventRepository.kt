@@ -62,7 +62,7 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .equalTo("isSuccessful", true)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
-        val copy = copyFromRealm(lastEvent)
+        val copy = if (lastEvent != null) copyFromRealm(lastEvent) else null
 
         close()
         return@with copy
@@ -73,7 +73,7 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .equalTo("isSuccessful", false)
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
-        val copy = copyFromRealm(accident)
+        val copy = if (accident != null) copyFromRealm(accident) else null
 
         close()
         return@with copy
