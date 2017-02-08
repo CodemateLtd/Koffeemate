@@ -43,7 +43,7 @@ class MigrationTest {
     @Test
     fun testMigrationFromVersionZeroToOne() {
         val config = RealmConfiguration.Builder()
-                .name("migration-test.realm")
+                .name("test.realm")
                 .schemaVersion(1)
                 .migration(Migration())
                 .build()
@@ -82,6 +82,7 @@ class MigrationTest {
         assertThat(brewingEventWithUserId.user!!.last_updated, equalTo(brewingAccident.user!!.last_updated))
 
         realm.close()
+        Realm.deleteRealm(config)
     }
 
     @Throws(IOException::class)

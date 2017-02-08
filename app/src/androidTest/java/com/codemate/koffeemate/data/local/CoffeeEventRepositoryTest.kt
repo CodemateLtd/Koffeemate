@@ -19,34 +19,21 @@ package com.codemate.koffeemate.data.local
 import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
 import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class CoffeeEventRepositoryTest {
-    val testConfig: RealmConfiguration = RealmConfiguration.Builder()
-            .name("test.realm")
-            .build()
-
     lateinit var coffeeEventRepository: RealmCoffeeEventRepository
+
+    @Rule @JvmField
+    val realmRule: RealmTestRule = RealmTestRule()
 
     @Before
     fun setUp() {
-        Realm.setDefaultConfiguration(testConfig)
-
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction(Realm::deleteAll)
-        realm.close()
-
         coffeeEventRepository = RealmCoffeeEventRepository()
-    }
-
-    @After
-    fun tearDown() {
-        Realm.deleteRealm(testConfig)
     }
 
     @Test

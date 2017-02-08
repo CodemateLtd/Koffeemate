@@ -17,38 +17,24 @@
 package com.codemate.koffeemate.data.local
 
 import com.codemate.koffeemate.data.models.User
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class UserRepositoryTest {
-    val testConfig: RealmConfiguration = RealmConfiguration.Builder()
-            .name("test.realm")
-            .build()
-
     val TEST_USERS_UNIQUE = listOf(User(id = "abc123"), User(id = "123abc"), User(id = "a1b2c3"))
     val TEST_USERS_DUPLICATE = listOf(User(id = "abc123"), User(id = "abc123"), User(id = "abc123"))
 
     lateinit var userRepository: UserRepository
 
+    @Rule @JvmField
+    val realmRule = RealmTestRule()
+
     @Before
     fun setUp() {
-        Realm.setDefaultConfiguration(testConfig)
-
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction(Realm::deleteAll)
-        realm.close()
-
         userRepository = RealmUserRepository()
-    }
-
-    @After
-    fun tearDown() {
-        Realm.deleteRealm(testConfig)
     }
 
     @Test
