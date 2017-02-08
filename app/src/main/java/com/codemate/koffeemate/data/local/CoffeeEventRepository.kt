@@ -26,44 +26,58 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
             }
         }
 
+        val copy = copyFromRealm(event)
         close()
-        return@with event!!
+        return@with copy!!
     }
 
     override fun recordBrewingAccident(user: User) = with(Realm.getDefaultInstance()) {
-        var event: CoffeeBrewingEvent? = null
+        var accident: CoffeeBrewingEvent? = null
         executeTransaction {
-            event = newEvent(it).apply {
+            accident = newEvent(it).apply {
                 time = System.currentTimeMillis()
                 isSuccessful = false
                 this.user = copyToRealmOrUpdate(user)
             }
         }
 
+        val copy = copyFromRealm(accident)
         close()
-        return@with event!!
+        return@with copy!!
     }
 
-    override fun getAccidentCountForUser(user: User) =
-            Realm.getDefaultInstance()
-                    .where(CoffeeBrewingEvent::class.java)
-                    .equalTo("isSuccessful", false)
-                    .equalTo("user.id", user.id)
-                    .count()
+    override fun getAccidentCountForUser(user: User) = with(Realm.getDefaultInstance()) {
+        val count = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", false)
+                .equalTo("user.id", user.id)
+                .count()
 
-    override fun getLastBrewingEvent() =
-            Realm.getDefaultInstance()
-                    .where(CoffeeBrewingEvent::class.java)
-                    .equalTo("isSuccessful", true)
-                    .findAllSorted("time", Sort.ASCENDING)
-                    .lastOrNull()
+        close()
+        return@with count
+    }
 
-    override fun getLastBrewingAccident() =
-            Realm.getDefaultInstance()
-                    .where(CoffeeBrewingEvent::class.java)
-                    .equalTo("isSuccessful", false)
-                    .findAllSorted("time", Sort.ASCENDING)
-                    .lastOrNull()
+
+    override fun getLastBrewingEvent() = with(Realm.getDefaultInstance()) {
+        val lastEvent = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .findAllSorted("time", Sort.ASCENDING)
+                .lastOrNull()
+        val copy = copyFromRealm(lastEvent)
+
+        close()
+        return@with copy
+    }
+
+    override fun getLastBrewingAccident() = with(Realm.getDefaultInstance()) {
+        val accident = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", false)
+                .findAllSorted("time", Sort.ASCENDING)
+                .lastOrNull()
+        val copy = copyFromRealm(accident)
+
+        close()
+        return@with copy
+    }
 
     private fun newEvent(realm: Realm) =
             realm.createObject(

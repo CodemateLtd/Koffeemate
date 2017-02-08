@@ -21,24 +21,32 @@ import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.hamcrest.core.IsEqual.equalTo
+import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 
 class CoffeeEventRepositoryTest {
+    val testConfig: RealmConfiguration = RealmConfiguration.Builder()
+            .name("test.realm")
+            .build()
+
     lateinit var coffeeEventRepository: RealmCoffeeEventRepository
 
     @Before
     fun setUp() {
-        val realmConfig = RealmConfiguration.Builder()
-                .name("test.realm")
-                .inMemory()
-                .build()
+        Realm.setDefaultConfiguration(testConfig)
 
-        Realm.setDefaultConfiguration(realmConfig)
-        Realm.getDefaultInstance().executeTransaction(Realm::deleteAll)
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction(Realm::deleteAll)
+        realm.close()
 
         coffeeEventRepository = RealmCoffeeEventRepository()
+    }
+
+    @After
+    fun tearDown() {
+        Realm.deleteRealm(testConfig)
     }
 
     @Test
@@ -63,7 +71,7 @@ class CoffeeEventRepositoryTest {
         coffeeEventRepository.recordBrewingEvent()
 
         val lastEvent = coffeeEventRepository.recordBrewingEvent()
-        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(lastEvent))
+        assertThat(coffeeEventRepository.getLastBrewingEvent()!!.id, equalTo(lastEvent.id))
     }
 
     @Test
@@ -71,7 +79,7 @@ class CoffeeEventRepositoryTest {
         val lastSuccessfulEvent = coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingAccident(User())
 
-        assertThat(coffeeEventRepository.getLastBrewingEvent(), equalTo(lastSuccessfulEvent))
+        assertThat(coffeeEventRepository.getLastBrewingEvent()!!.user, equalTo(lastSuccessfulEvent.user))
     }
 
     @Test
@@ -81,7 +89,8 @@ class CoffeeEventRepositoryTest {
         coffeeEventRepository.recordBrewingAccident(user)
 
         val lastAccident = coffeeEventRepository.recordBrewingAccident(user)
-        assertThat(coffeeEventRepository.getLastBrewingAccident(), equalTo(lastAccident))
+        assertThat(coffeeEventRepository.getLastBrewingAccident()!!.id, equalTo(lastAccident.id))
+        assertThat(coffeeEventRepository.getLastBrewingAccident()!!.user!!.id, equalTo(lastAccident.user!!.id))
     }
 
     @Test
@@ -100,8 +109,12 @@ class CoffeeEventRepositoryTest {
         assertThat(coffeeEventRepository.getAccidentCountForUser(user), equalTo(3L))
     }
 
-    private fun coffeeEventCount() =
-            Realm.getDefaultInstance().where(CoffeeBrewingEvent::class.java)
-                    .equalTo("isSuccessful", true)
-                    .count()
+    private fun coffeeEventCount() = with(Realm.getDefaultInstance()) {
+        val count = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .count()
+        close()
+
+        return@with count
+    }
 }
