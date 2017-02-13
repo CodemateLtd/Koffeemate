@@ -96,6 +96,30 @@ class CoffeeEventRepositoryTest {
         assertThat(coffeeEventRepository.getAccidentCountForUser(user), equalTo(3L))
     }
 
+    @Test
+    fun getTopBrewers_ReturnsTopBrewersSorted() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val brewingMaster = User(id = "abc123")
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+
+        val brewingApprentice = User(id = "a1b2c3")
+        coffeeEventRepository.recordBrewingEvent(brewingApprentice)
+        coffeeEventRepository.recordBrewingEvent(brewingApprentice)
+
+        val brewingNoob = User(id = "cba321")
+        coffeeEventRepository.recordBrewingEvent(brewingNoob)
+
+        val sortedBrewers = coffeeEventRepository.getTopBrewers()
+        assertThat(sortedBrewers.size, equalTo(3))
+        assertThat(sortedBrewers[0].id, equalTo(brewingMaster.id))
+        assertThat(sortedBrewers[1].id, equalTo(brewingApprentice.id))
+        assertThat(sortedBrewers[2].id, equalTo(brewingNoob.id))
+    }
+
     private fun coffeeEventCount() = with(Realm.getDefaultInstance()) {
         val count = where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", true)
