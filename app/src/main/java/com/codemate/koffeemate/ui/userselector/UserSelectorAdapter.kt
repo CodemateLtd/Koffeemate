@@ -12,9 +12,9 @@ import com.codemate.koffeemate.data.models.User
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 import org.jetbrains.anko.onClick
 
-class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
+open class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit) :
         RecyclerView.Adapter<UserSelectorAdapter.ViewHolder>() {
-    private var users = emptyList<User>()
+    internal var users = emptyList<User>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

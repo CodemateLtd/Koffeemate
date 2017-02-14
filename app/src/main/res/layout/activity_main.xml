@@ -68,4 +68,10 @@
         android:layout_marginBottom="16dp"
         app:backgroundTint="#D74943" />
 
+    <com.codemate.koffeemate.views.UserQuickDialView
+        android:id="@+id/userQuickDial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"/>
+
 </FrameLayout>
