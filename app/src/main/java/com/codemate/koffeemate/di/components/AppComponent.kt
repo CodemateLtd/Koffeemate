@@ -17,7 +17,7 @@
 package com.codemate.koffeemate.di.components
 
 import com.codemate.koffeemate.di.modules.*
-import com.codemate.koffeemate.ui.userselector.UserSelectorFragment
+import com.codemate.koffeemate.ui.userselector.UserSelectorOverlay
 import dagger.Component
 import javax.inject.Singleton
 
@@ -29,7 +29,7 @@ import javax.inject.Singleton
         ThreadingModule::class)
 )
 interface AppComponent {
-    fun inject(userSelectorFragment: UserSelectorFragment)
+    fun inject(userSelectorOverlay: UserSelectorOverlay)
 
     fun plus(activityModule: ActivityModule): ActivityComponent
 }

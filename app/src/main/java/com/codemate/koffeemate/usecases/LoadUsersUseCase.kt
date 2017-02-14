@@ -48,7 +48,6 @@ open class LoadUsersUseCase @Inject constructor(
                     Observable.just(usersWithTimestamp)
                 }
                 .subscribeOn(subscriber)
-                .observeOn(observer)
                 .map {
                     filterNonCompanyUsers(it).sortedBy {
                         it.profile.real_name
@@ -61,6 +60,7 @@ open class LoadUsersUseCase @Inject constructor(
                 .first {
                     it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
                 }
+                .observeOn(observer)
     }
 
     private fun filterNonCompanyUsers(response: List<User>): List<User> {
@@ -70,7 +70,7 @@ open class LoadUsersUseCase @Inject constructor(
                             // but customers instead: they don't hang out in the office.
                             && !it.profile.first_name.toLowerCase().startsWith("ext-")
                             && it.real_name != "slackbot"
-                            && it.deleted == false
+                            && !it.deleted
                 }
     }
 }
