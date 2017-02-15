@@ -5,7 +5,6 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
-import com.codemate.koffeemate.data.local.RealmUserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
