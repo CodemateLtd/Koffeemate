@@ -31,6 +31,8 @@ import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 
 class UserQuickDialView : FrameLayout {
+    private val HIDE_DELAY_MS = 10000L
+
     constructor(ctx: Context) : super(ctx)
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 
@@ -78,7 +80,7 @@ class UserQuickDialView : FrameLayout {
             hideListener()
         }
 
-        handler.postDelayed(resetRunnable, 10000)
+        handler.postDelayed(resetRunnable, HIDE_DELAY_MS)
     }
 
     fun reset() {
