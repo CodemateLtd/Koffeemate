@@ -131,6 +131,16 @@ class CoffeeEventRepositoryTest {
     }
 
     @Test
+    fun getTopBrewers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+
+        val topBrewers = coffeeEventRepository.getTopBrewers()
+        assertTrue(topBrewers.isEmpty())
+    }
+
+    @Test
     fun getLatestBrewers_WhenHasBrewers_ReturnsAllSortedByLatest() {
         val oldest = User(id = "abc123")
         coffeeEventRepository.recordBrewingEvent(oldest)
@@ -155,6 +165,16 @@ class CoffeeEventRepositoryTest {
     fun getLatestBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
         coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
+
+        val latestBrewers = coffeeEventRepository.getLatestBrewers()
+        assertTrue(latestBrewers.isEmpty())
+    }
+
+    @Test
+    fun getLatestBrewers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
 
         val latestBrewers = coffeeEventRepository.getLatestBrewers()
         assertTrue(latestBrewers.isEmpty())

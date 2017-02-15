@@ -84,6 +84,7 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
 
     override fun getTopBrewers() = with(Realm.getDefaultInstance()) {
         val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
                 .isNotNull("user")
                 .findAll()
 
@@ -100,6 +101,7 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
 
     override fun getLatestBrewers() = with(Realm.getDefaultInstance()) {
         val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
                 .isNotNull("user")
                 .findAllSorted("time", Sort.DESCENDING)
 
