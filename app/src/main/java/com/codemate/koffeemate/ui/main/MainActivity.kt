@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
 
         userQuickDial.userSelectListener = this
         userQuickDial.onMoreClickedListener = {
+            coffeeProgressView.userSetterButton.show()
             showUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
         }
     }
