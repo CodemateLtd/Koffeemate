@@ -9,7 +9,11 @@ interface MainView : MvpView {
     fun showCancelCoffeeProgressPrompt()
 
     fun displayUserSelectorQuickDial(users: List<User>)
+    fun displayFullscreenUserSelector()
+    fun clearCoffeeBrewingPerson()
+
     fun displayUserSetterButton()
+    fun hideUserSetterButton()
 
     fun updateLastBrewingEvent(event: CoffeeBrewingEvent)
     fun updateCoffeeProgress(newProgress: Int)
@@ -18,10 +22,6 @@ interface MainView : MvpView {
     fun showNoAnnouncementChannelSetError()
     fun showNoAccidentChannelSetError()
 
-    fun selectCoffeeBrewingPerson()
-    fun clearCoffeeBrewingPerson()
-
-    fun launchUserSelector()
     fun showPostAccidentAnnouncementPrompt(user: User)
     fun showAccidentPostedSuccessfullyMessage()
     fun showErrorPostingAccidentMessage()

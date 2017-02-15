@@ -38,9 +38,12 @@ class MainPresenter @Inject constructor(
         }
 
         if (!brewingProgressUpdater.isUpdating) {
-            personBrewingCoffee = null
             getView()?.showNewCoffeeIsComing()
-            displayUserSelector()
+            personBrewingCoffee = null
+
+            if(!displayUserQuickDial()) {
+                getView()?.displayUserSetterButton()
+            }
 
             brewingProgressUpdater.startUpdating(
                     updateListener = { progress ->
@@ -75,16 +78,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private fun displayUserSelector() {
-        val brewers = coffeeEventRepository.getLatestBrewers().take(4)
-
-        if (brewers.isNotEmpty()) {
-            getView()?.displayUserSelectorQuickDial(brewers)
-        } else {
-            getView()?.displayUserSetterButton()
-        }
-    }
-
     private fun shouldAskForAnnouncementChannel(): Boolean {
         return !brewingProgressUpdater.isUpdating
                 && !coffeePreferences.isCoffeeAnnouncementChannelSet()
@@ -92,7 +85,11 @@ class MainPresenter @Inject constructor(
 
     fun handlePersonChange() {
         if (personBrewingCoffee == null) {
-            getView()?.selectCoffeeBrewingPerson()
+            getView()?.hideUserSetterButton()
+
+            if(!displayUserQuickDial()) {
+                getView()?.displayFullscreenUserSelector()
+            }
         } else {
             personBrewingCoffee = null
             getView()?.clearCoffeeBrewingPerson()
@@ -124,7 +121,7 @@ class MainPresenter @Inject constructor(
                 return
             }
 
-            getView()?.launchUserSelector()
+            getView()?.displayFullscreenUserSelector()
         } else {
             getView()?.showNoAccidentChannelSetError()
         }
@@ -147,5 +144,16 @@ class MainPresenter @Inject constructor(
                     override fun onCompleted() {
                     }
                 })
+    }
+
+    private fun displayUserQuickDial(): Boolean {
+        val latestBrewers = coffeeEventRepository.getLatestBrewers().take(4)
+
+        if (latestBrewers.isNotEmpty()) {
+            getView()?.displayUserSelectorQuickDial(latestBrewers)
+            return true
+        }
+
+        return false
     }
 }

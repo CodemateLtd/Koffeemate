@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestListener
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.common.ScreenSaver
@@ -68,7 +67,6 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
 
         userQuickDial.userSelectListener = this
         userQuickDial.onMoreClickedListener = {
-            coffeeProgressView.userSetterButton.show()
             showUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
         }
     }
@@ -103,8 +101,13 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
         container.addView(selector)
     }
 
-    // Functions for identifying who brews the coffee
-    override fun selectCoffeeBrewingPerson() {
+    override fun displayUserSelectorQuickDial(users: List<User>) {
+        userQuickDial.setUsers(users) {
+            coffeeProgressView.userSetterButton.show()
+        }
+    }
+
+    override fun displayFullscreenUserSelector() {
         showUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
     }
 
@@ -112,11 +115,19 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
         coffeeProgressView.userSetterButton.clearUser()
     }
 
+    override fun displayUserSetterButton() {
+        coffeeProgressView.userSetterButton.show()
+    }
+
+    override fun hideUserSetterButton() {
+        coffeeProgressView.userSetterButton.hide()
+    }
+
     override fun onUserSelected(user: User, requestCode: Int) {
+        coffeeProgressView.userSetterButton.show()
+
         when (requestCode) {
             UserSelectListener.REQUEST_WHOS_BREWING -> {
-                coffeeProgressView.userSetterButton.show()
-
                 Glide.with(this)
                         .load(user.profile.smallestAvailableImage)
                         .error(R.drawable.ic_user_unknown)
@@ -150,16 +161,6 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
         }.show()
     }
 
-    override fun displayUserSelectorQuickDial(users: List<User>) {
-        userQuickDial.setUsers(users) {
-            coffeeProgressView.userSetterButton.show()
-        }
-    }
-
-    override fun displayUserSetterButton() {
-        coffeeProgressView.userSetterButton.show()
-    }
-
     override fun updateLastBrewingEvent(event: CoffeeBrewingEvent) {
         lastBrewingEventTime.setTime(event.time)
     }
@@ -185,11 +186,6 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
     override fun showNoAccidentChannelSetError() {
         longToast(R.string.prompt_no_accident_channel_set)
         startActivity(intentFor<SettingsActivity>())
-    }
-
-    // Shaming users for coffee brewing failures -->
-    override fun launchUserSelector() {
-        showUserSelector(UserSelectListener.REQUEST_WHO_FAILED_BREWING)
     }
 
     override fun showPostAccidentAnnouncementPrompt(user: User) {

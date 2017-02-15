@@ -178,18 +178,8 @@ class MainPresenterTest {
     }
 
     @Test
-    fun displayUserSelector_WhenNoTopBrewers_ShowsUserSetterButton() {
-        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(emptyList())
-        expectSuccessfulPostMessageResponse()
-
-        presenter.startDelayedCoffeeAnnouncement("")
-        verify(view, times(1)).displayUserSetterButton()
-    }
-
-    @Test
-    fun displayUserSelector_WhenBrewersExist_ShowsUserQuickDial() {
+    fun startDelayedCoffeeAnnouncement_WhenHasLatestBrewers_ShowsUserQuickDial() {
         val latestBrewers = listOf(fakeUser())
-
         whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
         expectSuccessfulPostMessageResponse()
 
@@ -198,7 +188,16 @@ class MainPresenterTest {
     }
 
     @Test
-    fun displayUserSelectorQuickDial_DisplaysFourLatesBrewersAtMost() {
+    fun startDelayedCoffeeAnnouncement_WhenNoLatestBrewers_ShowsFullscreenUserSelector() {
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(emptyList())
+        expectSuccessfulPostMessageResponse()
+
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(view, times(1)).displayUserSetterButton()
+    }
+
+    @Test
+    fun userQuickDial_DisplaysFourLatestBrewersAtMost() {
         val latestBrewers = listOf(fakeUser(), fakeUser(), fakeUser(), fakeUser(), fakeUser())
 
         whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
@@ -215,11 +214,10 @@ class MainPresenterTest {
     }
 
     @Test
-    fun handlePersonChange_WhenPersonNotSet_ShowsPersonSelectionDialog() {
+    fun handlePersonChange_WhenPersonNotSet_ShowsFullScreenUserSelector() {
         presenter.handlePersonChange()
-
-        verify(view).selectCoffeeBrewingPerson()
-        verifyNoMoreInteractions(view)
+        verify(view).hideUserSetterButton()
+        verify(view).displayFullscreenUserSelector()
     }
 
     @Test
@@ -252,7 +250,7 @@ class MainPresenterTest {
     fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeNotKnown_ShowsUserSelector() {
         presenter.launchAccidentReportingScreen()
 
-        verify(view).launchUserSelector()
+        verify(view).displayFullscreenUserSelector()
         verifyNoMoreInteractions(view)
     }
 
