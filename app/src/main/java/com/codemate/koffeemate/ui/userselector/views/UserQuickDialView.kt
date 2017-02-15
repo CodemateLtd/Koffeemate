@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.views
+package com.codemate.koffeemate.ui.userselector.views
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -24,8 +24,8 @@ import android.widget.FrameLayout
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.userselector.UserItemAnimator
-import com.codemate.koffeemate.ui.userselector.UserQuickDialAdapter
 import com.codemate.koffeemate.ui.userselector.UserSelectListener
+import com.codemate.koffeemate.ui.userselector.adapter.UserQuickDialAdapter
 import kotlinx.android.synthetic.main.view_user_quick_dial.view.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
@@ -51,7 +51,7 @@ class UserQuickDialView : FrameLayout {
         userSelectorAdapter = UserQuickDialAdapter(
                 onUserSelectedListener = {
                     reset()
-                    userSelectListener?.onUserSelected(it, UserSelectListener.REQUEST_WHOS_BREWING)
+                    userSelectListener?.onUserSelected(it, UserSelectListener.Companion.REQUEST_WHOS_BREWING)
                 },
                 onMoreClickedListener = {
                     reset()

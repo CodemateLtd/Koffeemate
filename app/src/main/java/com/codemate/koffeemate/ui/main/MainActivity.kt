@@ -16,7 +16,7 @@ import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.extensions.loadBitmap
 import com.codemate.koffeemate.ui.settings.SettingsActivity
 import com.codemate.koffeemate.ui.userselector.UserSelectListener
-import com.codemate.koffeemate.ui.userselector.UserSelectorOverlay
+import com.codemate.koffeemate.ui.userselector.views.UserSelectorOverlay
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
 import org.jetbrains.anko.*

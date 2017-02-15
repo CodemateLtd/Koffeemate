@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.ui.userselector
+package com.codemate.koffeemate.ui.userselector.views
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
@@ -24,8 +24,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.codemate.koffeemate.KoffeemateApp
 import com.codemate.koffeemate.R
-import com.codemate.koffeemate.ui.userselector.UserItemAnimator
 import com.codemate.koffeemate.data.models.User
+import com.codemate.koffeemate.ui.userselector.UserItemAnimator
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
+import com.codemate.koffeemate.ui.userselector.UserSelectorPresenter
+import com.codemate.koffeemate.ui.userselector.UserSelectorView
+import com.codemate.koffeemate.ui.userselector.adapter.UserSelectorAdapter
 import kotlinx.android.synthetic.main.view_user_selector.view.*
 import org.jetbrains.anko.onClick
 import javax.inject.Inject

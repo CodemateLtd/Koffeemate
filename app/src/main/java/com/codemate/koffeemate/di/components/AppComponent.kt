@@ -17,7 +17,7 @@
 package com.codemate.koffeemate.di.components
 
 import com.codemate.koffeemate.di.modules.*
-import com.codemate.koffeemate.ui.userselector.UserSelectorOverlay
+import com.codemate.koffeemate.ui.userselector.views.UserSelectorOverlay
 import dagger.Component
 import javax.inject.Singleton
 

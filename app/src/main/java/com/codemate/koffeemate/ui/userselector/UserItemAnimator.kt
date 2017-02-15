@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.view.animation.DecelerateInterpolator
+import com.codemate.koffeemate.ui.userselector.adapter.UserSelectorAdapter
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 
 class UserItemAnimator : DefaultItemAnimator() {
