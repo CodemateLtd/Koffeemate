@@ -180,6 +180,47 @@ class CoffeeEventRepositoryTest {
         assertTrue(latestBrewers.isEmpty())
     }
 
+    @Test
+    fun getAllBrewers_WhenHasBrewers_ReturnsAll() {
+        val first = User(id = "abc123")
+        coffeeEventRepository.recordBrewingEvent(first)
+        coffeeEventRepository.recordBrewingEvent(first)
+
+        val second = User(id = "a1b2c3")
+        coffeeEventRepository.recordBrewingEvent(second)
+        coffeeEventRepository.recordBrewingEvent(second)
+
+        val third = User(id = "cba321")
+        coffeeEventRepository.recordBrewingEvent(third)
+        coffeeEventRepository.recordBrewingEvent(third)
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+        assertThat(brewers.size, equalTo(3))
+        assertThat(brewers[0].id, equalTo(first.id))
+        assertThat(brewers[1].id, equalTo(second.id))
+        assertThat(brewers[2].id, equalTo(third.id))
+    }
+
+    @Test
+    fun getAllBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+        assertTrue(brewers.isEmpty())
+    }
+
+    @Test
+    fun getAllUsers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+
+        assertTrue(brewers.isEmpty())
+    }
+
     private fun coffeeEventCount() = with(Realm.getDefaultInstance()) {
         val count = where(CoffeeBrewingEvent::class.java)
                 .equalTo("isSuccessful", true)

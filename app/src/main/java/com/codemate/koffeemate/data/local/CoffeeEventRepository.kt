@@ -16,6 +16,7 @@ interface CoffeeEventRepository {
 
     fun getTopBrewers(): List<User>
     fun getLatestBrewers(): List<User>
+    fun getAllBrewers(): List<User>
 }
 
 class RealmCoffeeEventRepository : CoffeeEventRepository {
@@ -104,6 +105,22 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .equalTo("isSuccessful", true)
                 .isNotNull("user")
                 .findAllSorted("time", Sort.DESCENDING)
+
+        val copy = copyFromRealm(users)
+                .groupBy(CoffeeBrewingEvent::user)
+                .entries
+                .map { it.key }
+                .filterNotNull()
+
+        close()
+        return@with copy
+    }
+
+    override fun getAllBrewers() = with(Realm.getDefaultInstance()) {
+        val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .isNotNull("user")
+                .findAll()
 
         val copy = copyFromRealm(users)
                 .groupBy(CoffeeBrewingEvent::user)
