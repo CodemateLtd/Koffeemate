@@ -191,23 +191,23 @@ class MainPresenterTest {
     }
 
     @Test
-    fun displayUserSelector_WhenTopBrewersExist_ShowsUserQuickDial() {
-        val topBrewers = listOf(fakeUser())
+    fun displayUserSelector_WhenBrewersExist_ShowsUserQuickDial() {
+        val latestBrewers = listOf(fakeUser())
 
-        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(topBrewers)
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
         whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
         whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)
 
         presenter.startDelayedCoffeeAnnouncement("")
-        verify(view, times(1)).displayUserSelectorQuickDial(topBrewers)
+        verify(view, times(1)).displayUserSelectorQuickDial(latestBrewers)
     }
 
     @Test
-    fun displayUserSelectorQuickDial_DisplaysFourTopBrewersAtMost() {
-        val topBrewers = listOf(fakeUser(), fakeUser(), fakeUser(), fakeUser(), fakeUser())
+    fun displayUserSelectorQuickDial_DisplaysFourLatesBrewersAtMost() {
+        val latestBrewers = listOf(fakeUser(), fakeUser(), fakeUser(), fakeUser(), fakeUser())
 
-        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(topBrewers)
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
         whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
         whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
                 .thenReturn(emptySuccessResponse)

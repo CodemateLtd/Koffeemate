@@ -76,7 +76,7 @@ class MainPresenter @Inject constructor(
     }
 
     private fun displayUserSelector() {
-        val brewers = coffeeEventRepository.getTopBrewers().take(4)
+        val brewers = coffeeEventRepository.getLatestBrewers().take(4)
 
         if (brewers.isNotEmpty()) {
             getView()?.displayUserSelectorQuickDial(brewers)
