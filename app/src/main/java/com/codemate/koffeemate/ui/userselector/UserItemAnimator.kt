@@ -26,14 +26,7 @@ import kotlinx.android.synthetic.main.recycler_item_user.view.*
 class UserItemAnimator : DefaultItemAnimator() {
     private val interpolator = DecelerateInterpolator(3f)
 
-    override fun getSupportsChangeAnimations() = true
-
     override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
-        runEnterAnimation(viewHolder)
-        return true
-    }
-
-    private fun runEnterAnimation(viewHolder: RecyclerView.ViewHolder) {
         if (viewHolder is UserSelectorAdapter.ViewHolder) {
             viewHolder.itemView.userName.alpha = 0f
 
@@ -59,5 +52,7 @@ class UserItemAnimator : DefaultItemAnimator() {
                     .rotation(0f)
                     .start()
         }
+
+        return true
     }
 }

@@ -5,6 +5,7 @@ import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
+import com.codemate.koffeemate.data.local.RealmUserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
@@ -40,6 +41,7 @@ class MainPresenter @Inject constructor(
         if (!brewingProgressUpdater.isUpdating) {
             personBrewingCoffee = null
             getView()?.showNewCoffeeIsComing()
+            displayUserSelector()
 
             brewingProgressUpdater.startUpdating(
                     updateListener = { progress ->
@@ -71,6 +73,16 @@ class MainPresenter @Inject constructor(
             )
         } else {
             getView()?.showCancelCoffeeProgressPrompt()
+        }
+    }
+
+    private fun displayUserSelector() {
+        val brewers = coffeeEventRepository.getTopBrewers().take(4)
+
+        if (brewers.isNotEmpty()) {
+            getView()?.displayUserSelectorQuickDial(brewers)
+        } else {
+            getView()?.displayUserSetterButton()
         }
     }
 

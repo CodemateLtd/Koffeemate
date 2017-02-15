@@ -9,6 +9,7 @@ import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
@@ -17,6 +18,7 @@ import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
+import org.hamcrest.core.IsEqual.equalTo
 import org.hamcrest.core.IsNull.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -175,6 +177,49 @@ class MainPresenterTest {
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
         verifyZeroInteractions(mockCoffeeEventRepository)
+    }
+
+    @Test
+    fun displayUserSelector_WhenNoTopBrewers_ShowsUserSetterButton() {
+        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(emptyList())
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(view, times(1)).displayUserSetterButton()
+    }
+
+    @Test
+    fun displayUserSelector_WhenTopBrewersExist_ShowsUserQuickDial() {
+        val topBrewers = listOf(fakeUser())
+
+        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(topBrewers)
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(view, times(1)).displayUserSelectorQuickDial(topBrewers)
+    }
+
+    @Test
+    fun displayUserSelectorQuickDial_DisplaysFourTopBrewersAtMost() {
+        val topBrewers = listOf(fakeUser(), fakeUser(), fakeUser(), fakeUser(), fakeUser())
+
+        whenever(mockCoffeeEventRepository.getTopBrewers()).thenReturn(topBrewers)
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+
+        presenter.startDelayedCoffeeAnnouncement("")
+
+        argumentCaptor<List<User>>().apply {
+            verify(view, times(1)).displayUserSelectorQuickDial(capture())
+
+            val users = allValues.first()
+            assertThat(users.size, equalTo(4))
+        }
     }
 
     @Test

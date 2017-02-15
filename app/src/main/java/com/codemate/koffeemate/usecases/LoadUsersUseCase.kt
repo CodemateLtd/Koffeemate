@@ -48,11 +48,7 @@ open class LoadUsersUseCase @Inject constructor(
                     Observable.just(usersWithTimestamp)
                 }
                 .subscribeOn(subscriber)
-                .map {
-                    filterNonCompanyUsers(it).sortedBy {
-                        it.profile.real_name
-                    }
-                }
+                .map { filterNonCompanyUsers(it) }
                 .doOnNext { userRepository.addAll(it) }
 
         return Observable
@@ -60,6 +56,7 @@ open class LoadUsersUseCase @Inject constructor(
                 .first {
                     it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
                 }
+                .map { it.sortedBy { it.profile.real_name } }
                 .observeOn(observer)
     }
 

@@ -30,7 +30,7 @@ open class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit)
 
     override fun getItemCount() = users.size
 
-    fun setItems(users: List<User>) {
+    open fun setItems(users: List<User>) {
         val diffResult = DiffUtil.calculateDiff(UserDiffCallback(this.users, users))
         this.users = users
         diffResult.dispatchUpdatesTo(this)
@@ -46,6 +46,11 @@ open class UserSelectorAdapter(val onUserSelectedListener: (user: User) -> Unit)
 
             onClick { onUserSelectedListener(user) }
         }
+    }
+
+    fun clear() {
+        this.users = emptyList()
+        notifyDataSetChanged()
     }
 }
 

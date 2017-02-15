@@ -21,6 +21,7 @@ import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -97,7 +98,7 @@ class CoffeeEventRepositoryTest {
     }
 
     @Test
-    fun getTopBrewers_ReturnsTopBrewersSorted() {
+    fun getTopBrewers_WhenHasBrewers_ReturnsTopBrewersSorted() {
         coffeeEventRepository.recordBrewingEvent()
         coffeeEventRepository.recordBrewingEvent()
 
@@ -118,6 +119,15 @@ class CoffeeEventRepositoryTest {
         assertThat(sortedBrewers[0].id, equalTo(brewingMaster.id))
         assertThat(sortedBrewers[1].id, equalTo(brewingApprentice.id))
         assertThat(sortedBrewers[2].id, equalTo(brewingNoob.id))
+    }
+
+    @Test
+    fun getTopBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val topBrewers = coffeeEventRepository.getTopBrewers()
+        assertTrue(topBrewers.isEmpty())
     }
 
     private fun coffeeEventCount() = with(Realm.getDefaultInstance()) {

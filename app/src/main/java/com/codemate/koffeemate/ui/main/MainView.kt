@@ -8,6 +8,9 @@ interface MainView : MvpView {
     fun showNewCoffeeIsComing()
     fun showCancelCoffeeProgressPrompt()
 
+    fun displayUserSelectorQuickDial(users: List<User>)
+    fun displayUserSetterButton()
+
     fun updateLastBrewingEvent(event: CoffeeBrewingEvent)
     fun updateCoffeeProgress(newProgress: Int)
     fun resetCoffeeViewStatus()

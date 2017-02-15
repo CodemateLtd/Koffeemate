@@ -21,64 +21,113 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import com.codemate.koffeemate.R
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.userselector.UserItemAnimator
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.ui.userselector.UserSelectorAdapter
 import kotlinx.android.synthetic.main.recycler_item_user.view.*
 import kotlinx.android.synthetic.main.view_user_quick_dial.view.*
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.onClick
 
 class UserQuickDialView : FrameLayout {
     constructor(ctx: Context) : super(ctx)
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 
     var userSelectorAdapter: UserQuickDialAdapter
+    var hideOffset = 0f
+    var resetRunnable: Runnable? = null
+    var userSelectListener: UserSelectListener? = null
+    var onMoreClickedListener: (() -> Unit)? = null
 
     init {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         backgroundResource = R.drawable.background_shadow
-        alpha = 0.2f
 
         inflate(context, R.layout.view_user_quick_dial, this)
 
-        userSelectorAdapter = UserQuickDialAdapter {}
+        userSelectorAdapter = UserQuickDialAdapter(
+                onUserSelectedListener = {
+                    reset()
+                    userSelectListener?.onUserSelected(it, UserSelectListener.REQUEST_WHOS_BREWING)
+                },
+                onMoreClickedListener = {
+                    reset()
+                    onMoreClickedListener?.invoke()
+                }
+        )
+
         quickDialRecycler.adapter = userSelectorAdapter
         quickDialRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         quickDialRecycler.itemAnimator = UserItemAnimator()
+
+        hideOffset = dip(200).toFloat()
+        translationY = hideOffset
+        alpha = 0f
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        translationY = height.toFloat()
-    }
+    fun setUsers(users: List<User>, hideListener: () -> Unit) {
+        userSelectorAdapter.setItems(users)
 
-    fun setUsers(users: List<User>) {
-        animate().setDuration(300)
-                .alpha(1f)
+        animate().alpha(1f)
                 .translationY(0f)
-                .withEndAction { userSelectorAdapter.setItems(users) }
                 .start()
 
-        postDelayed({
-            animate().setDuration(300)
-                    .translationY(height.toFloat())
-                    .alpha(0f)
-                    .start()
-        }, 3000)
+        resetRunnable = Runnable {
+            reset()
+            hideListener()
+        }
+
+        handler.postDelayed(resetRunnable, 10000)
+    }
+
+    fun reset() {
+        handler.removeCallbacks(resetRunnable)
+        animate().alpha(0f)
+                .translationY(hideOffset)
+                .withEndAction {
+                    userSelectorAdapter.clear()
+                }
+                .start()
     }
 }
 
-class UserQuickDialAdapter(onUserSelectedListener: (User) -> Unit)
-    : UserSelectorAdapter(onUserSelectedListener) {
+class UserQuickDialAdapter(
+        onUserSelectedListener: (User) -> Unit,
+        private val onMoreClickedListener: () -> Unit) : UserSelectorAdapter(onUserSelectedListener) {
     val accelerateDecelerateInterpolator = AccelerateDecelerateInterpolator()
 
+    private val TYPE_USER = 1
+    private val TYPE_MORE = 2
+
+    override fun getItemCount() =
+            if (users.isEmpty()) 0
+            else users.size + 1
+
+    override fun getItemViewType(position: Int) =
+            if (position < users.size)
+                TYPE_USER
+            else
+                TYPE_MORE
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        holder.itemView.userName.text = users[position].profile.first_name
+        when (getItemViewType(position)) {
+            TYPE_USER -> {
+                super.onBindViewHolder(holder, position)
+                holder.itemView.userName.text = users[position].profile.first_name
+
+            }
+            TYPE_MORE -> {
+                holder.itemView.profileImage.imageResource = R.mipmap.ic_launcher
+                holder.itemView.userName.text = holder.itemView.context.getString(R.string.more)
+                holder.itemView.onClick { onMoreClickedListener?.invoke() }
+            }
+        }
 
         with(ObjectAnimator.ofFloat(1f, 0f)) {
             interpolator = accelerateDecelerateInterpolator

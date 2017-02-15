@@ -86,5 +86,6 @@
     <!-- Error messages -->
     <string name="error_could_not_post_message">Couldn\'t post to Slack about new MoccaMaster graduate for some reason. :(</string>
     <string name="error_loading_profiles">Couldn\'t load the profile list. :(</string>
+    <string name="more">More</string>
 
 </resources>

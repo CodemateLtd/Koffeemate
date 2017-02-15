@@ -47,10 +47,6 @@ class UserSelectorOverlay : FrameLayout, UserSelectorView {
         alpha = 0f
     }
 
-    interface UserSelectListener {
-        fun onUserSelected(user: User, requestCode: Int)
-    }
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         KoffeemateApp.appComponent.inject(this)
