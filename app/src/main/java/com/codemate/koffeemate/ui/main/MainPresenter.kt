@@ -10,9 +10,6 @@ import com.codemate.koffeemate.ui.base.BasePresenter
 import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
 import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
-import okhttp3.ResponseBody
-import retrofit2.Response
-import rx.Subscriber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -42,7 +39,7 @@ class MainPresenter @Inject constructor(
             getView()?.showNewCoffeeIsComing()
             personBrewingCoffee = null
 
-            if(!displayUserQuickDial()) {
+            if (!displayUserQuickDial()) {
                 getView()?.displayUserSetterButton()
             }
 
@@ -56,22 +53,16 @@ class MainPresenter @Inject constructor(
                     completeListener = {
                         sendCoffeeAnnouncementUseCase
                                 .execute(coffeePreferences.getCoffeeAnnouncementChannel(), newCoffeeMessage)
-                                .subscribe(object : Subscriber<Response<ResponseBody>>() {
-                                    override fun onError(e: Throwable?) {
-                                        e?.printStackTrace()
-                                    }
+                                .subscribe(
+                                        {
+                                            getView()?.updateCoffeeProgress(0)
+                                            getView()?.resetCoffeeViewStatus()
 
-                                    override fun onCompleted() {
-                                        getView()?.updateCoffeeProgress(0)
-                                        getView()?.resetCoffeeViewStatus()
-
-                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
-                                        updateLastBrewingEventTime()
-                                    }
-
-                                    override fun onNext(t: Response<ResponseBody>?) {
-                                    }
-                                })
+                                            coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
+                                            updateLastBrewingEventTime()
+                                        },
+                                        { e -> e.printStackTrace() }
+                                )
                     }
             )
         } else {
@@ -88,7 +79,7 @@ class MainPresenter @Inject constructor(
         if (personBrewingCoffee == null) {
             getView()?.hideUserSetterButton()
 
-            if(!displayUserQuickDial()) {
+            if (!displayUserQuickDial()) {
                 getView()?.displayFullscreenUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
             }
         } else {
@@ -131,20 +122,18 @@ class MainPresenter @Inject constructor(
     fun announceCoffeeBrewingAccident(comment: String, user: User, profilePic: Bitmap) {
         ensureViewIsAttached()
 
-        postAccidentUseCase.execute(comment, user, profilePic).subscribe(
-                object : Subscriber<Response<ResponseBody>>() {
-                    override fun onNext(response: Response<ResponseBody>) {
-                        getView()?.showAccidentPostedSuccessfullyMessage()
-                        personBrewingCoffee = null
-                    }
-
-                    override fun onError(e: Throwable?) {
-                        getView()?.showErrorPostingAccidentMessage()
-                    }
-
-                    override fun onCompleted() {
-                    }
-                })
+        postAccidentUseCase
+                .execute(comment, user, profilePic)
+                .subscribe(
+                        {
+                            getView()?.showAccidentPostedSuccessfullyMessage()
+                            personBrewingCoffee = null
+                        },
+                        { e ->
+                            e.printStackTrace()
+                            getView()?.showErrorPostingAccidentMessage()
+                        }
+                )
     }
 
     private fun displayUserQuickDial(): Boolean {
