@@ -30,3 +30,14 @@ fun fakeUser() = User().apply {
     profile.first_name = "Jorma"
     profile.real_name = "Jorma"
 }
+
+fun namedUser(name: String) = User().apply {
+    id = name
+    this.name = name
+    profile.real_name = name
+}
+
+fun namedUserWithTimestamp(name: String, lastUpdated: Long) =
+        namedUser(name).apply {
+            last_updated = lastUpdated
+        }

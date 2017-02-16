@@ -2,6 +2,7 @@ package com.codemate.koffeemate.ui.userselector
 
 import android.graphics.Bitmap
 import com.codemate.koffeemate.common.AwardBadgeCreator
+import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.models.UserListResponse
@@ -47,6 +48,7 @@ class UserSelectorPresenterTest {
 
         val loadUsersUseCase = LoadUsersUseCase(
                 mock<UserRepository>(),
+                mock<CoffeeEventRepository>(),
                 mockSlackApi,
                 Schedulers.immediate(),
                 Schedulers.immediate()
@@ -92,27 +94,4 @@ class UserSelectorPresenterTest {
 
         verifyNoMoreInteractions(view)
     }
-/*
-    @Test
-    fun announceCoffeeBrewingAccident_OnSuccess_ShowsMessageOnUI() {
-        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(Observable.just(Response.success(
-                        ResponseBody.create(MediaType.parse("text/plain"), ""))
-                ))
-
-        presenter.announceCoffeeBrewingAccident("", fakeUser(), mockBitmap)
-
-        verify(view).showAccidentPostedSuccessfullyMessage()
-        verifyNoMoreInteractions(view)
-    }
-
-    @Test
-    fun announceCoffeeBrewingAccident_OnError_ShowsErrorOnUI() {
-        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(Observable.error(Throwable()))
-
-        presenter.announceCoffeeBrewingAccident("", fakeUser(), mockBitmap)
-
-        verify(view).showErrorPostingAccidentMessage()
-    }*/
 }

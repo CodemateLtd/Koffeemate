@@ -17,10 +17,13 @@
 package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.testutils.namedUser
+import com.codemate.koffeemate.testutils.namedUserWithTimestamp
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.mockwebserver.MockResponse
@@ -39,6 +42,9 @@ class LoadUsersUseCaseTest {
     @Mock
     lateinit var mockUserRepository: UserRepository
 
+    @Mock
+    lateinit var mockCoffeeEventRepository: CoffeeEventRepository
+
     lateinit var mockServer: MockWebServer
     lateinit var slackApi: SlackApi
     lateinit var useCase: LoadUsersUseCase
@@ -54,6 +60,7 @@ class LoadUsersUseCaseTest {
         slackApi = SlackApi.create(mockServer.url("/"))
         useCase = LoadUsersUseCase(
                 mockUserRepository,
+                mockCoffeeEventRepository,
                 slackApi,
                 Schedulers.immediate(),
                 Schedulers.immediate()
@@ -135,6 +142,34 @@ class LoadUsersUseCaseTest {
 
         val userList = testSubscriber.onNextEvents[0]
         verifyUsersFromApi(userList)
+    }
+
+    @Test
+    fun execute_WhenHasCoffeeBrewers_ReturnsCoffeeBrewersFirst_InSortedOrder() {
+        val brewers = listOf(namedUser("ddd"), namedUser("bbb"), namedUser("eee"))
+        whenever(mockCoffeeEventRepository.getAllBrewers()).thenReturn(brewers)
+
+        val currentTime = System.currentTimeMillis()
+        val cachedUsers = listOf(
+                namedUserWithTimestamp(name = "eee", lastUpdated = currentTime),
+                namedUserWithTimestamp(name = "ccc", lastUpdated = currentTime),
+                namedUserWithTimestamp(name = "bbb", lastUpdated = currentTime),
+                namedUserWithTimestamp(name = "ddd", lastUpdated = currentTime),
+                namedUserWithTimestamp(name = "aaa", lastUpdated = currentTime)
+        )
+
+        whenever(mockUserRepository.getAll()).thenReturn(cachedUsers)
+
+        useCase.execute().subscribe(testSubscriber)
+        testSubscriber.assertValueCount(1)
+
+        val userList = testSubscriber.onNextEvents[0]
+        assertThat(userList.size, equalTo(5))
+        assertThat(userList[0].id, equalTo("bbb"))
+        assertThat(userList[1].id, equalTo("ddd"))
+        assertThat(userList[2].id, equalTo("eee"))
+        assertThat(userList[3].id, equalTo("aaa"))
+        assertThat(userList[4].id, equalTo("ccc"))
     }
 
     // Utility functions -->

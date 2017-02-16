@@ -17,6 +17,7 @@
 package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.models.isFreshEnough
@@ -29,6 +30,7 @@ import javax.inject.Named
 
 open class LoadUsersUseCase @Inject constructor(
         var userRepository: UserRepository,
+        var coffeeEventRepository: CoffeeEventRepository,
         var slackApi: SlackApi,
         @Named("subscriber") var subscriber: Scheduler,
         @Named("observer") var observer: Scheduler
@@ -56,7 +58,7 @@ open class LoadUsersUseCase @Inject constructor(
                 .first {
                     it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
                 }
-                .map { it.sortedBy { it.profile.real_name } }
+                .map { brewersFirst(it) }
                 .observeOn(observer)
     }
 
@@ -69,5 +71,17 @@ open class LoadUsersUseCase @Inject constructor(
                             && it.real_name != "slackbot"
                             && !it.deleted
                 }
+    }
+
+    private fun brewersFirst(users: List<User>): List<User> {
+        val brewers = coffeeEventRepository
+                .getAllBrewers()
+                .sortedBy { it.profile.real_name }
+
+        val all = users.toMutableList()
+        all.removeAll { brewers.contains(it) }
+        all.sortBy { it.profile.real_name }
+
+        return brewers + all
     }
 }

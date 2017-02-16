@@ -40,4 +40,23 @@ open class User(
         open var is_bot: Boolean = false,
         open var deleted: Boolean = false,
         open var last_updated: Long = 0
-) : RealmObject()
+) : RealmObject() {
+    override fun equals(other: Any?): Boolean {
+        if (other is User) {
+            return id == other.id
+        }
+
+        return this == other
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + profile.hashCode()
+        result = 31 * result + (real_name?.hashCode() ?: 0)
+        result = 31 * result + is_bot.hashCode()
+        result = 31 * result + deleted.hashCode()
+        result = 31 * result + last_updated.hashCode()
+        return result
+    }
+}
