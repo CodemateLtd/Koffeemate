@@ -7,6 +7,7 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
 import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import okhttp3.ResponseBody
@@ -88,7 +89,7 @@ class MainPresenter @Inject constructor(
             getView()?.hideUserSetterButton()
 
             if(!displayUserQuickDial()) {
-                getView()?.displayFullscreenUserSelector()
+                getView()?.displayFullscreenUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
             }
         } else {
             personBrewingCoffee = null
@@ -121,7 +122,7 @@ class MainPresenter @Inject constructor(
                 return
             }
 
-            getView()?.displayFullscreenUserSelector()
+            getView()?.displayFullscreenUserSelector(UserSelectListener.REQUEST_WHO_FAILED_BREWING)
         } else {
             getView()?.showNoAccidentChannelSetError()
         }

@@ -13,6 +13,7 @@ import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
 import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import com.nhaarman.mockito_kotlin.*
@@ -217,7 +218,7 @@ class MainPresenterTest {
     fun handlePersonChange_WhenPersonNotSet_ShowsFullScreenUserSelector() {
         presenter.handlePersonChange()
         verify(view).hideUserSetterButton()
-        verify(view).displayFullscreenUserSelector()
+        verify(view).displayFullscreenUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
     }
 
     @Test
@@ -250,7 +251,7 @@ class MainPresenterTest {
     fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeNotKnown_ShowsUserSelector() {
         presenter.launchAccidentReportingScreen()
 
-        verify(view).displayFullscreenUserSelector()
+        verify(view).displayFullscreenUserSelector(UserSelectListener.REQUEST_WHO_FAILED_BREWING)
         verifyNoMoreInteractions(view)
     }
 

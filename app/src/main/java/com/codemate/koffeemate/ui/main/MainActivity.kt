@@ -107,8 +107,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
         }
     }
 
-    override fun displayFullscreenUserSelector() {
-        showUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
+    override fun displayFullscreenUserSelector(requestCode: Int) {
+        showUserSelector(requestCode)
     }
 
     override fun clearCoffeeBrewingPerson() {
@@ -124,10 +124,10 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
     }
 
     override fun onUserSelected(user: User, requestCode: Int) {
-        coffeeProgressView.userSetterButton.show()
-
         when (requestCode) {
             UserSelectListener.REQUEST_WHOS_BREWING -> {
+                coffeeProgressView.userSetterButton.show()
+
                 Glide.with(this)
                         .load(user.profile.smallestAvailableImage)
                         .error(R.drawable.ic_user_unknown)

@@ -9,7 +9,7 @@ interface MainView : MvpView {
     fun showCancelCoffeeProgressPrompt()
 
     fun displayUserSelectorQuickDial(users: List<User>)
-    fun displayFullscreenUserSelector()
+    fun displayFullscreenUserSelector(requestCode: Int)
     fun clearCoffeeBrewingPerson()
 
     fun displayUserSetterButton()
