@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.codemate.koffeemate.R
 import org.jetbrains.anko.defaultSharedPreferences
+import java.util.concurrent.TimeUnit
 
 open class CoffeePreferences(ctx: Context) {
     val DEFAULT_COFFEE_BREWING_TIME_MINUTES = "7"
@@ -16,10 +17,8 @@ open class CoffeePreferences(ctx: Context) {
     val accidentChannelKey: String = ctx.getString(R.string.preference_coffee_accident_slack_channel_key)
 
     open fun getCoffeeBrewingTime(): Long {
-        return preferences.getString(
-                coffeeBrewingTimeKey,
-                DEFAULT_COFFEE_BREWING_TIME_MINUTES
-        ).toLong()
+        // TODO: return preferences.getString( coffeeBrewingTimeKey, DEFAULT_COFFEE_BREWING_TIME_MINUTES ).toLong()
+        return TimeUnit.MINUTES.toMillis(7)
     }
 
     open fun isCoffeeAnnouncementChannelSet() = !getCoffeeAnnouncementChannel().isBlank()

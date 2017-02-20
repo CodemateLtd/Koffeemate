@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Codemate Ltd
+ * Copyright 2017 Codemate Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,118 +16,63 @@
 
 package com.codemate.koffeemate.common
 
-import android.os.Handler
-import com.codemate.koffeemate.common.BrewingProgressUpdater
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import rx.observers.TestSubscriber
+import rx.schedulers.Schedulers
+import rx.schedulers.TestScheduler
 import java.util.concurrent.TimeUnit
 
 class BrewingProgressUpdaterTest {
-    lateinit var mockHandler: Handler
+    lateinit var testScheduler: TestScheduler
+    lateinit var updater: BrewingProgressUpdater
+    lateinit var testSubscriber: TestSubscriber<Int>
 
     @Before
     fun setUp() {
-        mockHandler = mock<Handler>()
+        testScheduler = Schedulers.test()
+        updater = BrewingProgressUpdater(testScheduler)
+        testSubscriber = TestSubscriber()
     }
 
     @Test
-    fun calculatesCorrectUpdateIntervals() {
-        val sutOne = createUpdater(TimeUnit.SECONDS.toMillis(5), 10)
-        assertThat(sutOne.updateInterval, equalTo(500L))
+    fun start_WithOneSecond_HasTwoSteps() {
+        updater.start(TimeUnit.SECONDS.toMillis(1)).subscribe(testSubscriber)
 
-        val sutTwo = createUpdater(TimeUnit.SECONDS.toMillis(9), 4)
-        assertThat(sutTwo.updateInterval, equalTo(2250L))
+        testScheduler.advanceTimeBy(1, TimeUnit.SECONDS)
+        testSubscriber.assertValueCount(2)
     }
 
     @Test
-    fun reset_ShouldCleanStateAndRemoveCallbacks() {
-        val sut = createUpdater(1, 1)
+    fun start_WithThreeSeconds_HasSixSteps() {
+        updater.start(TimeUnit.SECONDS.toMillis(3)).subscribe(testSubscriber)
 
-        sut.startUpdating({}, {})
-        verify(mockHandler, times(1)).postDelayed(sut, 1)
-
-        sut.reset()
-
-        assertNull(sut.updateListener)
-        assertNull(sut.completeListener)
-        assertFalse(sut.isUpdating)
-        assertThat(sut.currentStep, equalTo(0))
-
-        verify(mockHandler, times(1)).removeCallbacks(sut)
-        verifyNoMoreInteractions(mockHandler)
+        testScheduler.advanceTimeBy(3, TimeUnit.SECONDS)
+        testSubscriber.assertValueCount(6)
     }
 
     @Test
-    fun startUpdating_CallsPostDelayed() {
-        val sut = createUpdater(1, 1)
-        sut.startUpdating({}, {})
+    fun start_RunsProperlyAndCompletes() {
+        updater.start(TimeUnit.SECONDS.toMillis(2)).subscribe(testSubscriber)
 
-        verify(mockHandler).postDelayed(sut, 1)
-        verifyNoMoreInteractions(mockHandler)
-    }
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testSubscriber.assertValueCount(1)
+        assertThat(testSubscriber.onNextEvents[0], equalTo(0))
 
-    @Test
-    fun startUpdating_WhenCalledMultipleTimes_CallsPostDelayedOnlyOnce() {
-        val sut = createUpdater(1, 1)
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testSubscriber.assertValueCount(2)
+        assertThat(testSubscriber.onNextEvents[1], equalTo(25))
 
-        sut.startUpdating({}, {})
-        sut.startUpdating({}, {})
-        sut.startUpdating({}, {})
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testSubscriber.assertValueCount(3)
+        assertThat(testSubscriber.onNextEvents[2], equalTo(50))
 
-        verify(mockHandler, times(1)).postDelayed(sut, 1)
-        verifyNoMoreInteractions(mockHandler)
-    }
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testSubscriber.assertValueCount(4)
+        assertThat(testSubscriber.onNextEvents[3], equalTo(75))
 
-    /**
-     * If you come up with a better name, just send a PR ¯\_(ツ)_/¯
-     */
-    @Test
-    fun shouldRunProperly() {
-        val sut = createUpdater(TimeUnit.SECONDS.toMillis(2), 4)
-        sut.startUpdating({}, {})
-
-        sut.run()
-        assertThat(sut.currentStep, equalTo(1))
-        assertThat(sut.calculateCurrentProgress(), equalTo(25))
-
-        sut.run()
-        sut.run()
-        assertThat(sut.currentStep, equalTo(3))
-        assertThat(sut.calculateCurrentProgress(), equalTo(75))
-
-        sut.run()
-        assertThat(sut.currentStep, equalTo(0))
-        assertThat(sut.calculateCurrentProgress(), equalTo(0))
-
-        verify(mockHandler, times(4)).postDelayed(sut, 500)
-        verify(mockHandler, times(1)).removeCallbacks(sut)
-        verifyNoMoreInteractions(mockHandler)
-    }
-
-    @Test
-    fun run_WhenIsUpdatingEqualsFalse_DoesNothing() {
-        val sut = createUpdater(TimeUnit.SECONDS.toMillis(5), 15)
-
-        sut.startUpdating({}, {})
-        sut.isUpdating = false
-
-        sut.run()
-        sut.run()
-        sut.run()
-
-        assertThat(sut.currentStep, equalTo(0))
-    }
-
-    fun createUpdater(totalTimeMillis: Long, totalSteps: Int) : BrewingProgressUpdater {
-        val updater = BrewingProgressUpdater(totalTimeMillis, totalSteps)
-        updater.updateHandler = mockHandler
-
-        return updater
+        testSubscriber.assertCompleted()
     }
 }

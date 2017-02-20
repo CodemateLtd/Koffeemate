@@ -23,7 +23,7 @@ import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.common.BrewingProgressUpdater
 import dagger.Module
 import dagger.Provides
-import java.util.concurrent.TimeUnit
+import rx.android.schedulers.AndroidSchedulers
 import javax.inject.Singleton
 
 @Module
@@ -38,7 +38,7 @@ class AppModule(val app: KoffeemateApp) {
 
     @Provides
     @Singleton
-    fun provideBrewingProgressUpdater() = BrewingProgressUpdater(TimeUnit.MINUTES.toMillis(7), 30)
+    fun provideBrewingProgressUpdater() = BrewingProgressUpdater(observerScheduler = AndroidSchedulers.mainThread())
 
     @Provides
     @Singleton

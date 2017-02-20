@@ -2,7 +2,6 @@ package com.codemate.koffeemate.ui.main
 
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.os.Handler
 import com.codemate.koffeemate.common.AwardBadgeCreator
 import com.codemate.koffeemate.common.BrewingProgressUpdater
 import com.codemate.koffeemate.common.ScreenSaver
@@ -21,6 +20,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.hamcrest.core.IsEqual.equalTo
 import org.hamcrest.core.IsNull.nullValue
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -29,6 +29,8 @@ import org.mockito.MockitoAnnotations
 import retrofit2.Response
 import rx.Observable
 import rx.schedulers.Schedulers
+import rx.schedulers.TestScheduler
+import java.util.concurrent.TimeUnit
 
 class MainPresenterTest {
     val CHANNEL_NAME = "fake-channel"
@@ -47,9 +49,6 @@ class MainPresenterTest {
     lateinit var mockCoffeeEventRepository: CoffeeEventRepository
 
     @Mock
-    lateinit var mockHandler: Handler
-
-    @Mock
     lateinit var view: MainView
 
     @Mock
@@ -59,14 +58,13 @@ class MainPresenterTest {
     lateinit var mockSendCoffeeAnnouncementUseCase: SendCoffeeAnnouncementUseCase
 
     @Mock
-    lateinit var updater: BrewingProgressUpdater
-
-    @Mock
     lateinit var mockSlackApi: SlackApi
 
     @Mock
     lateinit var mockAwardBadgeCreator: AwardBadgeCreator
 
+    lateinit var testScheduler: TestScheduler
+    lateinit var updater: BrewingProgressUpdater
     lateinit var presenter: MainPresenter
 
     @Before
@@ -74,17 +72,11 @@ class MainPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         mockCoffeePreferences.preferences = mock<SharedPreferences>()
+        whenever(mockCoffeePreferences.getCoffeeBrewingTime()).thenReturn(TimeUnit.SECONDS.toMillis(2))
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(mockCoffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
         whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
         whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
-
-        whenever(mockHandler.removeCallbacks(any())).then {
-            // No-op
-        }
-
-        updater = BrewingProgressUpdater(9, 3)
-        updater.updateHandler = mockHandler
 
         whenever(mockAwardBadgeCreator.createBitmapFileWithAward(any(), any()))
                 .thenReturn(getResourceFile("images/empty.png"))
@@ -104,6 +96,9 @@ class MainPresenterTest {
                 Schedulers.immediate()
         )
 
+        testScheduler = Schedulers.test()
+        updater = BrewingProgressUpdater(testScheduler)
+
         presenter = MainPresenter(
                 mockCoffeePreferences,
                 mockCoffeeEventRepository,
@@ -118,20 +113,24 @@ class MainPresenterTest {
     @Test
     fun startDelayedCoffeeAnnouncement_HappyPathRunsToEnd() {
         expectSuccessfulPostMessageResponse()
+        whenever(mockCoffeePreferences.getCoffeeBrewingTime()).thenReturn(TimeUnit.SECONDS.toMillis(2))
 
         val user = fakeUser()
         presenter.startDelayedCoffeeAnnouncement("")
         presenter.personBrewingCoffee = user
 
-        updater.run()
-        updater.run()
-        updater.run()
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS)
 
-        inOrder(view, mockCoffeeEventRepository) {
+        inOrder(view) {
             verify(view).showNewCoffeeIsComing()
             verify(view).updateCoffeeProgress(10)
-            verify(view).updateCoffeeProgress(33)
-            verify(view).updateCoffeeProgress(67)
+            verify(view).updateCoffeeProgress(25)
+            verify(view).updateCoffeeProgress(50)
+            verify(view).updateCoffeeProgress(75)
         }
 
         verify(view).updateCoffeeProgress(0)
@@ -142,13 +141,10 @@ class MainPresenterTest {
     @Test
     fun startDelayedCoffeeAnnouncement_ClearsPreviousPersonBrewingCoffee() {
         expectSuccessfulPostMessageResponse()
-
         presenter.personBrewingCoffee = fakeUser()
-        presenter.startDelayedCoffeeAnnouncement("")
 
-        updater.run()
-        updater.run()
-        updater.run()
+        presenter.startDelayedCoffeeAnnouncement("")
+        testScheduler.advanceTimeBy(2, TimeUnit.SECONDS)
 
         verify(mockCoffeeEventRepository).recordBrewingEvent(null)
     }
@@ -171,7 +167,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenUpdaterAlreadyUpdating_ShowsCancelCoffeeProgressPrompt() {
-        updater.isUpdating = true
+        presenter.isUpdating = true
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showCancelCoffeeProgressPrompt()
@@ -287,12 +283,15 @@ class MainPresenterTest {
     fun cancelCoffeeCountDown_ResetsUpdaterAndUpdatesView() {
         presenter.startDelayedCoffeeAnnouncement("")
         presenter.personBrewingCoffee = fakeUser()
+
+        assertFalse(presenter.progressSubscription!!.isUnsubscribed)
+
         presenter.cancelCoffeeCountDown()
 
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
-        verify(mockHandler).removeCallbacks(updater)
 
+        assertThat(presenter.progressSubscription, nullValue())
         assertThat(presenter.personBrewingCoffee, nullValue())
     }
 

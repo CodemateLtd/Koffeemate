@@ -16,63 +16,32 @@
 
 package com.codemate.koffeemate.common
 
-import android.os.Handler
+import rx.Observable
+import rx.Scheduler
+import rx.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * Class responsible for updating the CircularFillableLoader on
  * the main screen from empty to full state, since the library
  * doesn't support it out of the box.
- *
- * This is generalized enough for other purposes as well.
- *
- * See MainPresenter & BrewingProgressUpdateTest for usage.
  */
 open class BrewingProgressUpdater(
-        brewingTimeMillis: Long,
-        private val totalSteps: Int) : Runnable {
-    var updateHandler: Handler = Handler()
-    val updateInterval: Long = brewingTimeMillis / totalSteps
+        private val intervalScheduler: Scheduler = Schedulers.computation(),
+        private val observerScheduler: Scheduler = Schedulers.immediate()
+) {
+    open fun start(brewingTimeMillis: Long): Observable<Int> {
+        val totalSteps = (TimeUnit.MILLISECONDS.toSeconds(brewingTimeMillis) * 2).toInt()
+        val interval = brewingTimeMillis / totalSteps
 
-    var isUpdating = false
-    var currentStep = 0
-
-    var updateListener: ((Int) -> Unit)? = null
-    var completeListener: (() -> Unit)? = null
-
-    fun startUpdating(updateListener: (Int) -> Unit, completeListener: () -> Unit) {
-        if (!isUpdating) {
-            this.updateListener = updateListener
-            this.completeListener = completeListener
-
-            isUpdating = true
-            updateListener(currentStep)
-            updateHandler.postDelayed(this, updateInterval)
-        }
+        return Observable
+                .interval(interval, TimeUnit.MILLISECONDS, intervalScheduler)
+                .observeOn(observerScheduler)
+                .take(totalSteps)
+                .map { currentStep -> convertToPercent(currentStep, totalSteps) }
     }
 
-    fun reset() {
-        updateListener = null
-        completeListener = null
-        isUpdating = false
-        currentStep = 0
-        updateHandler.removeCallbacks(this)
+    private fun convertToPercent(currentStep: Long, totalSteps: Int): Int {
+        return Math.round((currentStep / (totalSteps * 1.0)) * 100.0).toInt()
     }
-
-    override fun run() {
-        if (!isUpdating) {
-            return
-        }
-
-        currentStep++
-
-        if (currentStep >= totalSteps) {
-            completeListener?.invoke()
-            reset()
-        } else {
-            updateListener?.invoke(calculateCurrentProgress())
-            updateHandler.postDelayed(this, updateInterval)
-        }
-    }
-
-    fun calculateCurrentProgress() = Math.round((currentStep / (totalSteps * 1.0)) * 100.0).toInt()
 }
