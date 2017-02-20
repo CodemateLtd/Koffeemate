@@ -36,6 +36,7 @@ class CoffeePreferencesTest {
         coffeePreferences.preferences.edit().clear().apply()
     }
 
+    /* TODO: Uncomment when the functionality exists
     @Test
     fun getCoffeeBrewingTime_DefaultsToSevenMinutes() {
         assertThat(coffeePreferences.getCoffeeBrewingTime(), equalTo(7L))
@@ -48,7 +49,7 @@ class CoffeePreferencesTest {
                 .apply()
 
         assertThat(coffeePreferences.getCoffeeBrewingTime(), equalTo(4L))
-    }
+    }*/
 
     @Test
     fun isCoffeeAnnouncementChannelSet_WhenNotSet_ReturnsFalse() {
