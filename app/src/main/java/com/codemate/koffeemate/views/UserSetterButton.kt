@@ -21,7 +21,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.OvershootInterpolator
+import android.view.animation.AccelerateDecelerateInterpolator
 import com.codemate.koffeemate.R
 import de.hdodenhof.circleimageview.CircleImageView
 import org.jetbrains.anko.imageResource
@@ -54,9 +54,9 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
         animate().alpha(value)
                 .scaleX(value)
                 .scaleY(value)
-                .setInterpolator(OvershootInterpolator(3f))
+                .setInterpolator(AccelerateDecelerateInterpolator())
                 .setStartDelay(100)
-                .setDuration(300)
+                .setDuration(200)
                 .setListener(listener)
                 .start()
     }
@@ -69,11 +69,11 @@ class UserSetterButton(ctx: Context, attrs: AttributeSet) : CircleImageView(ctx,
                 .withEndAction {
                     imageResource = EMPTY_IMAGE_RESOURCE
                     rotation = -180f
+
                     animate().alpha(1f)
                             .scaleX(1f)
                             .scaleY(1f)
                             .rotation(0f)
-                            .setInterpolator(OvershootInterpolator(2f))
                             .start()
                 }
     }

@@ -31,7 +31,6 @@ class CoffeeProgressView(ctx: Context, attrs: AttributeSet) : FrameLayout(ctx, a
 
     fun setCoffeeIncoming() {
         animate().alpha(1f).start()
-        userSetterButton.show()
     }
 
     fun reset() {

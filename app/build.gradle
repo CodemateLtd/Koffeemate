@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
-apply plugin: 'com.github.kt3k.coveralls'
 
 apply from: 'dependencies.gradle'
 apply from: 'app-config.gradle'
@@ -36,15 +35,6 @@ android {
 
 kapt {
     generateStubs = true
-}
-
-coveralls {
-    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
-}
-
-tasks.coveralls {
-    dependsOn 'test', 'connectedAndroidTest'
-    onlyIf { System.env.'CI' }
 }
 
 repositories {

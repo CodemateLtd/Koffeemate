@@ -7,11 +7,9 @@ import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
 import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
-import okhttp3.ResponseBody
-import retrofit2.Response
-import rx.Subscriber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -38,8 +36,12 @@ class MainPresenter @Inject constructor(
         }
 
         if (!brewingProgressUpdater.isUpdating) {
-            personBrewingCoffee = null
             getView()?.showNewCoffeeIsComing()
+            personBrewingCoffee = null
+
+            if (!displayUserQuickDial()) {
+                getView()?.displayUserSetterButton()
+            }
 
             brewingProgressUpdater.startUpdating(
                     updateListener = { progress ->
@@ -51,22 +53,16 @@ class MainPresenter @Inject constructor(
                     completeListener = {
                         sendCoffeeAnnouncementUseCase
                                 .execute(coffeePreferences.getCoffeeAnnouncementChannel(), newCoffeeMessage)
-                                .subscribe(object : Subscriber<Response<ResponseBody>>() {
-                                    override fun onError(e: Throwable?) {
-                                        e?.printStackTrace()
-                                    }
+                                .subscribe(
+                                        {
+                                            getView()?.updateCoffeeProgress(0)
+                                            getView()?.resetCoffeeViewStatus()
 
-                                    override fun onCompleted() {
-                                        getView()?.updateCoffeeProgress(0)
-                                        getView()?.resetCoffeeViewStatus()
-
-                                        coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
-                                        updateLastBrewingEventTime()
-                                    }
-
-                                    override fun onNext(t: Response<ResponseBody>?) {
-                                    }
-                                })
+                                            coffeeEventRepository.recordBrewingEvent(personBrewingCoffee)
+                                            updateLastBrewingEventTime()
+                                        },
+                                        { e -> e.printStackTrace() }
+                                )
                     }
             )
         } else {
@@ -81,7 +77,11 @@ class MainPresenter @Inject constructor(
 
     fun handlePersonChange() {
         if (personBrewingCoffee == null) {
-            getView()?.selectCoffeeBrewingPerson()
+            getView()?.hideUserSetterButton()
+
+            if (!displayUserQuickDial()) {
+                getView()?.displayFullscreenUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
+            }
         } else {
             personBrewingCoffee = null
             getView()?.clearCoffeeBrewingPerson()
@@ -113,7 +113,7 @@ class MainPresenter @Inject constructor(
                 return
             }
 
-            getView()?.launchUserSelector()
+            getView()?.displayFullscreenUserSelector(UserSelectListener.REQUEST_WHO_FAILED_BREWING)
         } else {
             getView()?.showNoAccidentChannelSetError()
         }
@@ -122,19 +122,28 @@ class MainPresenter @Inject constructor(
     fun announceCoffeeBrewingAccident(comment: String, user: User, profilePic: Bitmap) {
         ensureViewIsAttached()
 
-        postAccidentUseCase.execute(comment, user, profilePic).subscribe(
-                object : Subscriber<Response<ResponseBody>>() {
-                    override fun onNext(response: Response<ResponseBody>) {
-                        getView()?.showAccidentPostedSuccessfullyMessage()
-                        personBrewingCoffee = null
-                    }
+        postAccidentUseCase
+                .execute(comment, user, profilePic)
+                .subscribe(
+                        {
+                            getView()?.showAccidentPostedSuccessfullyMessage()
+                            personBrewingCoffee = null
+                        },
+                        { e ->
+                            e.printStackTrace()
+                            getView()?.showErrorPostingAccidentMessage()
+                        }
+                )
+    }
 
-                    override fun onError(e: Throwable?) {
-                        getView()?.showErrorPostingAccidentMessage()
-                    }
+    private fun displayUserQuickDial(): Boolean {
+        val latestBrewers = coffeeEventRepository.getLatestBrewers().take(4)
 
-                    override fun onCompleted() {
-                    }
-                })
+        if (latestBrewers.isNotEmpty()) {
+            getView()?.displayUserSelectorQuickDial(latestBrewers)
+            return true
+        }
+
+        return false
     }
 }

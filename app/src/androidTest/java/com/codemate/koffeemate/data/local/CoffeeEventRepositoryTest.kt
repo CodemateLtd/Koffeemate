@@ -21,6 +21,7 @@ import com.codemate.koffeemate.data.models.User
 import io.realm.Realm
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -94,6 +95,130 @@ class CoffeeEventRepositoryTest {
         coffeeEventRepository.recordBrewingAccident(otherUser)
 
         assertThat(coffeeEventRepository.getAccidentCountForUser(user), equalTo(3L))
+    }
+
+    @Test
+    fun getTopBrewers_WhenHasBrewers_ReturnsTopBrewersSorted() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val brewingMaster = User(id = "abc123")
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+        coffeeEventRepository.recordBrewingEvent(brewingMaster)
+
+        val brewingApprentice = User(id = "a1b2c3")
+        coffeeEventRepository.recordBrewingEvent(brewingApprentice)
+        coffeeEventRepository.recordBrewingEvent(brewingApprentice)
+
+        val brewingNoob = User(id = "cba321")
+        coffeeEventRepository.recordBrewingEvent(brewingNoob)
+
+        val sortedBrewers = coffeeEventRepository.getTopBrewers()
+        assertThat(sortedBrewers.size, equalTo(3))
+        assertThat(sortedBrewers[0].id, equalTo(brewingMaster.id))
+        assertThat(sortedBrewers[1].id, equalTo(brewingApprentice.id))
+        assertThat(sortedBrewers[2].id, equalTo(brewingNoob.id))
+    }
+
+    @Test
+    fun getTopBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val topBrewers = coffeeEventRepository.getTopBrewers()
+        assertTrue(topBrewers.isEmpty())
+    }
+
+    @Test
+    fun getTopBrewers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+
+        val topBrewers = coffeeEventRepository.getTopBrewers()
+        assertTrue(topBrewers.isEmpty())
+    }
+
+    @Test
+    fun getLatestBrewers_WhenHasBrewers_ReturnsAllSortedByLatest() {
+        val oldest = User(id = "abc123")
+        coffeeEventRepository.recordBrewingEvent(oldest)
+        coffeeEventRepository.recordBrewingEvent(oldest)
+
+        val secondOldest = User(id = "a1b2c3")
+        coffeeEventRepository.recordBrewingEvent(secondOldest)
+        coffeeEventRepository.recordBrewingEvent(secondOldest)
+
+        val newest = User(id = "cba321")
+        coffeeEventRepository.recordBrewingEvent(newest)
+        coffeeEventRepository.recordBrewingEvent(newest)
+
+        val latestBrewers = coffeeEventRepository.getLatestBrewers()
+        assertThat(latestBrewers.size, equalTo(3))
+        assertThat(latestBrewers[0].id, equalTo(newest.id))
+        assertThat(latestBrewers[1].id, equalTo(secondOldest.id))
+        assertThat(latestBrewers[2].id, equalTo(oldest.id))
+    }
+
+    @Test
+    fun getLatestBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val latestBrewers = coffeeEventRepository.getLatestBrewers()
+        assertTrue(latestBrewers.isEmpty())
+    }
+
+    @Test
+    fun getLatestBrewers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+
+        val latestBrewers = coffeeEventRepository.getLatestBrewers()
+        assertTrue(latestBrewers.isEmpty())
+    }
+
+    @Test
+    fun getAllBrewers_WhenHasBrewers_ReturnsAll() {
+        val first = User(id = "abc123")
+        coffeeEventRepository.recordBrewingEvent(first)
+        coffeeEventRepository.recordBrewingEvent(first)
+
+        val second = User(id = "a1b2c3")
+        coffeeEventRepository.recordBrewingEvent(second)
+        coffeeEventRepository.recordBrewingEvent(second)
+
+        val third = User(id = "cba321")
+        coffeeEventRepository.recordBrewingEvent(third)
+        coffeeEventRepository.recordBrewingEvent(third)
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+        assertThat(brewers.size, equalTo(3))
+        assertThat(brewers[0].id, equalTo(first.id))
+        assertThat(brewers[1].id, equalTo(second.id))
+        assertThat(brewers[2].id, equalTo(third.id))
+    }
+
+    @Test
+    fun getAllBrewers_WhenHasNoBrewers_ReturnsEmptyList() {
+        coffeeEventRepository.recordBrewingEvent()
+        coffeeEventRepository.recordBrewingEvent()
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+        assertTrue(brewers.isEmpty())
+    }
+
+    @Test
+    fun getAllUsers_ReturnsNoAccidents() {
+        val user = User(id = "abc123")
+        coffeeEventRepository.recordBrewingAccident(user)
+        coffeeEventRepository.recordBrewingAccident(user)
+
+        val brewers = coffeeEventRepository.getAllBrewers()
+
+        assertTrue(brewers.isEmpty())
     }
 
     private fun coffeeEventCount() = with(Realm.getDefaultInstance()) {

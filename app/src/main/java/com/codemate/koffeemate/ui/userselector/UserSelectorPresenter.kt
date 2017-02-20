@@ -1,9 +1,7 @@
 package com.codemate.koffeemate.ui.userselector
 
-import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.ui.base.BasePresenter
 import com.codemate.koffeemate.usecases.LoadUsersUseCase
-import rx.Subscriber
 import javax.inject.Inject
 
 class UserSelectorPresenter @Inject constructor(
@@ -13,19 +11,13 @@ class UserSelectorPresenter @Inject constructor(
         ensureViewIsAttached()
         getView()?.showProgress()
 
-        loadUsersUseCase.execute().subscribe(
-                object : Subscriber<List<User>>() {
-                    override fun onCompleted() {
-                        getView()?.hideProgress()
-                    }
-
-                    override fun onNext(users: List<User>) {
-                        getView()?.showUsers(users)
-                    }
-
-                    override fun onError(e: Throwable?) {
-                        getView()?.showError()
-                    }
-                })
+        loadUsersUseCase.execute()
+                .subscribe(
+                        { users ->
+                            getView()?.showUsers(users)
+                            getView()?.hideProgress()
+                        },
+                        { getView()?.showError() }
+                )
     }
 }

@@ -13,6 +13,10 @@ interface CoffeeEventRepository {
 
     fun getLastBrewingEvent(): CoffeeBrewingEvent?
     fun getLastBrewingAccident(): CoffeeBrewingEvent?
+
+    fun getTopBrewers(): List<User>
+    fun getLatestBrewers(): List<User>
+    fun getAllBrewers(): List<User>
 }
 
 class RealmCoffeeEventRepository : CoffeeEventRepository {
@@ -74,6 +78,55 @@ class RealmCoffeeEventRepository : CoffeeEventRepository {
                 .findAllSorted("time", Sort.ASCENDING)
                 .lastOrNull()
         val copy = if (accident != null) copyFromRealm(accident) else null
+
+        close()
+        return@with copy
+    }
+
+    override fun getTopBrewers() = with(Realm.getDefaultInstance()) {
+        val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .isNotNull("user")
+                .findAll()
+
+        val copy = copyFromRealm(users)
+                .groupBy(CoffeeBrewingEvent::user)
+                .entries
+                .sortedByDescending { it.value.size }
+                .map { it.key }
+                .filterNotNull()
+
+        close()
+        return@with copy
+    }
+
+    override fun getLatestBrewers() = with(Realm.getDefaultInstance()) {
+        val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .isNotNull("user")
+                .findAllSorted("time", Sort.DESCENDING)
+
+        val copy = copyFromRealm(users)
+                .groupBy(CoffeeBrewingEvent::user)
+                .entries
+                .map { it.key }
+                .filterNotNull()
+
+        close()
+        return@with copy
+    }
+
+    override fun getAllBrewers() = with(Realm.getDefaultInstance()) {
+        val users = where(CoffeeBrewingEvent::class.java)
+                .equalTo("isSuccessful", true)
+                .isNotNull("user")
+                .findAll()
+
+        val copy = copyFromRealm(users)
+                .groupBy(CoffeeBrewingEvent::user)
+                .entries
+                .map { it.key }
+                .filterNotNull()
 
         close()
         return@with copy

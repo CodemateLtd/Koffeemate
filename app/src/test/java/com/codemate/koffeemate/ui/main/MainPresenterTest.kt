@@ -9,14 +9,17 @@ import com.codemate.koffeemate.common.ScreenSaver
 import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.CoffeePreferences
 import com.codemate.koffeemate.data.models.CoffeeBrewingEvent
+import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.network.SlackApi
 import com.codemate.koffeemate.testutils.fakeUser
 import com.codemate.koffeemate.testutils.getResourceFile
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
 import com.codemate.koffeemate.usecases.PostAccidentUseCase
 import com.codemate.koffeemate.usecases.SendCoffeeAnnouncementUseCase
 import com.nhaarman.mockito_kotlin.*
 import okhttp3.MediaType
 import okhttp3.ResponseBody
+import org.hamcrest.core.IsEqual.equalTo
 import org.hamcrest.core.IsNull.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -73,6 +76,8 @@ class MainPresenterTest {
         mockCoffeePreferences.preferences = mock<SharedPreferences>()
         whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn(CHANNEL_NAME)
         whenever(mockCoffeePreferences.getCoffeeAnnouncementChannel()).thenReturn(CHANNEL_NAME)
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
+        whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
 
         whenever(mockHandler.removeCallbacks(any())).then {
             // No-op
@@ -112,9 +117,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_HappyPathRunsToEnd() {
-        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
-        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
-                .thenReturn(emptySuccessResponse)
+        expectSuccessfulPostMessageResponse()
 
         val user = fakeUser()
         presenter.startDelayedCoffeeAnnouncement("")
@@ -138,9 +141,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_ClearsPreviousPersonBrewingCoffee() {
-        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(true)
-        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
-                .thenReturn(emptySuccessResponse)
+        expectSuccessfulPostMessageResponse()
 
         presenter.personBrewingCoffee = fakeUser()
         presenter.startDelayedCoffeeAnnouncement("")
@@ -160,7 +161,7 @@ class MainPresenterTest {
 
     @Test
     fun startDelayedCoffeeAnnouncement_WhenChannelNameNotSet_AndIsNotUpdatingProgress_InformsView() {
-        whenever(mockCoffeePreferences.getCoffeeAnnouncementChannel()).thenReturn("")
+        makeAnnouncementChannelNotSet()
         presenter.startDelayedCoffeeAnnouncement("")
 
         verify(view, times(1)).showNoAnnouncementChannelSetError()
@@ -178,11 +179,46 @@ class MainPresenterTest {
     }
 
     @Test
-    fun handlePersonChange_WhenPersonNotSet_ShowsPersonSelectionDialog() {
-        presenter.handlePersonChange()
+    fun startDelayedCoffeeAnnouncement_WhenHasLatestBrewers_ShowsUserQuickDial() {
+        val latestBrewers = listOf(fakeUser())
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
+        expectSuccessfulPostMessageResponse()
 
-        verify(view).selectCoffeeBrewingPerson()
-        verifyNoMoreInteractions(view)
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(view, times(1)).displayUserSelectorQuickDial(latestBrewers)
+    }
+
+    @Test
+    fun startDelayedCoffeeAnnouncement_WhenNoLatestBrewers_ShowsFullscreenUserSelector() {
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(emptyList())
+        expectSuccessfulPostMessageResponse()
+
+        presenter.startDelayedCoffeeAnnouncement("")
+        verify(view, times(1)).displayUserSetterButton()
+    }
+
+    @Test
+    fun userQuickDial_DisplaysFourLatestBrewersAtMost() {
+        val latestBrewers = listOf(fakeUser(), fakeUser(), fakeUser(), fakeUser(), fakeUser())
+
+        whenever(mockCoffeeEventRepository.getLatestBrewers()).thenReturn(latestBrewers)
+        expectSuccessfulPostMessageResponse()
+
+        presenter.startDelayedCoffeeAnnouncement("")
+
+        argumentCaptor<List<User>>().apply {
+            verify(view, times(1)).displayUserSelectorQuickDial(capture())
+
+            val users = allValues.first()
+            assertThat(users.size, equalTo(4))
+        }
+    }
+
+    @Test
+    fun handlePersonChange_WhenPersonNotSet_ShowsFullScreenUserSelector() {
+        presenter.handlePersonChange()
+        verify(view).hideUserSetterButton()
+        verify(view).displayFullscreenUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
     }
 
     @Test
@@ -204,7 +240,7 @@ class MainPresenterTest {
 
     @Test
     fun launchAccidentReportingScreen_WhenNoAccidentChannelSet_InformsView() {
-        whenever(mockCoffeePreferences.getAccidentChannel()).thenReturn("")
+        makeAccidentChannelNotSet()
         presenter.launchAccidentReportingScreen()
 
         verify(view).showNoAccidentChannelSetError()
@@ -213,17 +249,14 @@ class MainPresenterTest {
 
     @Test
     fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeNotKnown_ShowsUserSelector() {
-        whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
         presenter.launchAccidentReportingScreen()
 
-        verify(view).launchUserSelector()
+        verify(view).displayFullscreenUserSelector(UserSelectListener.REQUEST_WHO_FAILED_BREWING)
         verifyNoMoreInteractions(view)
     }
 
     @Test
     fun launchAccidentReportingScreen_WhenPersonBrewingCoffeeIsKnown_SkipsUserSelector() {
-        whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(true)
-
         val user = fakeUser()
         presenter.personBrewingCoffee = user
         presenter.launchAccidentReportingScreen()
@@ -259,15 +292,13 @@ class MainPresenterTest {
         verify(view).updateCoffeeProgress(0)
         verify(view).resetCoffeeViewStatus()
         verify(mockHandler).removeCallbacks(updater)
-        verifyZeroInteractions(mockCoffeeEventRepository)
 
         assertThat(presenter.personBrewingCoffee, nullValue())
     }
 
     @Test
     fun announceCoffeeBrewingAccident_OnSuccess_ClearCoffeeBrewingPsrson() {
-        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(emptySuccessResponse)
+        expectSuccessfulPostImageResponse()
 
         presenter.personBrewingCoffee = fakeUser()
         presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
@@ -277,9 +308,7 @@ class MainPresenterTest {
 
     @Test
     fun announceCoffeeBrewingAccident_OnSuccess_ShowsMessageOnUI() {
-        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(emptySuccessResponse)
-
+        expectSuccessfulPostImageResponse()
         presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showAccidentPostedSuccessfullyMessage()
@@ -288,11 +317,33 @@ class MainPresenterTest {
 
     @Test
     fun announceCoffeeBrewingAccident_OnError_ShowsErrorOnUI() {
-        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
-                .thenReturn(Observable.error(Throwable()))
-
+        expectFailingPostImageResponse()
         presenter.announceCoffeeBrewingAccident("", fakeUser(), mock<Bitmap>())
 
         verify(view).showErrorPostingAccidentMessage()
+    }
+
+    // Helper functions -->
+    private fun makeAccidentChannelNotSet() {
+        whenever(mockCoffeePreferences.isAccidentChannelSet()).thenReturn(false)
+    }
+
+    private fun makeAnnouncementChannelNotSet() {
+        whenever(mockCoffeePreferences.isCoffeeAnnouncementChannelSet()).thenReturn(false)
+    }
+
+    private fun expectSuccessfulPostMessageResponse() {
+        whenever(mockSlackApi.postMessage(any(), any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+    }
+
+    private fun expectSuccessfulPostImageResponse() {
+        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
+                .thenReturn(emptySuccessResponse)
+    }
+
+    private fun expectFailingPostImageResponse() {
+        whenever(mockSlackApi.postImage(any(), any(), any(), any(), any()))
+                .thenReturn(Observable.error(Throwable()))
     }
 }

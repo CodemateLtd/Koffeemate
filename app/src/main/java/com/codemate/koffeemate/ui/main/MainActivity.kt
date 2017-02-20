@@ -2,6 +2,7 @@ package com.codemate.koffeemate.ui.main
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
@@ -14,16 +15,14 @@ import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.di.modules.ActivityModule
 import com.codemate.koffeemate.extensions.loadBitmap
 import com.codemate.koffeemate.ui.settings.SettingsActivity
-import com.codemate.koffeemate.ui.userselector.UserSelectorFragment
+import com.codemate.koffeemate.ui.userselector.UserSelectListener
+import com.codemate.koffeemate.ui.userselector.views.UserSelectorOverlay
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_coffee_progress.view.*
 import org.jetbrains.anko.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSelectListener {
-    private val REQUEST_WHOS_BREWING = 1
-    private val REQUEST_WHO_FAILED_BREWING = 2
-
+class MainActivity : AppCompatActivity(), MainView, UserSelectListener {
     @Inject
     lateinit var presenter: MainPresenter
 
@@ -65,6 +64,11 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         }
 
         logAccidentButton.onClick { presenter.launchAccidentReportingScreen() }
+
+        userQuickDial.userSelectListener = this
+        userQuickDial.onMoreClickedListener = {
+            showUserSelector(UserSelectListener.REQUEST_WHOS_BREWING)
+        }
     }
 
     override fun onStart() {
@@ -88,27 +92,49 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         accidentProgress?.dismiss()
     }
 
-    // Functions for identifying who brews the coffee
-    override fun selectCoffeeBrewingPerson() {
-        UserSelectorFragment.newInstance(
-                title = getString(R.string.prompt_select_person_below),
-                requestCode = REQUEST_WHOS_BREWING
-        ).show(supportFragmentManager, "user_selector")
+    private fun showUserSelector(requestCode: Int) {
+        val selector = UserSelectorOverlay(this)
+        selector.userSelectListener = this
+        selector.requestCode = requestCode
+
+        ViewCompat.setElevation(selector, dip(12).toFloat())
+        container.addView(selector)
+    }
+
+    override fun displayUserSelectorQuickDial(users: List<User>) {
+        userQuickDial.setUsers(users) {
+            coffeeProgressView.userSetterButton.show()
+        }
+    }
+
+    override fun displayFullscreenUserSelector(requestCode: Int) {
+        showUserSelector(requestCode)
     }
 
     override fun clearCoffeeBrewingPerson() {
         coffeeProgressView.userSetterButton.clearUser()
     }
 
+    override fun displayUserSetterButton() {
+        coffeeProgressView.userSetterButton.show()
+    }
+
+    override fun hideUserSetterButton() {
+        coffeeProgressView.userSetterButton.hide()
+    }
+
     override fun onUserSelected(user: User, requestCode: Int) {
         when (requestCode) {
-            REQUEST_WHOS_BREWING -> {
+            UserSelectListener.REQUEST_WHOS_BREWING -> {
+                coffeeProgressView.userSetterButton.show()
+
                 Glide.with(this)
                         .load(user.profile.smallestAvailableImage)
+                        .error(R.drawable.ic_user_unknown)
                         .into(coffeeProgressView.userSetterButton)
                 presenter.personBrewingCoffee = user
             }
-            REQUEST_WHO_FAILED_BREWING -> {
+            UserSelectListener.REQUEST_WHO_FAILED_BREWING -> {
                 showPostAccidentAnnouncementPrompt(user)
             }
         }
@@ -146,8 +172,9 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
     override fun resetCoffeeViewStatus() {
         coffeeStatusTitle.text = getString(R.string.title_coffeeview_idle)
         coffeeStatusMessage.text = getString(R.string.message_coffeeview_idle)
-        coffeeProgressView.reset()
 
+        coffeeProgressView.reset()
+        userQuickDial.reset()
         logAccidentButton.show()
     }
 
@@ -161,14 +188,6 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
         startActivity(intentFor<SettingsActivity>())
     }
 
-    // Shaming users for coffee brewing failures -->
-    override fun launchUserSelector() {
-        UserSelectorFragment.newInstance(
-                title = getString(R.string.prompt_who_is_guilty),
-                requestCode = REQUEST_WHO_FAILED_BREWING
-        ).show(supportFragmentManager, "user_selector")
-    }
-
     override fun showPostAccidentAnnouncementPrompt(user: User) {
         alert {
             title(R.string.prompt_reset_the_counter)
@@ -179,7 +198,8 @@ class MainActivity : AppCompatActivity(), MainView, UserSelectorFragment.UserSel
                 accidentProgress = indeterminateProgressDialog(R.string.progress_message_shaming_person_on_slack)
                 val comment = getString(R.string.message_congratulations_to_user_fmt, user.profile.first_name)
 
-                Glide.with(this@MainActivity).loadBitmap(user.profile.largestAvailableImage) { profilePic ->
+                Glide.with(this@MainActivity)
+                        .loadBitmap(user.profile.largestAvailableImage) { profilePic ->
                     presenter.announceCoffeeBrewingAccident(comment, user, profilePic)
                 }
             }

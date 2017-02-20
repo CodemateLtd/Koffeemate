@@ -17,6 +17,7 @@
 package com.codemate.koffeemate.usecases
 
 import com.codemate.koffeemate.BuildConfig
+import com.codemate.koffeemate.data.local.CoffeeEventRepository
 import com.codemate.koffeemate.data.local.UserRepository
 import com.codemate.koffeemate.data.models.User
 import com.codemate.koffeemate.data.models.isFreshEnough
@@ -29,6 +30,7 @@ import javax.inject.Named
 
 open class LoadUsersUseCase @Inject constructor(
         var userRepository: UserRepository,
+        var coffeeEventRepository: CoffeeEventRepository,
         var slackApi: SlackApi,
         @Named("subscriber") var subscriber: Scheduler,
         @Named("observer") var observer: Scheduler
@@ -48,12 +50,7 @@ open class LoadUsersUseCase @Inject constructor(
                     Observable.just(usersWithTimestamp)
                 }
                 .subscribeOn(subscriber)
-                .observeOn(observer)
-                .map {
-                    filterNonCompanyUsers(it).sortedBy {
-                        it.profile.real_name
-                    }
-                }
+                .map { filterNonCompanyUsers(it) }
                 .doOnNext { userRepository.addAll(it) }
 
         return Observable
@@ -61,6 +58,8 @@ open class LoadUsersUseCase @Inject constructor(
                 .first {
                     it.isNotEmpty() && it.isFreshEnough(MAX_CACHE_STALENESS)
                 }
+                .map { brewersFirst(it) }
+                .observeOn(observer)
     }
 
     private fun filterNonCompanyUsers(response: List<User>): List<User> {
@@ -70,7 +69,19 @@ open class LoadUsersUseCase @Inject constructor(
                             // but customers instead: they don't hang out in the office.
                             && !it.profile.first_name.toLowerCase().startsWith("ext-")
                             && it.real_name != "slackbot"
-                            && it.deleted == false
+                            && !it.deleted
                 }
+    }
+
+    private fun brewersFirst(users: List<User>): List<User> {
+        val brewers = coffeeEventRepository
+                .getAllBrewers()
+                .sortedBy { it.profile.real_name }
+
+        val all = users.toMutableList()
+        all.removeAll { brewers.contains(it) }
+        all.sortBy { it.profile.real_name }
+
+        return brewers + all
     }
 }

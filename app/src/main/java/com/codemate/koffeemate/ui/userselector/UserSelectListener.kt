@@ -14,30 +14,15 @@
  * limitations under the License.
  */
 
-package com.codemate.koffeemate.testutils
+package com.codemate.koffeemate.ui.userselector
 
-import com.codemate.koffeemate.data.models.Profile
 import com.codemate.koffeemate.data.models.User
-import java.io.File
 
-fun Any.getResourceFile(path: String): File {
-    return File(javaClass.classLoader.getResource(path).file)
+interface UserSelectListener {
+    companion object {
+        val REQUEST_WHOS_BREWING = 1
+        val REQUEST_WHO_FAILED_BREWING = 2
+    }
+
+    fun onUserSelected(user: User, requestCode: Int)
 }
-
-fun fakeUser() = User().apply {
-    id = "abc123"
-    profile = Profile()
-    profile.first_name = "Jorma"
-    profile.real_name = "Jorma"
-}
-
-fun namedUser(name: String) = User().apply {
-    id = name
-    this.name = name
-    profile.real_name = name
-}
-
-fun namedUserWithTimestamp(name: String, lastUpdated: Long) =
-        namedUser(name).apply {
-            last_updated = lastUpdated
-        }
