@@ -82,8 +82,8 @@ class Migration : RealmMigration {
                     .addField("last_updated", Long::class.java)
 
             schema.get("CoffeeBrewingEvent")
-                    .addRealmObjectField("user", userSchema)
-                    .transform { brewingEvent ->
+                    ?.addRealmObjectField("user", userSchema)
+                    ?.transform { brewingEvent ->
                         brewingEvent.getString("userId")?.let { previousUserId ->
                             if (previousUserId.isNotBlank()) {
                                 var user: DynamicRealmObject?
@@ -106,7 +106,7 @@ class Migration : RealmMigration {
                             }
                         }
                     }
-                    .removeField("userId")
+                    ?.removeField("userId")
         }
     }
 }

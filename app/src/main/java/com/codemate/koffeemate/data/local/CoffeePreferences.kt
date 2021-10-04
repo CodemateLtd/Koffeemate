@@ -19,7 +19,7 @@ open class CoffeePreferences(ctx: Context) {
         return preferences.getString(
                 coffeeBrewingTimeKey,
                 DEFAULT_COFFEE_BREWING_TIME_MINUTES
-        ).toLong()
+        )!!.toLong()
     }
 
     open fun isCoffeeAnnouncementChannelSet() = !getCoffeeAnnouncementChannel().isBlank()
